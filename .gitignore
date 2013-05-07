@@ -19,3 +19,8 @@ qrc_*.cpp
 ui_*.h
 *.moc
 Makefile
+
+# mingw32
+*.rc
+*.Debug
+*.Release
