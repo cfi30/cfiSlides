@@ -1,5 +1,6 @@
-# C++ objects and libs
+build/
 
+# C++ objects and libs
 *.slo
 *.lo
 *.o
@@ -10,11 +11,11 @@
 *.dll
 *.dylib
 
-# Qt-es
-
+# Qt
 *.pro.user
 *.pro.user.*
 moc_*.cpp
 qrc_*.cpp
+ui_*.h
+*.moc
 Makefile
-*-build-*
