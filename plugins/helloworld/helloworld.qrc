@@ -1,0 +1,12 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+<file>./icons/oxygen/16x16/call-start.png</file>
+<file>./icons/oxygen/16x16/call-stop.png</file>
+
+<file>./icons/oxygen/22x22/call-start.png</file>
+<file>./icons/oxygen/22x22/call-stop.png</file>
+
+<file>./icons/oxygen/32x32/call-start.png</file>
+<file>./icons/oxygen/32x32/call-stop.png</file>
+</qresource>
+</RCC>
