@@ -211,6 +211,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	}
 
 	this->slideshow = new Slideshow();
+	this->currentSlideActions->setEnabled(false);
 
 	QProgressDialog *progress = new QProgressDialog(this);
 	progress->setWindowTitle(tr("Ouvrir"));
