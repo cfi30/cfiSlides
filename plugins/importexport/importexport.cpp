@@ -87,8 +87,15 @@ void ImportExport::launchImport()
 
 void ImportExport::launchExport()
 {
+	const int slideCount = window->getSlideshow()->getSlides().size();
+	if(slideCount < 1)
+	{
+		QMessageBox::critical(window, exportAction->text(), tr("Impossible d'exporter un diaporama vide."));
+		return;
+	}
+
 	ExportDialog *dialog = new ExportDialog(window);
-	dialog->setSlideCount(window->getSlideshow()->getSlides().size());
+	dialog->setSlideCount(slideCount);
 	connect(dialog, SIGNAL(finished(int)), dialog, SLOT(deleteLater()));
 
 	if(dialog->exec() == QDialog::Rejected)
