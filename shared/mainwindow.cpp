@@ -833,6 +833,7 @@ void MainWindow::on_removeElementButton_clicked()
 	updateSlide(index);
 	updateSlideTree(index);
 	updatePropertiesEditor(slide);
+	updateMediaPreview();
 
 	ui->removeElementButton->setEnabled(false);
 	ui->duplicateElementButton->setEnabled(false);
