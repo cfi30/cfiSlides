@@ -4,32 +4,6 @@ DEPENDPATH += $$PWD
 cfislides-uselib:!cfislides-buildlib {
 	LIBS += -L$$LIBDIR -l$$qtLibraryTarget(cfislides)
 } else {
-	SOURCES += \
-		mainwindow.cpp \
-		slideshow.cpp \
-		slide.cpp \
-		graphicsview.cpp \
-		baseelement.cpp \
-		slideelement.cpp \
-		imageelement.cpp \
-		graphicspixmapitem.cpp \
-		graphicsrectitem.cpp \
-		rectelement.cpp \
-		graphicstextitem.cpp \
-		textelement.cpp \
-		textinputdialog.cpp \
-		texteditfactory.cpp \
-		textedit.cpp \
-		movieelement.cpp \
-		graphicsellipseitem.cpp \
-		ellipseelement.cpp \
-		viewwidget.cpp \
-		audioelement.cpp \
-		graphicslineitem.cpp \
-		lineelement.cpp \
-		plugindialog.cpp \
-		graphicsmoviepreviewitem.cpp
-
 	HEADERS += \
 		mainwindow.h \
 		slideshow.h \
@@ -57,7 +31,34 @@ cfislides-uselib:!cfislides-buildlib {
 		lineelement.h \
 		plugindialog.h \
 		plugin.h \
+		shared.h \
 		graphicsmoviepreviewitem.h
+
+	SOURCES += \
+		mainwindow.cpp \
+		slideshow.cpp \
+		slide.cpp \
+		graphicsview.cpp \
+		baseelement.cpp \
+		slideelement.cpp \
+		imageelement.cpp \
+		graphicspixmapitem.cpp \
+		graphicsrectitem.cpp \
+		rectelement.cpp \
+		graphicstextitem.cpp \
+		textelement.cpp \
+		textinputdialog.cpp \
+		texteditfactory.cpp \
+		textedit.cpp \
+		movieelement.cpp \
+		graphicsellipseitem.cpp \
+		ellipseelement.cpp \
+		viewwidget.cpp \
+		audioelement.cpp \
+		graphicslineitem.cpp \
+		lineelement.cpp \
+		plugindialog.cpp \
+		graphicsmoviepreviewitem.cpp
 
 	FORMS += \
 		mainwindow.ui \
@@ -77,6 +78,3 @@ include(../qtpropertybrowser/extension/extension.pri)
 
 CONFIG += qtlockedfile-uselib
 include(../qtlockedfile/qtlockedfile.pri)
-
-HEADERS += \
-    ../shared/shared.h

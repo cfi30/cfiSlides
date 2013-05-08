@@ -4,23 +4,28 @@ DEPENDPATH += $$PWD
 qtpropertybrowser-uselib:!qtpropertybrowser-buildlib {
 	LIBS += -L$$LIBDIR -l$$qtLibraryTarget(qtpropertybrowser)
 } else {
-    SOURCES += $$PWD/qtpropertybrowser.cpp \
-            $$PWD/qtpropertymanager.cpp \
-            $$PWD/qteditorfactory.cpp \
-            $$PWD/qtvariantproperty.cpp \
-            $$PWD/qttreepropertybrowser.cpp \
-            $$PWD/qtbuttonpropertybrowser.cpp \
-            $$PWD/qtgroupboxpropertybrowser.cpp \
-            $$PWD/qtpropertybrowserutils.cpp
-    HEADERS += $$PWD/qtpropertybrowser.h \
-            $$PWD/qtpropertymanager.h \
-            $$PWD/qteditorfactory.h \
-            $$PWD/qtvariantproperty.h \
-            $$PWD/qttreepropertybrowser.h \
-            $$PWD/qtbuttonpropertybrowser.h \
-            $$PWD/qtgroupboxpropertybrowser.h \
-            $$PWD/qtpropertybrowserutils_p.h
-    RESOURCES += $$PWD/qtpropertybrowser.qrc
+	HEADERS += \
+		qtpropertybrowser.h \
+		qtpropertymanager.h \
+		qteditorfactory.h \
+		qtvariantproperty.h \
+		qttreepropertybrowser.h \
+		qtbuttonpropertybrowser.h \
+		qtgroupboxpropertybrowser.h \
+		qtpropertybrowserutils_p.h
+
+	SOURCES += \
+		qtpropertybrowser.cpp \
+		qtpropertymanager.cpp \
+		qteditorfactory.cpp \
+		qtvariantproperty.cpp \
+		qttreepropertybrowser.cpp \
+		qtbuttonpropertybrowser.cpp \
+		qtgroupboxpropertybrowser.cpp \
+		qtpropertybrowserutils.cpp
+
+	RESOURCES += \
+		qtpropertybrowser.qrc
 }
 
 win32 {

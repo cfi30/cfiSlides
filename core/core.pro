@@ -9,6 +9,7 @@ DEFINES += CFISLIDES_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
 	main.cpp
+
 TRANSLATIONS = \
 	strings_fr.ts \
 	strings_en.ts \
