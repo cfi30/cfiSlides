@@ -47,7 +47,7 @@
     </property>
     <widget class="QMenu" name="menuRecentFiles">
      <property name="title">
-      <string>Récemment ouverts</string>
+      <string>&amp;Récemment ouverts</string>
      </property>
     </widget>
     <addaction name="actionNew"/>
@@ -63,17 +63,33 @@
     <property name="title">
      <string>&amp;Diaporama</string>
     </property>
+    <widget class="QMenu" name="menuInsertElement">
+     <property name="title">
+      <string>&amp;Ajouter un élément</string>
+     </property>
+    </widget>
+    <widget class="QMenu" name="menuSelectedElements">
+     <property name="title">
+      <string>&amp;Sélection</string>
+     </property>
+     <addaction name="actionDeleteElements"/>
+     <addaction name="actionDuplicateElements"/>
+     <addaction name="actionRaiseElement"/>
+     <addaction name="actionLowerElement"/>
+    </widget>
     <addaction name="actionStart"/>
     <addaction name="separator"/>
     <addaction name="actionAddSlide"/>
     <addaction name="actionCurrentSlide"/>
+    <addaction name="menuInsertElement"/>
+    <addaction name="menuSelectedElements"/>
     <addaction name="actionSelectAll"/>
-    <addaction name="actionRename"/>
-    <addaction name="actionDuplicate"/>
     <addaction name="actionRepaint"/>
-    <addaction name="actionMoveLeft"/>
-    <addaction name="actionMoveRight"/>
-    <addaction name="actionDelete"/>
+    <addaction name="actionRenameSlide"/>
+    <addaction name="actionDuplicateSlide"/>
+    <addaction name="actionMoveSlideLeft"/>
+    <addaction name="actionMoveSlideRight"/>
+    <addaction name="actionDeleteSlide"/>
    </widget>
    <widget class="QMenu" name="menuConfiguration">
     <property name="title">
@@ -101,9 +117,6 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>Barre d'outils</string>
-   </property>
    <property name="toolButtonStyle">
     <enum>Qt::ToolButtonTextBesideIcon</enum>
    </property>
@@ -122,9 +135,6 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="propertiesDock">
-   <property name="windowTitle">
-    <string>Propriétés</string>
-   </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
@@ -153,9 +163,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="slideListDock">
-   <property name="windowTitle">
-    <string>Liste des diapositives</string>
-   </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
@@ -208,9 +215,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="mediaDock">
-   <property name="windowTitle">
-    <string>Aperçu du média</string>
-   </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
@@ -285,9 +289,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="slideDock">
-   <property name="windowTitle">
-    <string>Diapositive</string>
-   </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
@@ -332,141 +333,6 @@
        </column>
       </widget>
      </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QToolButton" name="addElementButton">
-         <property name="toolTip">
-          <string>Ajouter un élément</string>
-         </property>
-         <property name="text">
-          <string>Ajouter</string>
-         </property>
-         <property name="icon">
-          <iconset theme="list-add">
-           <normaloff/>
-          </iconset>
-         </property>
-         <property name="shortcut">
-          <string>+</string>
-         </property>
-         <property name="popupMode">
-          <enum>QToolButton::InstantPopup</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="removeElementButton">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>Supprimer cet élément</string>
-         </property>
-         <property name="text">
-          <string>Supprimer</string>
-         </property>
-         <property name="icon">
-          <iconset theme="list-remove">
-           <normaloff/>
-          </iconset>
-         </property>
-         <property name="shortcut">
-          <string>Del</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QToolButton" name="duplicateElementButton">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Dupliquer</string>
-         </property>
-         <property name="icon">
-          <iconset theme="edit-copy">
-           <normaloff/>
-          </iconset>
-         </property>
-         <property name="shortcut">
-          <string>Ctrl+C, Ctrl+V</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QToolButton" name="moveElementUpButton">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>Modifier la position de l'élément</string>
-         </property>
-         <property name="text">
-          <string>Monter</string>
-         </property>
-         <property name="icon">
-          <iconset theme="arrow-up">
-           <normaloff/>
-          </iconset>
-         </property>
-         <property name="shortcut">
-          <string>Shift+Up</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="moveElementDownButton">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>Modifier la position de l'élément</string>
-         </property>
-         <property name="text">
-          <string>Descendre</string>
-         </property>
-         <property name="icon">
-          <iconset theme="arrow-down">
-           <normaloff/>
-          </iconset>
-         </property>
-         <property name="shortcut">
-          <string>Shift+Down</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
     </layout>
    </widget>
   </widget>
@@ -477,7 +343,7 @@
     </iconset>
    </property>
    <property name="text">
-    <string>&amp;Ouvrir</string>
+    <string>Ouvrir</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -490,7 +356,7 @@
     </iconset>
    </property>
    <property name="text">
-    <string>&amp;Nouveau</string>
+    <string>Nouveau</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -503,7 +369,7 @@
     </iconset>
    </property>
    <property name="text">
-    <string>&amp;Enregistrer</string>
+    <string>Enregistrer</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -516,13 +382,16 @@
     </iconset>
    </property>
    <property name="text">
-    <string>&amp;Quitter</string>
+    <string>Quitter</string>
    </property>
    <property name="toolTip">
     <string>Quitter cfiSlides</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
    </property>
   </action>
   <action name="actionProperties">
@@ -533,7 +402,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Propriétés</string>
+    <string>Propriétés</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -546,7 +415,7 @@
     </iconset>
    </property>
    <property name="text">
-    <string>&amp;Ajouter une diapositive</string>
+    <string>Ajouter une diapositive</string>
    </property>
    <property name="shortcut">
     <string>Shift+N</string>
@@ -560,7 +429,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Liste des diapositives</string>
+    <string>Liste des diapositives</string>
    </property>
    <property name="shortcut">
     <string>F3</string>
@@ -587,7 +456,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Barre d'outils</string>
+    <string>Barre d'outils</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
@@ -606,7 +475,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Aperçu du média</string>
+    <string>Aperçu du média</string>
    </property>
    <property name="shortcut">
     <string>F6</string>
@@ -624,6 +493,9 @@
    <property name="shortcut">
     <string>F1</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
   </action>
   <action name="actionSlideDock">
    <property name="checkable">
@@ -633,33 +505,33 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Diapositive</string>
+    <string>Diapositive</string>
    </property>
    <property name="shortcut">
     <string>F4</string>
    </property>
   </action>
-  <action name="actionRename">
+  <action name="actionRenameSlide">
    <property name="icon">
     <iconset theme="document-properties">
      <normaloff/>
     </iconset>
    </property>
    <property name="text">
-    <string>&amp;Renommer</string>
+    <string>Renommer la diapositive</string>
    </property>
    <property name="shortcut">
     <string>Shift+E</string>
    </property>
   </action>
-  <action name="actionDelete">
+  <action name="actionDeleteSlide">
    <property name="icon">
     <iconset theme="edit-delete">
      <normaloff/>
     </iconset>
    </property>
    <property name="text">
-    <string>&amp;Supprimer</string>
+    <string>Supprimer la diapositive</string>
    </property>
    <property name="shortcut">
     <string>Shift+Del</string>
@@ -688,26 +560,26 @@
     </iconset>
    </property>
    <property name="text">
-    <string>&amp;Démarrer</string>
+    <string>Démarrer</string>
    </property>
    <property name="shortcut">
     <string>F11</string>
    </property>
   </action>
-  <action name="actionDuplicate">
+  <action name="actionDuplicateSlide">
    <property name="icon">
     <iconset theme="edit-copy">
      <normaloff/>
     </iconset>
    </property>
    <property name="text">
-    <string>&amp;Dupliquer</string>
+    <string>Dupliquer la diapositive</string>
    </property>
    <property name="shortcut">
     <string>Shift+C, Shift+V</string>
    </property>
   </action>
-  <action name="actionMoveLeft">
+  <action name="actionMoveSlideLeft">
    <property name="icon">
     <iconset theme="arrow-left">
      <normaloff/>
@@ -723,7 +595,7 @@
     <string>Shift+Left</string>
    </property>
   </action>
-  <action name="actionMoveRight">
+  <action name="actionMoveSlideRight">
    <property name="icon">
     <iconset theme="arrow-right">
      <normaloff/>
@@ -764,10 +636,13 @@
    <property name="text">
     <string>À propos de Qt</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::AboutQtRole</enum>
+   </property>
   </action>
   <action name="actionSelectAll">
    <property name="text">
-    <string>&amp;Sélectionner tout</string>
+    <string>Sélectionner tout</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
@@ -776,6 +651,50 @@
   <action name="actionCurrentSlide">
    <property name="text">
     <string>Diapositive actuelle</string>
+   </property>
+  </action>
+  <action name="actionDeleteElements">
+   <property name="icon">
+    <iconset theme="list-remove"/>
+   </property>
+   <property name="text">
+    <string>Supprimer</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="actionDuplicateElements">
+   <property name="icon">
+    <iconset theme="edit-copy"/>
+   </property>
+   <property name="text">
+    <string>Dupliquer</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C, Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionRaiseElement">
+   <property name="icon">
+    <iconset theme="object-order-raise"/>
+   </property>
+   <property name="text">
+    <string>Avancer vers l'avant-plan</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Up</string>
+   </property>
+  </action>
+  <action name="actionLowerElement">
+   <property name="icon">
+    <iconset theme="object-order-lower"/>
+   </property>
+   <property name="text">
+    <string>Reculer vers l'arrière-plan</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Down</string>
    </property>
   </action>
  </widget>
@@ -1078,7 +997,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionRename</sender>
+   <sender>actionRenameSlide</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>renameSlide()</slot>
@@ -1110,7 +1029,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionDelete</sender>
+   <sender>actionDeleteSlide</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>deleteSlide()</slot>
@@ -1142,7 +1061,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionDuplicate</sender>
+   <sender>actionDuplicateSlide</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>copySlide()</slot>
@@ -1285,6 +1204,166 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionDeleteElements</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>deleteElements()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionMoveSlideLeft</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>moveSlideLeft()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionMoveSlideRight</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>moveSlideRight()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDuplicateElements</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>duplicateElements()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRaiseElement</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>raiseElement()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLowerElement</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>lowerElement()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slideList</sender>
+   <signal>currentRowChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>currentSlideChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>156</x>
+     <y>229</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slideList</sender>
+   <signal>itemChanged(QListWidgetItem*)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slideItemChanged(QListWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>156</x>
+     <y>229</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slideTree</sender>
+   <signal>itemChanged(QTreeWidgetItem*,int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>elementItemChanged(QTreeWidgetItem*,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>127</x>
+     <y>113</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slideTree</sender>
+   <signal>itemSelectionChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>elementSelectionChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>127</x>
+     <y>113</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>createEmptySlide()</slot>
@@ -1303,5 +1382,15 @@
   <slot>updateMediaPreview()</slot>
   <slot>aboutPlugins()</slot>
   <slot>aboutQt()</slot>
+  <slot>deleteElements()</slot>
+  <slot>moveSlideLeft()</slot>
+  <slot>moveSlideRight()</slot>
+  <slot>duplicateElements()</slot>
+  <slot>raiseElement()</slot>
+  <slot>lowerElement()</slot>
+  <slot>currentSlideChanged(int)</slot>
+  <slot>slideItemChanged(QListWidgetItem*)</slot>
+  <slot>elementItemChanged(QTreeWidgetItem*,int)</slot>
+  <slot>elementSelectionChanged()</slot>
  </slots>
 </ui>

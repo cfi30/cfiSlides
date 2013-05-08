@@ -1,9 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-<file>./icons/oxygen/16x16/arrow-down.png</file>
 <file>./icons/oxygen/16x16/arrow-left.png</file>
 <file>./icons/oxygen/16x16/arrow-right.png</file>
-<file>./icons/oxygen/16x16/arrow-up.png</file>
 <file>./icons/oxygen/16x16/document-new.png</file>
 <file>./icons/oxygen/16x16/document-open.png</file>
 <file>./icons/oxygen/16x16/document-print.png</file>
@@ -16,19 +14,18 @@
 <file>./icons/oxygen/16x16/insert-horizontal-rule.png</file>
 <file>./icons/oxygen/16x16/insert-image.png</file>
 <file>./icons/oxygen/16x16/insert-text.png</file>
-<file>./icons/oxygen/16x16/list-add.png</file>
 <file>./icons/oxygen/16x16/list-remove.png</file>
 <file>./icons/oxygen/16x16/media-playback-pause.png</file>
 <file>./icons/oxygen/16x16/media-playback-start.png</file>
+<file>./icons/oxygen/16x16/object-order-lower.png</file>
+<file>./icons/oxygen/16x16/object-order-raise.png</file>
 <file>./icons/oxygen/16x16/view-fullscreen.png</file>
 <file>./icons/oxygen/16x16/view-refresh.png</file>
 <file>./icons/oxygen/16x16/window-close.png</file>
 <file>./icons/oxygen/16x16/window-new.png</file>
 
-<file>./icons/oxygen/22x22/arrow-down.png</file>
 <file>./icons/oxygen/22x22/arrow-left.png</file>
 <file>./icons/oxygen/22x22/arrow-right.png</file>
-<file>./icons/oxygen/22x22/arrow-up.png</file>
 <file>./icons/oxygen/22x22/document-new.png</file>
 <file>./icons/oxygen/22x22/document-open.png</file>
 <file>./icons/oxygen/22x22/document-print.png</file>
@@ -41,7 +38,6 @@
 <file>./icons/oxygen/22x22/insert-horizontal-rule.png</file>
 <file>./icons/oxygen/22x22/insert-image.png</file>
 <file>./icons/oxygen/22x22/insert-text.png</file>
-<file>./icons/oxygen/22x22/list-add.png</file>
 <file>./icons/oxygen/22x22/list-remove.png</file>
 <file>./icons/oxygen/22x22/media-playback-pause.png</file>
 <file>./icons/oxygen/22x22/media-playback-start.png</file>
@@ -50,10 +46,8 @@
 <file>./icons/oxygen/22x22/window-close.png</file>
 <file>./icons/oxygen/22x22/window-new.png</file>
 
-<file>./icons/oxygen/32x32/arrow-down.png</file>
 <file>./icons/oxygen/32x32/arrow-left.png</file>
 <file>./icons/oxygen/32x32/arrow-right.png</file>
-<file>./icons/oxygen/32x32/arrow-up.png</file>
 <file>./icons/oxygen/32x32/document-new.png</file>
 <file>./icons/oxygen/32x32/document-open.png</file>
 <file>./icons/oxygen/32x32/document-print.png</file>
@@ -66,7 +60,6 @@
 <file>./icons/oxygen/32x32/insert-horizontal-rule.png</file>
 <file>./icons/oxygen/32x32/insert-image.png</file>
 <file>./icons/oxygen/32x32/insert-text.png</file>
-<file>./icons/oxygen/32x32/list-add.png</file>
 <file>./icons/oxygen/32x32/list-remove.png</file>
 <file>./icons/oxygen/32x32/media-playback-pause.png</file>
 <file>./icons/oxygen/32x32/media-playback-start.png</file>

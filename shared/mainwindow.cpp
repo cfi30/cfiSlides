@@ -43,25 +43,37 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	ui->actionProperties->setChecked(ui->propertiesDock->isVisibleTo(this));
 	ui->actionMediaDock->setChecked(ui->mediaDock->isVisibleTo(this));
 
+	ui->toolBar->setWindowTitle(ui->actionToolbar->text());
+	ui->slideListDock->setWindowTitle(ui->actionSlideList->text());
+	ui->slideDock->setWindowTitle(ui->actionSlideDock->text());
+	ui->propertiesDock->setWindowTitle(ui->actionProperties->text());
+	ui->mediaDock->setWindowTitle(ui->actionMediaDock->text());
+
 	// this doesn't work when using the designer
 	connect(ui->menuRecentFiles, SIGNAL(aboutToShow()), this, SLOT(displayRecentFiles()));
 	connect(ui->menuRecentFiles, SIGNAL(triggered(QAction*)), this, SLOT(openRecentFile(QAction*)));
 
 	ui->actionCurrentSlide->setSeparator(true);
 
+	connect(ui->menuInsertElement, SIGNAL(aboutToShow()), this, SLOT(displayInsertElemMenu()));
+
 	currentSlideActions = new QActionGroup(this);
+	currentSlideActions->addAction(ui->menuInsertElement->menuAction());
+	currentSlideActions->addAction(ui->menuSelectedElements->menuAction());
 	currentSlideActions->addAction(ui->actionCurrentSlide);
 	currentSlideActions->addAction(ui->actionSelectAll);
-	currentSlideActions->addAction(ui->actionRename);
-	currentSlideActions->addAction(ui->actionDuplicate);
+	currentSlideActions->addAction(ui->actionRenameSlide);
+	currentSlideActions->addAction(ui->actionDuplicateSlide);
 	currentSlideActions->addAction(ui->actionRepaint);
-	currentSlideActions->addAction(ui->actionMoveLeft);
-	currentSlideActions->addAction(ui->actionMoveRight);
-	currentSlideActions->addAction(ui->actionDelete);
+	currentSlideActions->addAction(ui->actionMoveSlideLeft);
+	currentSlideActions->addAction(ui->actionMoveSlideRight);
+	currentSlideActions->addAction(ui->actionDeleteSlide);
 
-	QMenu *insertElementMenu = new QMenu(this);
-	setInsertElemMenu(insertElementMenu);
-	ui->addElementButton->setMenu(insertElementMenu);
+	selectionActions = new QActionGroup(this);
+	selectionActions->addAction(ui->actionDeleteElements);
+	selectionActions->addAction(ui->actionDuplicateElements);
+	selectionActions->addAction(ui->actionRaiseElement);
+	selectionActions->addAction(ui->actionLowerElement);
 
 	ui->seekSlider->setMediaObject(ui->videoPlayer->mediaObject());
 	ui->volumeSlider->setAudioOutput(ui->videoPlayer->audioOutput());
@@ -105,34 +117,34 @@ Slideshow *MainWindow::getSlideshow() const
 void MainWindow::setInsertElemMenu(QMenu *addElemMenu)
 {
 	QAction *separator = addElemMenu->addSeparator();
-	separator->setText(tr("Ajouter un élément"));
+	separator->setText(ui->menuInsertElement->menuAction()->text());
 	separator->setVisible(true);
 
-	QAction *actionRect = new QAction(QIcon::fromTheme("insert-rectangle"), "&Rectangle", this);
+	QAction *actionRect = new QAction(QIcon::fromTheme("insert-rectangle"), tr("Rectangle"), this);
 	connect(actionRect, SIGNAL(triggered()), this, SLOT(addRectElement()));
 	addElemMenu->addAction(actionRect);
 
-	QAction *actionEllipse = new QAction(QIcon::fromTheme("insert-ellipse"), "&Ellipse", this);
+	QAction *actionEllipse = new QAction(QIcon::fromTheme("insert-ellipse"), tr("Ellipse"), this);
 	connect(actionEllipse, SIGNAL(triggered()), this, SLOT(addEllipseElement()));
 	addElemMenu->addAction(actionEllipse);
 
-	QAction *actionLine = new QAction(QIcon::fromTheme("insert-horizontal-rule"), "&Ligne", this);
+	QAction *actionLine = new QAction(QIcon::fromTheme("insert-horizontal-rule"), tr("Ligne"), this);
 	connect(actionLine, SIGNAL(triggered()), this, SLOT(addLineElement()));
 	addElemMenu->addAction(actionLine);
 
-	QAction *actionText = new QAction(QIcon::fromTheme("insert-text"), "&Texte", this);
+	QAction *actionText = new QAction(QIcon::fromTheme("insert-text"), tr("Texte"), this);
 	connect(actionText, SIGNAL(triggered()), this, SLOT(addTextElement()));
 	addElemMenu->addAction(actionText);
 
-	QAction *actionPixmap = new QAction(QIcon::fromTheme("insert-image"), "&Image", this);
+	QAction *actionPixmap = new QAction(QIcon::fromTheme("insert-image"), tr("Image"), this);
 	connect(actionPixmap, SIGNAL(triggered()), this, SLOT(addImageElement()));
 	addElemMenu->addAction(actionPixmap);
 
-	QAction *actionMovie = new QAction(QIcon::fromTheme("insert-video"), "&Vidéo", this);
+	QAction *actionMovie = new QAction(QIcon::fromTheme("insert-video"), tr("Vidéo"), this);
 	connect(actionMovie, SIGNAL(triggered()), this, SLOT(addMovieElement()));
 	addElemMenu->addAction(actionMovie);
 
-	QAction *actionAudio = new QAction(QIcon::fromTheme("insert-audio"), "&Son", this);
+	QAction *actionAudio = new QAction(QIcon::fromTheme("insert-audio"), tr("Son"), this);
 	connect(actionAudio, SIGNAL(triggered()), this, SLOT(addAudioElement()));
 	addElemMenu->addAction(actionAudio);
 
@@ -171,13 +183,13 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	QString newFile;
 	if(knowPath.isEmpty())
 	{
-		newFile = QFileDialog::getOpenFileName(this, tr("Ouvrir"), QDir::homePath(), FILE_FILTER);
+		newFile = QFileDialog::getOpenFileName(this, ui->actionOpen->text(), QDir::homePath(), FILE_FILTER);
 		if(newFile.isEmpty())
 			return false;
 	}
 	else if(!QFile::exists(knowPath))
 	{
-		QMessageBox::critical(this, tr("Ouvrir"), tr("Impossible d'ouvrir le diaporama : le fichier demandé n'existe pas."));
+		QMessageBox::critical(this, ui->actionOpen->text(), tr("Impossible d'ouvrir le diaporama : le fichier demandé n'existe pas."));
 		return false;
 	}
 	else
@@ -186,7 +198,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	QtLockedFile file(newFile);
 	if(!file.open(QIODevice::ReadOnly))
 	{
-		QMessageBox::critical(this, tr("Ouvrir"), tr("Impossible de lire le contenu du fichier."));
+		QMessageBox::critical(this, ui->actionOpen->text(), tr("Impossible de lire le contenu du fichier."));
 		return false;
 	}
 	file.lock(QtLockedFile::ReadLock);
@@ -198,7 +210,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	in >> fileAppName;
 	if(fileAppName != qApp->applicationName())
 	{
-		QMessageBox::critical(this, tr("Ouvrir"), tr("Le fichier demandé ne peut pas être ouvert avec cfiSlides."));
+		QMessageBox::critical(this, ui->actionOpen->text(), tr("Le fichier demandé ne peut pas être ouvert avec cfiSlides."));
 		return false;
 	}
 	int slidesCount = 0;
@@ -214,7 +226,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	this->currentSlideActions->setEnabled(false);
 
 	QProgressDialog *progress = new QProgressDialog(this);
-	progress->setWindowTitle(tr("Ouvrir"));
+	progress->setWindowTitle(ui->actionOpen->text());
 	progress->setMinimumDuration(100);
 	progress->setCancelButtonText(QString());
 	progress->setLabelText(tr("Chargement et affichage du diaporama en cours..."));
@@ -246,7 +258,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 			{
 				if(errorsCount == 0)
 				{
-					QMessageBox::warning(this, tr("Ouvrir"),
+					QMessageBox::warning(this, ui->actionOpen->text(),
 						tr("Une erreur s'est produite lors du chargement des éléments graphiques de la diapositive n° %1 (index %2, élément %3, %4). L'élément en question a été supprimé du diaporama. Les erreurs suivantes seront ignorées.")
 							.arg(si+1).arg(si).arg(ei)
 							.arg(QString(type)=="" ? tr("Type inconnu") : type)
@@ -304,7 +316,7 @@ bool MainWindow::saveSlideshow()
 	QtLockedFile file(this->windowFilePath());
 	if(!file.open(QIODevice::WriteOnly))
 	{
-		QMessageBox::critical(this, tr("Enregistrer"), tr("Impossible d'écrire dans le fichier."));
+		QMessageBox::critical(this, ui->actionSave->text(), tr("Impossible d'écrire dans le fichier."));
 		return false;
 	}
 	file.lock(QtLockedFile::WriteLock);
@@ -337,7 +349,7 @@ bool MainWindow::saveSlideshow()
 
 bool MainWindow::saveSlideshowAs()
 {
-	const QString newFile = QFileDialog::getSaveFileName(this, tr("Enregistrer sous"), QDir::homePath(), FILE_FILTER);
+	const QString newFile = QFileDialog::getSaveFileName(this, ui->actionSave_as->text(), QDir::homePath(), FILE_FILTER);
 	if(newFile.isEmpty())
 		return false;
 
@@ -420,7 +432,7 @@ void MainWindow::displaySlide(Slide *slide)
 	scene->setSceneRect(QDesktopWidget().screenGeometry());
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateCurrentSlideTree()));
-	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateElementButtons()));
+	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateSelectionActions()));
 	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateCurrentPropertiesEditor()));
 	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateMediaPreview()));
 	slide->render(scene, true);
@@ -554,28 +566,16 @@ void MainWindow::updateCurrentPropertiesEditor()
 		updatePropertiesEditor(slide->getElement(item->data(0, Qt::UserRole).toInt()));
 }
 
-void MainWindow::updateElementButtons()
+void MainWindow::updateSelectionActions()
 {
-	if(ui->slideList->currentRow() == -1)
-	{
-		ui->addElementButton->setEnabled(false);
-		ui->removeElementButton->setEnabled(false);
-		ui->duplicateElementButton->setEnabled(false);
-		ui->moveElementUpButton->setEnabled(false);
-		ui->moveElementDownButton->setEnabled(false);
-		return;
-	}
+	selectionActions->setDisabled(ui->slideTree->selectedItems().isEmpty());
 
 	Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
 
-	ui->addElementButton->setEnabled(true);
-	ui->removeElementButton->setEnabled(!ui->slideTree->selectedItems().isEmpty());
-	ui->duplicateElementButton->setEnabled(!ui->slideTree->selectedItems().isEmpty());
-
 	const int selectedItemsCount = ui->slideTree->selectedItems().size();
 	const bool enableUpDown = slide->getElements().size() > 1 && selectedItemsCount == 1;
-	ui->moveElementUpButton->setEnabled(enableUpDown && ui->slideTree->selectedItems()[0] != ui->slideTree->topLevelItem(0)->child(0));
-	ui->moveElementDownButton->setEnabled(enableUpDown && selectedItemsCount > 0 && ui->slideTree->selectedItems()[selectedItemsCount - 1] != ui->slideTree->topLevelItem(0)->child(ui->slideTree->topLevelItem(0)->childCount() - 1));
+	ui->actionRaiseElement->setEnabled(enableUpDown && ui->slideTree->selectedItems()[0] != ui->slideTree->topLevelItem(0)->child(0));
+	ui->actionLowerElement->setEnabled(enableUpDown && selectedItemsCount > 0 && ui->slideTree->selectedItems()[selectedItemsCount - 1] != ui->slideTree->topLevelItem(0)->child(ui->slideTree->topLevelItem(0)->childCount() - 1));
 }
 
 void MainWindow::updateMediaPreview()
@@ -604,7 +604,7 @@ void MainWindow::renameSlide()
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
 	bool ok;
-	QString newName = QInputDialog::getText(this, tr("Renommer la diapositive"), tr("Nouveau nom pour cette diapositive :"), QLineEdit::Normal, slide->getValue("name").toString(), &ok);
+	QString newName = QInputDialog::getText(this, ui->actionRenameSlide->text(), tr("Nouveau nom pour cette diapositive :"), QLineEdit::Normal, slide->getValue("name").toString(), &ok);
 	if(!ok || !validateSlideName(newName)) return;
 
 	slide->setValue("name", newName);
@@ -660,7 +660,7 @@ void MainWindow::reRenderSlide()
 
 void MainWindow::deleteSlide()
 {
-	const int choice = QMessageBox::warning(this, tr("Supprimer la diapositive"), tr("Êtes-vous certain de vouloir supprimer cette diapositive ?"), QMessageBox::Yes, QMessageBox::Cancel);
+	const int choice = QMessageBox::warning(this, ui->actionDeleteSlide->text(), tr("Êtes-vous certain de vouloir supprimer cette diapositive ?"), QMessageBox::Yes, QMessageBox::Cancel);
 	if(choice == QMessageBox::Cancel)
 		return;
 
@@ -679,11 +679,11 @@ void MainWindow::deleteSlide()
 	delete view;
 
 	if(this->slideshow->getSlides().size() > 0)
-		on_slideList_currentRowChanged(ui->slideList->currentRow());
+		currentSlideChanged(ui->slideList->currentRow());
 	else
 	{
 		this->currentSlideActions->setEnabled(false);
-		updateElementButtons();
+		updateSelectionActions();
 	}
 
 	setWindowModified(true);
@@ -735,22 +735,22 @@ void MainWindow::about()
 					   " If not, see <a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>.</p>");
 }
 
-void MainWindow::on_slideList_currentRowChanged(int currentRow)
+void MainWindow::currentSlideChanged(int currentRow)
 {
 	if(currentRow == -1)
 		return;
 
 	ui->displayWidget->setCurrentIndex(currentRow);
-	ui->actionMoveLeft->setEnabled(this->slideshow->getSlides().size() > 0 && currentRow != 0);
-	ui->actionMoveRight->setEnabled(this->slideshow->getSlides().size() > 0 && currentRow != this->slideshow->getSlides().size() - 1);
+	ui->actionMoveSlideLeft->setEnabled(this->slideshow->getSlides().size() > 0 && currentRow != 0);
+	ui->actionMoveSlideRight->setEnabled(this->slideshow->getSlides().size() > 0 && currentRow != this->slideshow->getSlides().size() - 1);
 
 	updateSlideTree(currentRow);
 	updateCurrentPropertiesEditor();
 	updateMediaPreview();
-	updateElementButtons();
+	updateSelectionActions();
 }
 
-void MainWindow::on_slideList_itemChanged(QListWidgetItem *item)
+void MainWindow::slideItemChanged(QListWidgetItem *item)
 {
 	const int index = ui->slideList->row(item);
 	Slide *slide = this->slideshow->getSlide(index);
@@ -769,7 +769,7 @@ void MainWindow::on_slideList_itemChanged(QListWidgetItem *item)
 	setWindowModified(true);
 }
 
-void MainWindow::on_slideTree_itemChanged(QTreeWidgetItem *item, int)
+void MainWindow::elementItemChanged(QTreeWidgetItem *item, int)
 {
 	const int index = item->data(0, Qt::UserRole).toInt();
 	if(item->parent() == 0)
@@ -795,7 +795,7 @@ void MainWindow::on_slideTree_itemChanged(QTreeWidgetItem *item, int)
 	setWindowModified(true);
 }
 
-void MainWindow::on_slideTree_itemSelectionChanged()
+void MainWindow::elementSelectionChanged()
 {
 	GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->currentWidget());
 	view->setFocus();
@@ -812,10 +812,10 @@ void MainWindow::on_slideTree_itemSelectionChanged()
 	updateMediaPreview();
 	view->scene()->blockSignals(false);
 
-	updateElementButtons();
+	updateSelectionActions();
 }
 
-void MainWindow::on_removeElementButton_clicked()
+void MainWindow::deleteElements()
 {
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
@@ -834,16 +834,12 @@ void MainWindow::on_removeElementButton_clicked()
 	updateSlideTree(index);
 	updatePropertiesEditor(slide);
 	updateMediaPreview();
-
-	ui->removeElementButton->setEnabled(false);
-	ui->duplicateElementButton->setEnabled(false);
-	ui->moveElementUpButton->setEnabled(false);
-	ui->moveElementDownButton->setEnabled(false);
+	updateSelectionActions();
 
 	setWindowModified(true);
 }
 
-void MainWindow::on_duplicateElementButton_clicked()
+void MainWindow::duplicateElements()
 {
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
@@ -865,12 +861,12 @@ void MainWindow::on_duplicateElementButton_clicked()
 	ui->slideTree->clearSelection();
 	for(int i = 0; i < duplicatedCount; i++)
 		ui->slideTree->topLevelItem(0)->child(i)->setSelected(true);
-	on_slideTree_itemSelectionChanged();
+	elementSelectionChanged();
 
 	setWindowModified(true);
 }
 
-void MainWindow::on_moveElementUpButton_clicked()
+void MainWindow::raiseElement()
 {
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
@@ -883,12 +879,12 @@ void MainWindow::on_moveElementUpButton_clicked()
 	QGraphicsItem *graphicsItem = sceneItemFromIndex(elementIndex + 1);
 	if(graphicsItem != 0) graphicsItem->setSelected(true);
 	updateSlideTree(index);
-	on_slideTree_itemSelectionChanged();
+	elementSelectionChanged();
 
 	setWindowModified(true);
 }
 
-void MainWindow::on_moveElementDownButton_clicked()
+void MainWindow::lowerElement()
 {
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
@@ -901,12 +897,12 @@ void MainWindow::on_moveElementDownButton_clicked()
 	QGraphicsItem *graphicsItem = sceneItemFromIndex(elementIndex - 1);
 	if(graphicsItem != 0) graphicsItem->setSelected(true);
 	updateSlideTree(index);
-	on_slideTree_itemSelectionChanged();
+	elementSelectionChanged();
 
 	setWindowModified(true);
 }
 
-void MainWindow::on_actionMoveLeft_triggered()
+void MainWindow::moveSlideLeft()
 {
 	const int index = ui->slideList->currentRow();
 	this->slideshow->moveSlide(index, index - 1);
@@ -916,7 +912,7 @@ void MainWindow::on_actionMoveLeft_triggered()
 	statusBar()->showMessage(tr("La diapositive a été déplacée vers la gauche."), STATUS_TIMEOUT);
 }
 
-void MainWindow::on_actionMoveRight_triggered()
+void MainWindow::moveSlideRight()
 {
 	const int index = ui->slideList->currentRow();
 	this->slideshow->moveSlide(index, index + 1);
@@ -938,7 +934,7 @@ void MainWindow::addElement(SlideElement *element)
 
 	ui->slideTree->clearSelection();
 	ui->slideTree->topLevelItem(0)->child(0)->setSelected(true);
-	on_slideTree_itemSelectionChanged();
+	elementSelectionChanged();
 
 	setWindowModified(true);
 }
@@ -1100,7 +1096,7 @@ void MainWindow::print()
 	printer.setDocName(this->windowTitle().remove(QRegExp("\\[\\*\\].+$")));
 
 	QPrintDialog *dialog = new QPrintDialog(&printer, this);
-	dialog->setWindowTitle(tr("Imprimer"));
+	dialog->setWindowTitle(ui->actionPrint->text());
 	dialog->setOption(QAbstractPrintDialog::PrintCurrentPage);
 	if(dialog->exec() != QDialog::Accepted)
 		return;
@@ -1190,12 +1186,6 @@ void MainWindow::loadPlugins()
 	}
 
 	ui->actionAboutPlugins->setDisabled(plugins.isEmpty());
-
-	delete ui->addElementButton->menu();
-
-	QMenu *menu = new QMenu(this);
-	setInsertElemMenu(menu);
-	ui->addElementButton->setMenu(menu);
 }
 
 void MainWindow::unloadPlugins()
@@ -1238,4 +1228,10 @@ void MainWindow::displayRecentFiles()
 void MainWindow::openRecentFile(QAction *action)
 {
 	openSlideshow(action->text());
+}
+
+void MainWindow::displayInsertElemMenu()
+{
+	ui->menuInsertElement->clear();
+	setInsertElemMenu(ui->menuInsertElement);
 }

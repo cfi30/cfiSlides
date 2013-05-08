@@ -96,7 +96,7 @@ public slots:
 	bool openSlideshow(const QString knowPath = QString());
 	void updateCurrentSlideTree();
 	void updateCurrentPropertiesEditor();
-	void updateElementButtons();
+	void updateSelectionActions();
 	void updateMediaPreview();
 	void renameSlide();
 	void reRenderSlide();
@@ -118,6 +118,7 @@ public slots:
 	void aboutQt();
 	void displayRecentFiles();
 	void openRecentFile(QAction *);
+	void displayInsertElemMenu();
 
 	void addImageElement();
 	void addRectElement();
@@ -127,16 +128,16 @@ public slots:
 	void addAudioElement();
 	void addLineElement();
 
-	void on_slideList_currentRowChanged(int currentRow);
-	void on_slideList_itemChanged(QListWidgetItem *item);
-	void on_slideTree_itemChanged(QTreeWidgetItem *item, int column);
-	void on_slideTree_itemSelectionChanged();
-	void on_removeElementButton_clicked();
-	void on_moveElementUpButton_clicked();
-	void on_moveElementDownButton_clicked();
-	void on_actionMoveLeft_triggered();
-	void on_actionMoveRight_triggered();
-	void on_duplicateElementButton_clicked();
+	void currentSlideChanged(int currentRow);
+	void slideItemChanged(QListWidgetItem *item);
+	void elementItemChanged(QTreeWidgetItem *item, int column);
+	void elementSelectionChanged();
+	void deleteElements();
+	void raiseElement();
+	void lowerElement();
+	void moveSlideLeft();
+	void moveSlideRight();
+	void duplicateElements();
 
 signals:
 	void insertElemMenu(QMenu *);
@@ -152,6 +153,7 @@ protected:
 	QList<QPluginLoader *> plugins;
 	QString commandLineHelp;
 	QActionGroup *currentSlideActions;
+	QActionGroup *selectionActions;
 	virtual void closeEvent(QCloseEvent *);
 };
 

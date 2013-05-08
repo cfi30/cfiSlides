@@ -29,9 +29,8 @@
 #define DEFAULT_LINE_THICKNESS 2
 #define FILE_FILTER            tr("Diaporama au format cfiSlides (*.csl)")
 #define IMAGE_FILTER           tr("Image (*.bmp *.gif *.jpg *.jpeg *.mng *.png *.pbm *.pgm *.ppm *.tiff *.xbm *.xpm)")
-#define MOVIE_FILTER           tr("Vidéo (*.mpg *.mpeg *.mp4 *.m4v *.ogv *.mkv *.mks *.mov *.qt *.avi *.mng *.mp2 *.wmv *.flv *.m2ts *.mts, *.webm)")
+#define MOVIE_FILTER           tr("Vidéo (*.mpg *.mpeg *.mp4 *.m4v *.ogv *.mkv *.mks *.mov *.qt *.avi *.mng *.mp2 *.wmv *.flv *.m2ts *.mts *.webm)")
 #define AUDIO_FILTER           tr("Audio (*.wav *.mp2 *.mp3 *.wma *.ogg *.aif *.acc *.m4a *.mka)")
-#define MOVIE_PAINT_DELAY      800
 #define STATUS_TIMEOUT         5000
 #define COPY_SHIFT             10
 #define GENERIC_ICON           "document-new"
