@@ -573,7 +573,11 @@ void MainWindow::updateSelectionActions()
 {
 	selectionActions->setDisabled(ui->slideTree->selectedItems().isEmpty());
 
-	Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
+	const int index = ui->slideList->currentRow();
+	if(index == -1)
+		return;
+
+	Slide *slide = this->slideshow->getSlide(index);
 
 	const int selectedItemsCount = ui->slideTree->selectedItems().size();
 	const bool enableUpDown = slide->getElements().size() > 1 && selectedItemsCount == 1;
