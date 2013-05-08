@@ -28,7 +28,7 @@
 #include <QTimer>
 
 #include "slideelement.h"
-#include "graphicspixmapitem.h"
+#include "graphicsmoviepreviewitem.h"
 #include "filepathmanager.h"
 #include "fileeditfactory.h"
 #include "configuration.h"
@@ -51,15 +51,11 @@ public slots:
 	virtual void destroy();
 
 private slots:
-	void interactiveVideoLoaded(bool);
-	void takeSnapshot();
 	void restart();
 
 protected:
 	Phonon::VideoPlayer *player;
 	QGraphicsProxyWidget *proxy;
-	QPixmap snapshot;
-	QString loadedFile;
 	bool playbackFinished;
 };
 

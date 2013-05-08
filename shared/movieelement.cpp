@@ -48,32 +48,15 @@ void MovieElement::render(QGraphicsScene *scene, const bool interactive)
 
 	if(interactive)
 	{
-		if(loadedFile != getValue("src").toString())
-		{
-			// render video widget on the scene. will be painted in a GraphicsPixmapItem later (this is a really dirty hack...)
-			player = new Phonon::VideoPlayer(Phonon::VideoCategory);
-			connect(player->mediaObject(), SIGNAL(hasVideoChanged(bool)), this, SLOT(interactiveVideoLoaded(bool)));
-			connect(player->mediaObject(), SIGNAL(finished()), this, SLOT(takeSnapshot()));
-			player->audioOutput()->setMuted(true);
-			player->play(getValue("src").toString());
-			player->videoWidget()->setScaleMode(scaleMode);
-			player->setFixedSize(size);
+		GraphicsMoviePreviewItem *item = new GraphicsMoviePreviewItem;
+		item->setSource(getValue("src").toString());
+		item->setSize(size);
+		item->setPos(pos);
+		item->setData(Qt::UserRole, getIndex());
+		item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
+		item->setElement(this);
 
-			QGraphicsProxyWidget *proxy = scene->addWidget(player);
-			proxy->setPos(QPoint());
-			//proxy->setPos(pos); // FIXME: the snapshot is taken from the hole scene in takeSnapshot() so the correct position must not be set now.
-			proxy->setData(Qt::UserRole, getIndex());
-		}
-		else
-		{
-			GraphicsPixmapItem *item = new GraphicsPixmapItem();
-			item->setPixmap(snapshot.scaled(size));
-			item->setPos(pos);
-			item->setData(Qt::UserRole, getIndex());
-			item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-			item->setElement(this);
-			scene->addItem(item);
-		}
+		scene->addItem(item);
 	}
 	else
 	{
@@ -87,28 +70,6 @@ void MovieElement::render(QGraphicsScene *scene, const bool interactive)
 		QGraphicsProxyWidget *proxy = scene->addWidget(player);
 		proxy->setPos(pos);
 	}
-}
-
-void MovieElement::interactiveVideoLoaded(bool)
-{
-	loadedFile = getValue("src").toString();
-	player->seek(1000);
-	player->pause();
-
-	QTimer::singleShot(MOVIE_PAINT_DELAY, this, SLOT(takeSnapshot()));
-}
-
-void MovieElement::takeSnapshot()
-{
-	// FIXME: Take a picture of the movie alone.
-	snapshot = QPixmap(getValue("size").toSize());
-
-	QPainter painter(&snapshot);
-	painter.setRenderHint(QPainter::Antialiasing);
-	scene->render(&painter, scene->sceneRect());
-
-	player->deleteLater();
-	emit refresh();
 }
 
 void MovieElement::restart()

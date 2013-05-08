@@ -27,7 +27,8 @@ cfislides-uselib:!cfislides-buildlib {
 		audioelement.cpp \
 		graphicslineitem.cpp \
 		lineelement.cpp \
-		plugindialog.cpp
+		plugindialog.cpp \
+		graphicsmoviepreviewitem.cpp
 
 	HEADERS += \
 		mainwindow.h \
@@ -55,7 +56,8 @@ cfislides-uselib:!cfislides-buildlib {
 		graphicslineitem.h \
 		lineelement.h \
 		plugindialog.h \
-		plugin.h
+		plugin.h \
+		graphicsmoviepreviewitem.h
 
 	FORMS += \
 		mainwindow.ui \

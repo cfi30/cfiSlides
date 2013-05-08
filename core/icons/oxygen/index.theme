@@ -17,7 +17,7 @@ PanelSizes=16,22,32
 DialogDefault=32
 DialogSizes=16,22,32
 
-Directories=16x16,22x22,32x32
+Directories=16x16,22x22,32x32,128x128
 
 [16x16]
 Size=16
@@ -29,4 +29,8 @@ Type=Threshold
 
 [32x32]
 Size=32
+Type=Threshold
+
+[128x128]
+Size=128
 Type=Threshold

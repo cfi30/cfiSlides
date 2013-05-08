@@ -74,6 +74,8 @@
 <file>./icons/oxygen/32x32/view-refresh.png</file>
 <file>./icons/oxygen/32x32/window-close.png</file>
 <file>./icons/oxygen/32x32/window-new.png</file>
+
+<file>./icons/oxygen/128x128/applications-multimedia.png</file>
 <file>./icons/oxygen/index.theme</file>
 </qresource>
 </RCC>
