@@ -850,10 +850,11 @@ void MainWindow::duplicateElements()
 	const int duplicatedCount = ui->slideTree->selectedItems().size();
 	foreach(QTreeWidgetItem *item, ui->slideTree->selectedItems())
 	{
-		SlideElement *sourceElement = slide->getElement(item->data(0, Qt::UserRole).toInt());
+		const int elementIndex = item->data(0, Qt::UserRole).toInt();
+		SlideElement *sourceElement = slide->getElement(elementIndex);
 		SlideElement *newElement = (SlideElement *)QMetaType::construct(QMetaType::type(sourceElement->type()), sourceElement);
 		newElement->setValue("name", tr("Copie de %1").arg(sourceElement->getValue("name").toString()));
-		if(sourceElement->getProperties().contains("position"))
+		if(sceneItemFromIndex(elementIndex))
 			newElement->setValue("position", sourceElement->getValue("position").toPoint() + QPoint(COPY_SHIFT, COPY_SHIFT));
 		slide->addElement(newElement);
 	}
