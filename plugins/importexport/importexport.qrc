@@ -5,17 +5,5 @@
 <file>./icons/oxygen/16x16/image-x-generic.png</file>
 <file>./icons/oxygen/16x16/video-x-generic.png</file>
 <file>./icons/oxygen/16x16/audio-x-generic.png</file>
-
-<file>./icons/oxygen/22x22/document-import.png</file>
-<file>./icons/oxygen/22x22/document-export.png</file>
-<file>./icons/oxygen/22x22/image-x-generic.png</file>
-<file>./icons/oxygen/22x22/video-x-generic.png</file>
-<file>./icons/oxygen/22x22/audio-x-generic.png</file>
-
-<file>./icons/oxygen/32x32/document-import.png</file>
-<file>./icons/oxygen/32x32/document-export.png</file>
-<file>./icons/oxygen/32x32/image-x-generic.png</file>
-<file>./icons/oxygen/32x32/video-x-generic.png</file>
-<file>./icons/oxygen/32x32/audio-x-generic.png</file>
 </qresource>
 </RCC>
