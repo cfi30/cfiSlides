@@ -37,6 +37,8 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	this->restoreGeometry(QSettings().value("mainWindow/geometry").toByteArray());
 	this->restoreState(QSettings().value("mainWindow/state").toByteArray());
 
+	ui->menuRecentFiles->setDisabled(QSettings().value("recentFiles").toStringList().isEmpty());
+
 	ui->actionToolbar->setChecked(ui->toolBar->isVisibleTo(this));
 	ui->actionSlideList->setChecked(ui->slideListDock->isVisibleTo(this));
 	ui->actionSlideDock->setChecked(ui->slideDock->isVisibleTo(this));
@@ -291,6 +293,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 		recentFiles.removeLast();
 
 	QSettings().setValue("recentFiles", recentFiles);
+	ui->menuRecentFiles->setEnabled(true);
 
 	progress->close();
 	progress->deleteLater();
