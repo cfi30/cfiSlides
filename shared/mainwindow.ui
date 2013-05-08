@@ -255,9 +255,7 @@
           <string>Lire</string>
          </property>
          <property name="icon">
-          <iconset theme="media-playback-start">
-           <normaloff/>
-          </iconset>
+          <iconset theme="media-playback-start"/>
          </property>
         </widget>
        </item>
@@ -267,9 +265,7 @@
           <string>Pause</string>
          </property>
          <property name="icon">
-          <iconset theme="media-playback-pause">
-           <normaloff/>
-          </iconset>
+          <iconset theme="media-playback-pause"/>
          </property>
          <property name="shortcut">
           <string>Ctrl+Space</string>
@@ -338,9 +334,7 @@
   </widget>
   <action name="actionOpen">
    <property name="icon">
-    <iconset theme="document-open">
-     <normaloff/>
-    </iconset>
+    <iconset theme="document-open"/>
    </property>
    <property name="text">
     <string>Ouvrir</string>
@@ -351,9 +345,7 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset theme="document-new">
-     <normaloff/>
-    </iconset>
+    <iconset theme="document-new"/>
    </property>
    <property name="text">
     <string>Nouveau</string>
@@ -364,9 +356,7 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset theme="document-save">
-     <normaloff/>
-    </iconset>
+    <iconset theme="document-save"/>
    </property>
    <property name="text">
     <string>Enregistrer</string>
@@ -377,9 +367,7 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset theme="window-close">
-     <normaloff/>
-    </iconset>
+    <iconset theme="window-close"/>
    </property>
    <property name="text">
     <string>Quitter</string>
@@ -410,9 +398,7 @@
   </action>
   <action name="actionAddSlide">
    <property name="icon">
-    <iconset theme="window-new">
-     <normaloff/>
-    </iconset>
+    <iconset theme="window-new"/>
    </property>
    <property name="text">
     <string>Ajouter une diapositive</string>
@@ -437,9 +423,7 @@
   </action>
   <action name="actionSave_as">
    <property name="icon">
-    <iconset theme="document-save-as">
-     <normaloff/>
-    </iconset>
+    <iconset theme="document-save-as"/>
    </property>
    <property name="text">
     <string>Enregistrer sous...</string>
@@ -483,9 +467,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset theme="help-about">
-     <normaloff/>
-    </iconset>
+    <iconset theme="help-about"/>
    </property>
    <property name="text">
     <string>À &amp;propos</string>
@@ -513,9 +495,7 @@
   </action>
   <action name="actionRenameSlide">
    <property name="icon">
-    <iconset theme="document-properties">
-     <normaloff/>
-    </iconset>
+    <iconset theme="document-properties"/>
    </property>
    <property name="text">
     <string>Renommer la diapositive</string>
@@ -526,9 +506,7 @@
   </action>
   <action name="actionDeleteSlide">
    <property name="icon">
-    <iconset theme="edit-delete">
-     <normaloff/>
-    </iconset>
+    <iconset theme="edit-delete"/>
    </property>
    <property name="text">
     <string>Supprimer la diapositive</string>
@@ -539,9 +517,7 @@
   </action>
   <action name="actionRepaint">
    <property name="icon">
-    <iconset theme="view-refresh">
-     <normaloff/>
-    </iconset>
+    <iconset theme="view-refresh"/>
    </property>
    <property name="text">
     <string>Refaire le rendu</string>
@@ -555,9 +531,7 @@
   </action>
   <action name="actionStart">
    <property name="icon">
-    <iconset theme="view-fullscreen">
-     <normaloff/>
-    </iconset>
+    <iconset theme="view-fullscreen"/>
    </property>
    <property name="text">
     <string>Démarrer</string>
@@ -568,9 +542,7 @@
   </action>
   <action name="actionDuplicateSlide">
    <property name="icon">
-    <iconset theme="edit-copy">
-     <normaloff/>
-    </iconset>
+    <iconset theme="edit-copy"/>
    </property>
    <property name="text">
     <string>Dupliquer la diapositive</string>
@@ -581,9 +553,7 @@
   </action>
   <action name="actionMoveSlideLeft">
    <property name="icon">
-    <iconset theme="arrow-left">
-     <normaloff/>
-    </iconset>
+    <iconset theme="arrow-left"/>
    </property>
    <property name="text">
     <string>Déplacer vers la gauche</string>
@@ -597,9 +567,7 @@
   </action>
   <action name="actionMoveSlideRight">
    <property name="icon">
-    <iconset theme="arrow-right">
-     <normaloff/>
-    </iconset>
+    <iconset theme="arrow-right"/>
    </property>
    <property name="text">
     <string>Déplacer vers la droite</string>
@@ -613,9 +581,7 @@
   </action>
   <action name="actionPrint">
    <property name="icon">
-    <iconset theme="document-print">
-     <normaloff/>
-    </iconset>
+    <iconset theme="document-print"/>
    </property>
    <property name="text">
     <string>Imprimer</string>
@@ -655,7 +621,7 @@
   </action>
   <action name="actionDeleteElements">
    <property name="icon">
-    <iconset theme="list-remove"/>
+    <iconset theme="edit-delete"/>
    </property>
    <property name="text">
     <string>Supprimer</string>
