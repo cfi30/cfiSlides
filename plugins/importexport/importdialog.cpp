@@ -126,10 +126,23 @@ bool ImportDialog::updateList(const QString directory)
 			break;
 	}
 
+	QProgressDialog *progress = new QProgressDialog(this);
+	progress->setWindowTitle(this->windowTitle());
+	progress->setCancelButtonText(QString());
+	progress->setLabelText(tr("Recherche en cours des fichiers correspondants..."));
+	progress->open();
+
 	QDir dir(directory);
 	QStringList files = dir.entryList(filters, QDir::Files | QDir::Readable, sortBy);
-	foreach(QString file, files)
+
+	const int fileCount = files.size();
+	progress->setMaximum(fileCount);
+
+	for(int index = 0; index < fileCount; index++)
 	{
+		QString file = files[index];
+		progress->setValue(index + 1);
+
 		Slide *slide = new Slide(tr("Diapositive %1").arg(++slideCount));
 		connect(slide, SIGNAL(modified()), this, SLOT(elementModified()));
 
@@ -163,6 +176,7 @@ bool ImportDialog::updateList(const QString directory)
 		item->setFlags(Qt::NoItemFlags);
 	}
 
+	progress->close();
 	on_treeWidget_itemSelectionChanged();
 	ui->treeWidget->blockSignals(false);
 	this->modified = false;

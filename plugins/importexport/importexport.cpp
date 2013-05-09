@@ -72,8 +72,21 @@ void ImportExport::launchImport()
 	if(dialog->exec() == QDialog::Rejected)
 		return;
 
-	foreach(Slide *tempSlide, dialog->slides())
+	QList<Slide *> slides = dialog->slides();
+	const int slideCount = slides.size();
+
+	QProgressDialog *progress = new QProgressDialog(window);
+	progress->setWindowTitle(dialog->windowTitle());
+	progress->setCancelButtonText(QString());
+	progress->setLabelText(tr("Importation et affichage des éléments en cours..."));
+	progress->setMaximum(slideCount);
+	progress->open();
+
+	for(int index = 0; index < slideCount; index++)
 	{
+		Slide *tempSlide = slides[index];
+		progress->setValue(index);
+
 		Slide *slide = window->getSlideshow()->createSlide("temp-name");
 		slide->setProperties(tempSlide->getProperties());
 
@@ -83,6 +96,9 @@ void ImportExport::launchImport()
 		window->displaySlide(slide);
 		window->setWindowModified(true);
 	}
+
+	progress->close();
+	progress->deleteLater();
 }
 
 void ImportExport::launchExport()
