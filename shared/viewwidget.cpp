@@ -80,7 +80,7 @@ void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 {
 	QProgressDialog *progress = new QProgressDialog(this);
 	progress->setWindowTitle(this->windowTitle());
-	progress->setMinimumDuration(100);
+	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 	progress->setCancelButtonText(QString());
 	progress->setLabelText(tr("Pré-affichage du diaporama en cours..."));
 	progress->setMaximum(slideshow->getSlides().size());

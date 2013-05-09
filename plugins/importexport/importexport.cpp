@@ -77,6 +77,7 @@ void ImportExport::launchImport()
 
 	QProgressDialog *progress = new QProgressDialog(window);
 	progress->setWindowTitle(dialog->windowTitle());
+	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 	progress->setCancelButtonText(QString());
 	progress->setLabelText(tr("Importation et affichage des éléments en cours..."));
 	progress->setMaximum(slideCount);
@@ -130,7 +131,7 @@ void ImportExport::launchExport()
 
 	QProgressDialog *progress = new QProgressDialog(window);
 	progress->setWindowTitle(dialog->windowTitle());
-	progress->setMinimumDuration(100);
+	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 	progress->setCancelButtonText(QString());
 	progress->setLabelText(tr("Exportation des diapositives sélectionnées en cours..."));
 	progress->setMinimum(from);

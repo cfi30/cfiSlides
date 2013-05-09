@@ -128,6 +128,7 @@ bool ImportDialog::updateList(const QString directory)
 
 	QProgressDialog *progress = new QProgressDialog(this);
 	progress->setWindowTitle(this->windowTitle());
+	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 	progress->setCancelButtonText(QString());
 	progress->setLabelText(tr("Recherche en cours des fichiers correspondants..."));
 	progress->open();

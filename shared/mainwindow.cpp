@@ -229,7 +229,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 
 	QProgressDialog *progress = new QProgressDialog(this);
 	progress->setWindowTitle(ui->actionOpen->text());
-	progress->setMinimumDuration(100);
+	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 	progress->setCancelButtonText(QString());
 	progress->setLabelText(tr("Chargement et affichage du diaporama en cours..."));
 	progress->setMaximum(slidesCount);
