@@ -76,6 +76,8 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	selectionActions->addAction(ui->actionDuplicateElements);
 	selectionActions->addAction(ui->actionRaiseElement);
 	selectionActions->addAction(ui->actionLowerElement);
+	selectionActions->addAction(ui->actionBringElementToFront);
+	selectionActions->addAction(ui->actionBringElementToBack);
 
 	ui->seekSlider->setMediaObject(ui->videoPlayer->mediaObject());
 	ui->volumeSlider->setAudioOutput(ui->videoPlayer->audioOutput());
@@ -581,8 +583,12 @@ void MainWindow::updateSelectionActions()
 
 	const int selectedItemsCount = ui->slideTree->selectedItems().size();
 	const bool enableUpDown = slide->getElements().size() > 1 && selectedItemsCount == 1;
+
 	ui->actionRaiseElement->setEnabled(enableUpDown && ui->slideTree->selectedItems()[0] != ui->slideTree->topLevelItem(0)->child(0));
 	ui->actionLowerElement->setEnabled(enableUpDown && selectedItemsCount > 0 && ui->slideTree->selectedItems()[selectedItemsCount - 1] != ui->slideTree->topLevelItem(0)->child(ui->slideTree->topLevelItem(0)->childCount() - 1));
+
+	ui->actionBringElementToFront->setEnabled(ui->actionRaiseElement->isEnabled());
+	ui->actionBringElementToBack->setEnabled(ui->actionLowerElement->isEnabled());
 }
 
 void MainWindow::updateMediaPreview()
@@ -874,17 +880,15 @@ void MainWindow::duplicateElements()
 	setWindowModified(true);
 }
 
-void MainWindow::raiseElement()
+void MainWindow::moveElement(const int before, const int after)
 {
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
-	QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
-	const int elementIndex = item->data(0, Qt::UserRole).toInt();
-	slide->moveElement(elementIndex, elementIndex + 1);
+	slide->moveElement(before, after);
 
 	updateSlide(index);
 
-	QGraphicsItem *graphicsItem = sceneItemFromIndex(elementIndex + 1);
+	QGraphicsItem *graphicsItem = sceneItemFromIndex(after);
 	if(graphicsItem != 0) graphicsItem->setSelected(true);
 	updateSlideTree(index);
 	elementSelectionChanged();
@@ -892,22 +896,33 @@ void MainWindow::raiseElement()
 	setWindowModified(true);
 }
 
-void MainWindow::lowerElement()
+void MainWindow::raiseElement()
 {
-	const int index = ui->slideList->currentRow();
-	Slide *slide = this->slideshow->getSlide(index);
 	QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
 	const int elementIndex = item->data(0, Qt::UserRole).toInt();
-	slide->moveElement(elementIndex, elementIndex - 1);
+	moveElement(elementIndex, elementIndex + 1);
+}
 
-	updateSlide(index);
+void MainWindow::lowerElement()
+{
+	QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
+	const int elementIndex = item->data(0, Qt::UserRole).toInt();
+	moveElement(elementIndex, elementIndex - 1);
+}
 
-	QGraphicsItem *graphicsItem = sceneItemFromIndex(elementIndex - 1);
-	if(graphicsItem != 0) graphicsItem->setSelected(true);
-	updateSlideTree(index);
-	elementSelectionChanged();
+void MainWindow::bringElementToFront()
+{
+	Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
+	QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
+	const int elementIndex = item->data(0, Qt::UserRole).toInt();
+	moveElement(elementIndex, slide->getElements().size() - 1);
+}
 
-	setWindowModified(true);
+void MainWindow::bringElementToBack()
+{
+	QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
+	const int elementIndex = item->data(0, Qt::UserRole).toInt();
+	moveElement(elementIndex, 0);
 }
 
 void MainWindow::moveSlideLeft()

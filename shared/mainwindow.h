@@ -84,6 +84,7 @@ public:
 	void clearPropertiesEditor();
 	QGraphicsItem *sceneItemFromIndex(const int index) const;
 	void addElement(SlideElement *element);
+	void moveElement(const int before, const int after);
 
 	static bool validateSlideName(const QString &name);
 	static bool validateElementName(const QString &name);
@@ -135,6 +136,8 @@ public slots:
 	void deleteElements();
 	void raiseElement();
 	void lowerElement();
+	void bringElementToFront();
+	void bringElementToBack();
 	void moveSlideLeft();
 	void moveSlideRight();
 	void duplicateElements();
