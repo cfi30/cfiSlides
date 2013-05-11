@@ -39,9 +39,14 @@ public:
 	void moveSlide(const int from, const int to);
 	int indexOf(Slide *) const;
 	void removeSlide(const int index);
+	QVariant getValue(const QString &name, QVariant defaultValue = QVariant()) const;
+	void setValue(const QString &name, QVariant value);
+	QMap<QString, QVariant> getMetadata() const;
+	void setMetadata(QMap<QString, QVariant>);
 
 protected:
 	QList<Slide *> slides;
+	QMap<QString, QVariant> metadata;
 };
 
 #endif // SLIDESHOW_H

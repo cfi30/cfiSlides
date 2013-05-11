@@ -217,8 +217,6 @@ bool MainWindow::openSlideshow(const QString knowPath)
 		QMessageBox::critical(this, ui->actionOpen->text(), tr("Le fichier demandé ne peut pas être ouvert avec cfiSlides."));
 		return false;
 	}
-	int slidesCount = 0;
-	in >> slidesCount;
 
 	if(this->slideshow != 0)
 	{
@@ -226,8 +224,15 @@ bool MainWindow::openSlideshow(const QString knowPath)
 			return false;
 	}
 
+	QMap<QString, QVariant> metadata;
+	in >> metadata;
+
 	this->slideshow = new Slideshow();
+	this->slideshow->setMetadata(metadata);
 	this->currentSlideActions->setEnabled(false);
+
+	int slidesCount = 0;
+	in >> slidesCount;
 
 	QProgressDialog *progress = new QProgressDialog(this);
 	progress->setWindowTitle(ui->actionOpen->text());
@@ -330,7 +335,8 @@ bool MainWindow::saveSlideshow()
 	out.setVersion(QDataStream::Qt_4_8);
 
 	QList<Slide *> slides = slideshow->getSlides();
-	out << QString(qApp->applicationName());
+	out << qApp->applicationName();
+	out << slideshow->getMetadata();
 	out << slides.size();
 	foreach(Slide *slide, slides)
 	{
@@ -434,7 +440,7 @@ void MainWindow::displaySlide(Slide *slide)
 	statusBar()->showMessage(tr("Affichage de %1...").arg(slide->getValue("name").toString()));
 
 	QGraphicsScene *scene = new QGraphicsScene();
-	scene->setSceneRect(QDesktopWidget().screenGeometry());
+	scene->setSceneRect(slideshow->getValue("geometry", QDesktopWidget().screenGeometry()).toRect());
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateCurrentSlideTree()));
 	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateSelectionActions()));
