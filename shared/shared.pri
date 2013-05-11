@@ -80,6 +80,3 @@ win32 {
 CONFIG += qtpropertybrowser-uselib
 include(../qtpropertybrowser/qtpropertybrowser.pri)
 include(../qtpropertybrowser/extension/extension.pri)
-
-CONFIG += qtlockedfile-uselib
-include(../qtlockedfile/qtlockedfile.pri)

@@ -199,13 +199,12 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	else
 		newFile = knowPath;
 
-	QtLockedFile file(newFile);
+	QFile file(newFile);
 	if(!file.open(QIODevice::ReadOnly))
 	{
 		QMessageBox::critical(this, ui->actionOpen->text(), tr("Impossible de lire le contenu du fichier."));
 		return false;
 	}
-	file.lock(QtLockedFile::ReadLock);
 
 	int errorsCount = 0;
 
@@ -285,8 +284,6 @@ bool MainWindow::openSlideshow(const QString knowPath)
 
 		displaySlide(slide);
 	}
-
-	file.unlock();
 	file.close();
 
 	QString fileName = QFileInfo(newFile).fileName();
@@ -323,13 +320,12 @@ bool MainWindow::saveSlideshow()
 		return saveSlideshowAs();
 	}
 
-	QtLockedFile file(this->windowFilePath());
+	QFile file(this->windowFilePath());
 	if(!file.open(QIODevice::WriteOnly))
 	{
 		QMessageBox::critical(this, ui->actionSave->text(), tr("Impossible d'écrire dans le fichier."));
 		return false;
 	}
-	file.lock(QtLockedFile::WriteLock);
 
 	QDataStream out(&file);
 	out.setVersion(QDataStream::Qt_4_8);
@@ -349,8 +345,6 @@ bool MainWindow::saveSlideshow()
 			out << element->getProperties();
 		}
 	}
-
-	file.unlock();
 	file.close();
 
 	this->setWindowModified(false);

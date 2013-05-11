@@ -23,7 +23,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QCloseEvent>
-#include <QtLockedFile>
+#include <QFile>
 #include <QSettings>
 #include <QPainter>
 #include <QDesktopWidget>

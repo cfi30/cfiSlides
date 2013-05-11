@@ -2,7 +2,6 @@ TEMPLATE = subdirs
 CONFIG += ordered build-plugins
 SUBDIRS += \
 	qtpropertybrowser \
-	qtlockedfile \
 	shared \
 	core
 
