@@ -1275,12 +1275,27 @@ void MainWindow::resizeSlideshow()
 		slideshow->setValue("geometry", newRect);
 
 	const int slideCount = ui->displayWidget->count();
+
+	QProgressDialog *progress = new QProgressDialog(this);
+	progress->setWindowTitle(ui->actionResizeSlideshow->text());
+	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
+	progress->setCancelButtonText(QString());
+	progress->setLabelText(tr("Mise à jour de toutes les diapositives en cours..."));
+	progress->setMaximum(slideCount);
+	progress->open();
+
 	for(int index = 0; index < slideCount; index++)
 	{
+		progress->setValue(index + 1);
+
 		GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
 		view->scene()->setSceneRect(newRect);
 		updateSlide(index);
 	}
 
 	setWindowModified(true);
+	dialog->deleteLater();
+
+	progress->close();
+	progress->deleteLater();
 }

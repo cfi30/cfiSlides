@@ -65,12 +65,12 @@
     </property>
     <widget class="QMenu" name="menuInsertElement">
      <property name="title">
-      <string>&amp;Ajouter un élément</string>
+      <string>Ajouter un élément</string>
      </property>
     </widget>
     <widget class="QMenu" name="menuSelectedElements">
      <property name="title">
-      <string>&amp;Sélection</string>
+      <string>Sélection</string>
      </property>
      <addaction name="actionDeleteElements"/>
      <addaction name="actionDuplicateElements"/>
@@ -736,7 +736,7 @@
   </action>
   <action name="actionResizeSlideshow">
    <property name="text">
-    <string>Modifier les &amp;dimensions</string>
+    <string>Modifier les dimensions</string>
    </property>
   </action>
  </widget>
