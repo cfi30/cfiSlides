@@ -32,6 +32,7 @@ public:
 	explicit BaseElement();
 	QVariant getValue(const QString &name, QVariant defaultValue = QVariant()) const;
 	void setValue(const QString &name, QVariant value);
+	int unsetValue(const QString &name);
 	QMap<QString, QVariant> getProperties() const;
 	void setProperties(QMap<QString, QVariant>);
 

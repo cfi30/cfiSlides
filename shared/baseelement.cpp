@@ -32,6 +32,11 @@ void BaseElement::setValue(const QString &name, QVariant value)
 	this->properties[name] = value;
 }
 
+int BaseElement::unsetValue(const QString &name)
+{
+	return this->properties.remove(name);
+}
+
 void BaseElement::setProperties(QMap<QString, QVariant> properties)
 {
 	QMap<QString, QVariant>::iterator iterator;

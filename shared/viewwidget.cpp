@@ -92,10 +92,10 @@ void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 	{
 		progress->setValue(index + 1);
 
-		QDesktopWidget desktop;
+		const QRect sceneRect = slideshow->getValue("geometry", QDesktopWidget().screenGeometry()).toRect();
 
 		QGraphicsScene *scene = new QGraphicsScene(this);
-		scene->setSceneRect(desktop.screenGeometry());
+		scene->setSceneRect(sceneRect);
 		slide->render(scene, false);
 
 		QGraphicsView *view = new QGraphicsView(scene, this);
@@ -103,6 +103,7 @@ void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 		view->setCursor(Qt::BlankCursor);
 		view->setFocusPolicy(Qt::NoFocus);
 		view->setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
+		view->setFixedSize(sceneRect.size());
 		ui->stackedWidget->addWidget(view);
 		index++;
 	}

@@ -55,6 +55,7 @@
 #include "viewwidget.h"
 #include "plugindialog.h"
 #include "plugin.h"
+#include "geometrydialog.h"
 #include "configuration.h"
 #include "shared.h"
 
@@ -120,6 +121,7 @@ public slots:
 	void displayRecentFiles();
 	void openRecentFile(QAction *);
 	void displayInsertElemMenu();
+	void resizeSlideshow();
 
 	void addImageElement();
 	void addRectElement();

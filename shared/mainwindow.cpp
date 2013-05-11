@@ -1264,3 +1264,29 @@ void MainWindow::displayInsertElemMenu()
 	ui->menuInsertElement->clear();
 	setInsertElemMenu(ui->menuInsertElement);
 }
+
+void MainWindow::resizeSlideshow()
+{
+	GeometryDialog *dialog = new GeometryDialog(slideshow->getValue("geometry").toRect(), this);
+	if(dialog->exec() == QDialog::Rejected)
+		return;
+
+	QRect newRect = dialog->getRect();
+	if(newRect.isNull())
+	{
+		newRect = QDesktopWidget().screenGeometry();
+		slideshow->unsetValue("geometry");
+	}
+	else
+		slideshow->setValue("geometry", newRect);
+
+	const int slideCount = ui->displayWidget->count();
+	for(int index = 0; index < slideCount; index++)
+	{
+		GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
+		view->scene()->setSceneRect(newRect);
+		updateSlide(index);
+	}
+
+	setWindowModified(true);
+}
