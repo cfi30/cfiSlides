@@ -228,7 +228,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	in >> metadata;
 
 	this->slideshow = new Slideshow();
-	this->slideshow->setMetadata(metadata);
+	this->slideshow->setProperties(metadata);
 	this->currentSlideActions->setEnabled(false);
 
 	int slidesCount = 0;
@@ -336,7 +336,7 @@ bool MainWindow::saveSlideshow()
 
 	QList<Slide *> slides = slideshow->getSlides();
 	out << qApp->applicationName();
-	out << slideshow->getMetadata();
+	out << slideshow->getProperties();
 	out << slides.size();
 	foreach(Slide *slide, slides)
 	{
@@ -543,7 +543,7 @@ void MainWindow::updateCurrentSlideTree()
 	updateSlideTree(ui->slideList->currentRow());
 }
 
-void MainWindow::updatePropertiesEditor(const BaseElement *element)
+void MainWindow::updatePropertiesEditor(const SlideshowElement *element)
 {
 	clearPropertiesEditor();
 	element->bindProperties(ui->propertiesEditor);

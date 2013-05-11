@@ -90,7 +90,7 @@ void AudioElement::destroy()
 
 void AudioElement::bindProperties(QtTreePropertyBrowser *browser) const
 {
-	BaseElement::bindProperties(browser);
+	SlideshowElement::bindProperties(browser);
 
 	QtBoolPropertyManager *boolManager = new QtBoolPropertyManager();
 	QtCheckBoxFactory *checkBoxFactory = new QtCheckBoxFactory(browser);

@@ -21,10 +21,10 @@
 
 #include <QObject>
 
-#include "baseelement.h"
+#include "slideshowelement.h"
 #include "shared.h"
 
-class CFISLIDES_DLLSPEC SlideElement : public BaseElement
+class CFISLIDES_DLLSPEC SlideElement : public SlideshowElement
 {
 	Q_OBJECT
 public:

@@ -70,7 +70,7 @@ void LineElement::render(QGraphicsScene *scene, const bool interactive)
 
 void LineElement::bindProperties(QtTreePropertyBrowser *browser) const
 {
-	BaseElement::bindProperties(browser);
+	SlideshowElement::bindProperties(browser);
 
 	QtBoolPropertyManager *boolManager = new QtBoolPropertyManager();
 	QtCheckBoxFactory *checkBoxFactory = new QtCheckBoxFactory(browser);

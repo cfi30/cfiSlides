@@ -32,7 +32,8 @@ cfislides-uselib:!cfislides-buildlib {
 		plugindialog.h \
 		plugin.h \
 		shared.h \
-		graphicsmoviepreviewitem.h
+		graphicsmoviepreviewitem.h \
+		slideshowelement.h
 
 	SOURCES += \
 		mainwindow.cpp \
@@ -58,7 +59,8 @@ cfislides-uselib:!cfislides-buildlib {
 		graphicslineitem.cpp \
 		lineelement.cpp \
 		plugindialog.cpp \
-		graphicsmoviepreviewitem.cpp
+		graphicsmoviepreviewitem.cpp \
+		slideshowelement.cpp
 
 	FORMS += \
 		mainwindow.ui \

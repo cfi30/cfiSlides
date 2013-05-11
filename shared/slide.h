@@ -27,14 +27,14 @@
 #include <QGraphicsItem>
 #include <QColor>
 
-#include "baseelement.h"
+#include "slideshowelement.h"
 #include "slideelement.h"
 #include "filepathmanager.h"
 #include "fileeditfactory.h"
 #include "configuration.h"
 #include "shared.h"
 
-class CFISLIDES_DLLSPEC Slide : public BaseElement
+class CFISLIDES_DLLSPEC Slide : public SlideshowElement
 {
 	Q_OBJECT
 

@@ -18,7 +18,7 @@
 
 #include "slideshow.h"
 
-Slideshow::Slideshow(QObject *parent) : QObject(parent)
+Slideshow::Slideshow() : BaseElement()
 {
 }
 
@@ -59,26 +59,4 @@ void Slideshow::removeSlide(const int index)
 {
 	this->slides[index]->deleteLater();
 	this->slides.removeAt(index);
-}
-
-QVariant Slideshow::getValue(const QString &name, QVariant defaultValue) const
-{
-	return this->metadata.value(name, defaultValue);
-}
-
-void Slideshow::setValue(const QString &name, QVariant value)
-{
-	this->metadata[name] = value;
-}
-
-void Slideshow::setMetadata(QMap<QString, QVariant> metadata)
-{
-	QMap<QString, QVariant>::iterator iterator;
-	for(iterator = metadata.begin(); iterator != metadata.end(); ++iterator)
-		this->metadata[iterator.key()] = iterator.value();
-}
-
-QMap<QString, QVariant> Slideshow::getMetadata() const
-{
-	return this->metadata;
 }

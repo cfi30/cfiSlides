@@ -18,13 +18,13 @@
 
 #include "slideelement.h"
 
-SlideElement::SlideElement() : BaseElement()
+SlideElement::SlideElement() : SlideshowElement()
 {
 	this->scene = 0;
 	setValue("visible", true);
 }
 
-SlideElement::SlideElement(const SlideElement &copy) : BaseElement()
+SlideElement::SlideElement(const SlideElement &copy) : SlideshowElement()
 {
 	SlideElement();
 	setProperties(copy.getProperties());
@@ -48,7 +48,7 @@ void SlideElement::render(QGraphicsScene *scene, const bool interactive)
 
 void SlideElement::bindProperties(QtTreePropertyBrowser *browser) const
 {
-	BaseElement::bindProperties(browser);
+	SlideshowElement::bindProperties(browser);
 
 	QtBoolPropertyManager *boolManager = new QtBoolPropertyManager();
 	QtCheckBoxFactory *checkBoxFactory = new QtCheckBoxFactory(browser);

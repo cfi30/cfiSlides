@@ -22,14 +22,15 @@
 #include <QObject>
 #include <QList>
 
+#include "baseelement.h"
 #include "slide.h"
 #include "shared.h"
 
-class CFISLIDES_DLLSPEC Slideshow : public QObject
+class CFISLIDES_DLLSPEC Slideshow : public BaseElement
 {
 	Q_OBJECT
 public:
-	Slideshow(QObject *parent = 0);
+	Slideshow();
 	~Slideshow();
 
 	QList<Slide *> getSlides() const;
@@ -39,14 +40,9 @@ public:
 	void moveSlide(const int from, const int to);
 	int indexOf(Slide *) const;
 	void removeSlide(const int index);
-	QVariant getValue(const QString &name, QVariant defaultValue = QVariant()) const;
-	void setValue(const QString &name, QVariant value);
-	QMap<QString, QVariant> getMetadata() const;
-	void setMetadata(QMap<QString, QVariant>);
 
 protected:
 	QList<Slide *> slides;
-	QMap<QString, QVariant> metadata;
 };
 
 #endif // SLIDESHOW_H

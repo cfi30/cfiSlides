@@ -80,7 +80,7 @@ public:
 	void updateSlide(const int index);
 	void updateIcon(const int index);
 	void updateSlideTree(const int index);
-	void updatePropertiesEditor(const BaseElement *element);
+	void updatePropertiesEditor(const SlideshowElement *element);
 	void clearPropertiesEditor();
 	QGraphicsItem *sceneItemFromIndex(const int index) const;
 	void addElement(SlideElement *element);

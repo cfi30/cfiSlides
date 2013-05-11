@@ -278,7 +278,7 @@ void ImportDialog::elementModified()
 	QTreeWidgetItem *item = ui->treeWidget->selectedItems()[0];
 	if(item->parent() == 0)
 	{
-		BaseElement *element = (BaseElement *)sender();
+		SlideshowElement *element = (SlideshowElement *)sender();
 		item->setText(0, element->getValue("name").toString());
 		item->setData(0, Qt::UserRole, element->getValue("name").toString());
 	}
@@ -337,7 +337,7 @@ void ImportDialog::on_treeWidget_itemChanged(QTreeWidgetItem *item, int)
 		}
 
 		item->setData(0, Qt::UserRole, item->text(0));
-		BaseElement *element = (BaseElement *)item->data(1, Qt::UserRole).value<void *>();
+		SlideshowElement *element = (SlideshowElement *)item->data(1, Qt::UserRole).value<void *>();
 		element->setValue("name", item->text(0));
 		on_treeWidget_itemSelectionChanged();
 	}
@@ -363,6 +363,6 @@ void ImportDialog::on_treeWidget_itemSelectionChanged()
 	if(ui->treeWidget->selectedItems().empty())
 		return;
 
-	BaseElement *element = (BaseElement *)ui->treeWidget->currentItem()->data(1, Qt::UserRole).value<void *>();
+	SlideshowElement *element = (SlideshowElement *)ui->treeWidget->currentItem()->data(1, Qt::UserRole).value<void *>();
 	element->bindProperties(ui->propertiesEditor);
 }

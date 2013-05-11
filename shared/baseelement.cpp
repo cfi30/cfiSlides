@@ -18,7 +18,7 @@
 
 #include "baseelement.h"
 
-BaseElement::BaseElement(QObject *parent) : QObject(parent)
+BaseElement::BaseElement() : QObject()
 {
 }
 
@@ -42,62 +42,4 @@ void BaseElement::setProperties(QMap<QString, QVariant> properties)
 QMap<QString, QVariant> BaseElement::getProperties() const
 {
 	return this->properties;
-}
-
-void BaseElement::bindProperties(QtTreePropertyBrowser *browser) const
-{
-	QtStringPropertyManager *stringManager = new QtStringPropertyManager();
-	QtLineEditFactory *lineEditFactory = new QtLineEditFactory(browser);
-
-	QtProperty *name = stringManager->addProperty(tr("Étiquette"));
-	name->setWhatsThis("name");
-	name->setToolTip(tr("Nom de l'élément"));
-	stringManager->setValue(name, getValue("name").toString());
-	stringManager->setRegExp(name, QRegExp("^([^\\s](.*[^\\s])?)$"));
-	browser->addProperty(name);
-
-	browser->setFactoryForManager(stringManager, lineEditFactory);
-
-	connect(stringManager, SIGNAL(valueChanged(QtProperty*,QString)), this, SLOT(stringValueChanged(QtProperty*,QString)));
-}
-
-void BaseElement::valueChanged(QtProperty *property, QVariant value)
-{
-	setValue(property->whatsThis(), value);
-	emit modified();
-}
-
-void BaseElement::stringValueChanged(QtProperty *property, QString value)
-{
-	valueChanged(property, value);
-}
-
-void BaseElement::intValueChanged(QtProperty *property, int value)
-{
-	valueChanged(property, value);
-}
-
-void BaseElement::colorValueChanged(QtProperty *property, QColor value)
-{
-	valueChanged(property, value);
-}
-
-void BaseElement::sizeValueChanged(QtProperty *property, QSize value)
-{
-	valueChanged(property, value);
-}
-
-void BaseElement::pointValueChanged(QtProperty *property, QPoint value)
-{
-	valueChanged(property, value);
-}
-
-void BaseElement::fontValueChanged(QtProperty *property, QFont value)
-{
-	valueChanged(property, value);
-}
-
-void BaseElement::boolValueChanged(QtProperty *property, bool value)
-{
-	valueChanged(property, value);
 }

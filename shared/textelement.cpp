@@ -47,7 +47,7 @@ void TextElement::render(QGraphicsScene *scene, const bool interactive)
 
 void TextElement::bindProperties(QtTreePropertyBrowser *browser) const
 {
-	BaseElement::bindProperties(browser);
+	SlideshowElement::bindProperties(browser);
 
 	QtBoolPropertyManager *boolManager = new QtBoolPropertyManager();
 	QtCheckBoxFactory *checkBoxFactory = new QtCheckBoxFactory(browser);

@@ -18,11 +18,11 @@
 
 #include "slide.h"
 
-Slide::Slide() : BaseElement()
+Slide::Slide() : SlideshowElement()
 {
 }
 
-Slide::Slide(const QString name) : BaseElement()
+Slide::Slide(const QString name) : SlideshowElement()
 {
 	this->setValue("name", name);
 	this->setValue("backgroundColor", Qt::white);
@@ -108,7 +108,7 @@ void Slide::moveElement(const int from, const int to)
 
 void Slide::bindProperties(QtTreePropertyBrowser *browser) const
 {
-	BaseElement::bindProperties(browser);
+	SlideshowElement::bindProperties(browser);
 
 	QtGroupPropertyManager *groupManager = new QtGroupPropertyManager();
 	QtColorPropertyManager *colorManager = new QtColorPropertyManager();
