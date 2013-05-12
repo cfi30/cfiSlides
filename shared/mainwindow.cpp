@@ -1316,22 +1316,3 @@ void MainWindow::resizeSlideshow()
 	progress->close();
 	progress->deleteLater();
 }
-
-void MainWindow::unloadSomeSlides()
-{
-	const int currentSlide = ui->slideList->currentRow();
-	const int slideCount = ui->displayWidget->count();
-
-	int start = currentSlide - (MAX_LOADED_SLIDES / 2);
-	if(start < 0) start = 0;
-
-	const int end = currentSlide + (MAX_LOADED_SLIDES / 2);
-
-	qDebug() << start << end;
-
-	for(int i = start; i < end && i < slideCount; i++)
-	{
-		GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(i));
-		view->scene()->clear();
-	}
-}
