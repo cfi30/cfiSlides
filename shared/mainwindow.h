@@ -122,6 +122,7 @@ public slots:
 	void openRecentFile(QAction *);
 	void displayInsertElemMenu();
 	void resizeSlideshow();
+	void unloadSomeSlides();
 
 	void addImageElement();
 	void addRectElement();

@@ -39,5 +39,6 @@
 #define PLUGINS_PATH           QCoreApplication::applicationDirPath() + "/plugins/"
 #define RELOAD_PLUGINS         10000
 #define RECENT_FILES_MAX       6
+#define MAX_LOADED_SLIDES      20
 
 #endif // CONFIGURATION_H
