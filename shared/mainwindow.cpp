@@ -769,7 +769,7 @@ void MainWindow::currentSlideChanged(int currentRow)
 	const int keepEnd = currentRow + (MAX_LOADED_SLIDES / 2);
 	for(int index = 0; index < slideCount; index++)
 	{
-		GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
+		const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
 		if(index < keepStart || index > keepEnd)
 			view->scene()->clear();
 		else if(view->scene()->items().size() == 0)
