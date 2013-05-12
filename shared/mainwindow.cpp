@@ -444,7 +444,7 @@ void MainWindow::displaySlide(Slide *slide)
 
 	GraphicsView *view = new GraphicsView(scene);
 	view->setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(view, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showViewContextMenu(const QPoint &)));
+	connect(view, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(displayContextMenu(const QPoint &)));
 	ui->displayWidget->addWidget(view);
 
 	QPixmap pixmap(scene->sceneRect().size().toSize());
@@ -1167,15 +1167,28 @@ void MainWindow::moveFinishTimerTimeout()
 	updateCurrentPropertiesEditor();
 }
 
-void MainWindow::showViewContextMenu(const QPoint &pos)
+void MainWindow::displayContextMenu(const QPoint &pos)
 {
 	GraphicsView *view = qobject_cast<GraphicsView *>(sender());
-	QPoint globalPos = view->mapToGlobal(pos);
+	QGraphicsItem *item = view->scene()->itemAt(view->mapToScene(pos));
+	while(item->parentItem())
+		item = item->parentItem();
+	if(item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+	{
+		view->scene()->clearSelection();
+		item->setSelected(true);
+	}
+
 	QMenu *menu = new QMenu(this);
+	if(!view->scene()->selectedItems().isEmpty())
+	{
+		menu->addActions(selectionActions->actions());
+		menu->addSeparator();
+	}
 	menu->addAction(ui->actionSelectAll);
 	menu->addAction(ui->actionRepaint);
 	setInsertElemMenu(menu);
-	menu->exec(globalPos);
+	menu->exec(view->mapToGlobal(pos));
 	delete menu;
 }
 
