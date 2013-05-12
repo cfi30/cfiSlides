@@ -86,6 +86,9 @@ void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 	progress->setMaximum(slideshow->getSlides().size());
 	progress->open();
 
+	const int renderStart = startIndex - (MAX_LOADED_SLIDES / 2);
+	const int renderEnd = startIndex + (MAX_LOADED_SLIDES / 2);
+
 	this->slideshow = slideshow;
 	int index = 0;
 	foreach(Slide *slide, slideshow->getSlides())
@@ -96,7 +99,8 @@ void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 
 		QGraphicsScene *scene = new QGraphicsScene(this);
 		scene->setSceneRect(sceneRect);
-		if(index < MAX_LOADED_SLIDES)
+
+		if(index >= renderStart && index <= renderEnd)
 			slide->render(scene, false);
 
 		QGraphicsView *view = new QGraphicsView(scene, this);
