@@ -214,7 +214,7 @@ SlideElement *ImportDialog::createElementFor(const QString file)
 			element = new MovieElement;
 			element->setValue("name", QFileInfo(file).baseName());
 			element->setValue("src", file);
-			element->setValue("size", QDesktopWidget().screenGeometry());  // TODO: use movie size
+			element->setValue("size", QDesktopWidget().screenGeometry().size() / DEFAULT_SIZE_SCALE);  // TODO: use movie size
 			break;
 		case AudioType:
 			element = new AudioElement;
