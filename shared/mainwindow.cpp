@@ -440,19 +440,17 @@ void MainWindow::displaySlide(Slide *slide)
 	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateSelectionActions()));
 	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateCurrentPropertiesEditor()));
 	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateMediaPreview()));
+	slide->render(scene, true);
 
 	GraphicsView *view = new GraphicsView(scene);
 	view->setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(view, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(displayContextMenu(const QPoint &)));
+	connect(view, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showViewContextMenu(const QPoint &)));
 	ui->displayWidget->addWidget(view);
 
 	QPixmap pixmap(scene->sceneRect().size().toSize());
 	QPainter painter(&pixmap);
 	painter.setRenderHint(QPainter::Antialiasing);
-
-	slide->render(scene, true);
 	scene->render(&painter, scene->sceneRect());
-	scene->clear();
 
 	QIcon icon(pixmap.scaledToWidth(ui->slideList->iconSize().width()));
 	QListWidgetItem *newItem = new QListWidgetItem(icon, slide->getValue("name").toString());
@@ -755,29 +753,14 @@ void MainWindow::currentSlideChanged(int currentRow)
 	if(currentRow == -1)
 		return;
 
-	const int slideCount = this->slideshow->getSlides().size();
 	ui->displayWidget->setCurrentIndex(currentRow);
-	ui->actionMoveSlideLeft->setEnabled(slideCount > 0 && currentRow != 0);
-	ui->actionMoveSlideRight->setEnabled(slideCount > 0 && currentRow != slideCount - 1);
+	ui->actionMoveSlideLeft->setEnabled(this->slideshow->getSlides().size() > 0 && currentRow != 0);
+	ui->actionMoveSlideRight->setEnabled(this->slideshow->getSlides().size() > 0 && currentRow != this->slideshow->getSlides().size() - 1);
 
 	updateSlideTree(currentRow);
 	updateCurrentPropertiesEditor();
 	updateMediaPreview();
 	updateSelectionActions();
-
-	const int keepStart = currentRow - (MAX_LOADED_SLIDES / 2);
-	const int keepEnd = currentRow + (MAX_LOADED_SLIDES / 2);
-	for(int index = 0; index < slideCount; index++)
-	{
-		const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
-		if(index < keepStart || index > keepEnd)
-			view->scene()->clear();
-		else if(view->scene()->items().size() == 0)
-		{
-			Slide *slide = this->slideshow->getSlide(index);
-			slide->render(view->scene(), true);
-		}
-	}
 }
 
 void MainWindow::slideItemChanged(QListWidgetItem *item)
@@ -1184,28 +1167,15 @@ void MainWindow::moveFinishTimerTimeout()
 	updateCurrentPropertiesEditor();
 }
 
-void MainWindow::displayContextMenu(const QPoint &pos)
+void MainWindow::showViewContextMenu(const QPoint &pos)
 {
 	GraphicsView *view = qobject_cast<GraphicsView *>(sender());
-	QGraphicsItem *item = view->scene()->itemAt(view->mapToScene(pos));
-	while(item->parentItem())
-		item = item->parentItem();
-	if(item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
-	{
-		view->scene()->clearSelection();
-		item->setSelected(true);
-	}
-
+	QPoint globalPos = view->mapToGlobal(pos);
 	QMenu *menu = new QMenu(this);
-	if(!view->scene()->selectedItems().isEmpty())
-	{
-		menu->addActions(selectionActions->actions());
-		menu->addSeparator();
-	}
 	menu->addAction(ui->actionSelectAll);
 	menu->addAction(ui->actionRepaint);
 	setInsertElemMenu(menu);
-	menu->exec(view->mapToGlobal(pos));
+	menu->exec(globalPos);
 	delete menu;
 }
 

@@ -113,7 +113,7 @@ public slots:
 	void managePlugins();
 	void print();
 	void moveFinishTimerTimeout();
-	void displayContextMenu(const QPoint &);
+	void showViewContextMenu(const QPoint &);
 	void loadPlugins();
 	void unloadPlugins();
 	void aboutPlugins();

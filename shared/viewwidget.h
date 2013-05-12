@@ -62,7 +62,6 @@ public slots:
 
 private:
 	Ui::ViewWidget *ui;
-	void lazyLoad();
 
 protected:
 	bool paused;
