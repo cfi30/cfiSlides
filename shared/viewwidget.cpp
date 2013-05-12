@@ -223,8 +223,14 @@ void ViewWidget::restart()
 
 void ViewWidget::closeEvent(QCloseEvent *)
 {
-	foreach(Slide *slide, slideshow->getSlides())
+	const int slideCount = slideshow->getSlides().size();
+	for(int index = 0; index < slideCount; index++)
 	{
+		const QGraphicsView *view = qobject_cast<QGraphicsView *>(ui->stackedWidget->widget(index));
+		if(view->scene()->items().size() == 0)
+			continue;
+
+		Slide *slide = this->slideshow->getSlide(index);
 		slide->stop();
 		slide->destroy();
 	}
@@ -247,6 +253,7 @@ void ViewWidget::lazyLoad()
 		{
 			if(view->scene()->items().size() > 0)
 			{
+				slide->stop();
 				slide->destroy();
 				view->scene()->clear();
 			}
