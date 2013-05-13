@@ -86,6 +86,9 @@ void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 	progress->setMaximum(slideshow->getSlides().size());
 	progress->open();
 
+	const int renderStart = startIndex - (MAX_LOADED_SLIDES / 2);
+	const int renderEnd = startIndex + (MAX_LOADED_SLIDES / 2);
+
 	this->slideshow = slideshow;
 	int index = 0;
 	foreach(Slide *slide, slideshow->getSlides())
@@ -96,7 +99,9 @@ void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 
 		QGraphicsScene *scene = new QGraphicsScene(this);
 		scene->setSceneRect(sceneRect);
-		slide->render(scene, false);
+
+		if(index >= renderStart && index <= renderEnd)
+			slide->render(scene, false);
 
 		QGraphicsView *view = new QGraphicsView(scene, this);
 		view->setFrameShape(QFrame::NoFrame);
@@ -122,6 +127,7 @@ void ViewWidget::prev()
 
 	stop();
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex() - 1);
+	lazyLoad();
 	play();
 }
 
@@ -132,6 +138,7 @@ void ViewWidget::next()
 
 	stop();
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex() + 1);
+	lazyLoad();
 	play();
 }
 
@@ -142,6 +149,7 @@ void ViewWidget::first()
 
 	stop();
 	ui->stackedWidget->setCurrentIndex(0);
+	lazyLoad();
 	play();
 }
 
@@ -152,6 +160,7 @@ void ViewWidget::last()
 
 	stop();
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->count() - 1);
+	lazyLoad();
 	play();
 }
 
@@ -202,6 +211,7 @@ void ViewWidget::goTo()
 
 	stop();
 	ui->stackedWidget->setCurrentIndex(slideNames.indexOf(name));
+	lazyLoad();
 	play();
 }
 
@@ -213,10 +223,42 @@ void ViewWidget::restart()
 
 void ViewWidget::closeEvent(QCloseEvent *)
 {
-	foreach(Slide *slide, slideshow->getSlides())
+	const int slideCount = slideshow->getSlides().size();
+	for(int index = 0; index < slideCount; index++)
 	{
+		const QGraphicsView *view = qobject_cast<QGraphicsView *>(ui->stackedWidget->widget(index));
+		if(view->scene()->items().size() == 0)
+			continue;
+
+		Slide *slide = this->slideshow->getSlide(index);
 		slide->stop();
 		slide->destroy();
 	}
 	emit closed(ui->stackedWidget->currentIndex());
+}
+
+void ViewWidget::lazyLoad()
+{
+	const int currentIndex = ui->stackedWidget->currentIndex();
+	const int slideCount = ui->stackedWidget->count();
+
+	const int keepStart = currentIndex - (MAX_LOADED_SLIDES / 2);
+	const int keepEnd = currentIndex + (MAX_LOADED_SLIDES / 2);
+	for(int index = 0; index < slideCount; index++)
+	{
+		const QGraphicsView *view = qobject_cast<QGraphicsView *>(ui->stackedWidget->widget(index));
+		Slide *slide = this->slideshow->getSlide(index);
+
+		if(index < keepStart || index > keepEnd)
+		{
+			if(view->scene()->items().size() > 0)
+			{
+				slide->stop();
+				slide->destroy();
+				view->scene()->clear();
+			}
+		}
+		else if(view->scene()->items().size() == 0)
+			slide->render(view->scene(), false);
+	}
 }

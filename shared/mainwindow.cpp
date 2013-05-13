@@ -440,7 +440,6 @@ void MainWindow::displaySlide(Slide *slide)
 	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateSelectionActions()));
 	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateCurrentPropertiesEditor()));
 	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateMediaPreview()));
-	slide->render(scene, true);
 
 	GraphicsView *view = new GraphicsView(scene);
 	view->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -450,7 +449,10 @@ void MainWindow::displaySlide(Slide *slide)
 	QPixmap pixmap(scene->sceneRect().size().toSize());
 	QPainter painter(&pixmap);
 	painter.setRenderHint(QPainter::Antialiasing);
+
+	slide->render(scene, true);
 	scene->render(&painter, scene->sceneRect());
+	scene->clear();
 
 	QIcon icon(pixmap.scaledToWidth(ui->slideList->iconSize().width()));
 	QListWidgetItem *newItem = new QListWidgetItem(icon, slide->getValue("name").toString());
@@ -753,14 +755,29 @@ void MainWindow::currentSlideChanged(int currentRow)
 	if(currentRow == -1)
 		return;
 
+	const int slideCount = this->slideshow->getSlides().size();
 	ui->displayWidget->setCurrentIndex(currentRow);
-	ui->actionMoveSlideLeft->setEnabled(this->slideshow->getSlides().size() > 0 && currentRow != 0);
-	ui->actionMoveSlideRight->setEnabled(this->slideshow->getSlides().size() > 0 && currentRow != this->slideshow->getSlides().size() - 1);
+	ui->actionMoveSlideLeft->setEnabled(slideCount > 0 && currentRow != 0);
+	ui->actionMoveSlideRight->setEnabled(slideCount > 0 && currentRow != slideCount - 1);
 
 	updateSlideTree(currentRow);
 	updateCurrentPropertiesEditor();
 	updateMediaPreview();
 	updateSelectionActions();
+
+	const int keepStart = currentRow - (MAX_LOADED_SLIDES / 2);
+	const int keepEnd = currentRow + (MAX_LOADED_SLIDES / 2);
+	for(int index = 0; index < slideCount; index++)
+	{
+		const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
+		if(index < keepStart || index > keepEnd)
+			view->scene()->clear();
+		else if(view->scene()->items().size() == 0)
+		{
+			Slide *slide = this->slideshow->getSlide(index);
+			slide->render(view->scene(), true);
+		}
+	}
 }
 
 void MainWindow::slideItemChanged(QListWidgetItem *item)
