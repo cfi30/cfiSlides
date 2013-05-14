@@ -59,12 +59,8 @@ void LineElement::render(QGraphicsScene *scene, const bool interactive)
 	item->setPen(pen);
 	item->setPos(pos);
 	item->setLine(QLineF(QPoint(0, getValue("start").toInt()), getValue("stop").toPoint()));
-	item->setData(Qt::UserRole, getIndex());
-	if(interactive)
-	{
-		item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-		item->setElement(this);
-	}
+	item->setElement(this);
+
 	scene->addItem(item);
 }
 

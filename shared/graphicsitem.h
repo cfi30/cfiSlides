@@ -25,10 +25,11 @@
 public:\
 void setElement(SlideElement *parent)\
 {\
-	this->parentElement = parent;\
+	this->slideElement = parent;\
+	this->setData(Qt::UserRole, parent->getIndex());\
 }\
 protected:\
-SlideElement *parentElement;\
+SlideElement *slideElement;\
 virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value)\
 {\
 	if(change == ItemPositionChange && scene())\
@@ -45,8 +46,8 @@ virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value)\
 		if(newPos.y() + boundingRect().bottom() > rect.bottom())\
 			newPos.setY(rect.bottom() - boundingRect().bottom());\
 \
-		if(this->parentElement != 0)\
-			this->parentElement->movedTo(newPos.toPoint());\
+		if(this->slideElement != 0)\
+			this->slideElement->movedTo(newPos.toPoint());\
 		return newPos;\
 	}\
 	return QGraphicsItem::itemChange(change, value);\

@@ -66,6 +66,15 @@ void Slide::render(QGraphicsScene *scene, const bool interactive)
 
 	foreach(SlideElement *element, this->elements)
 		element->render(scene, interactive);
+
+	if(interactive)
+	{
+		foreach(QGraphicsItem *item, scene->items())
+		{
+			if(item->data(Qt::UserRole).isValid())
+				item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
+		}
+	}
 }
 
 QList<SlideElement *> Slide::getElements() const

@@ -714,8 +714,7 @@ void MainWindow::slideModified()
 	if(!ui->slideTree->selectedItems().isEmpty())
 	{
 		QGraphicsItem *item = sceneItemFromIndex(ui->slideTree->selectedItems()[0]->data(0, Qt::UserRole).toInt());
-		if(item != 0)
-			item->setSelected(true);
+		if(item != 0) item->setSelected(true);
 	}
 	updateSlideTree(index);
 	view->scene()->blockSignals(false);

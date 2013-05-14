@@ -52,8 +52,6 @@ void MovieElement::render(QGraphicsScene *scene, const bool interactive)
 		item->setSource(getValue("src").toString());
 		item->setSize(size);
 		item->setPos(pos);
-		item->setData(Qt::UserRole, getIndex());
-		item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
 		item->setElement(this);
 
 		scene->addItem(item);

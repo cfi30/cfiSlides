@@ -35,12 +35,8 @@ void TextElement::render(QGraphicsScene *scene, const bool interactive)
 	item->setDefaultTextColor(getValue("color").value<QColor>());
 	item->setTextWidth(getValue("width").toInt());
 	item->setPos(getValue("position").toPoint());
-	item->setData(Qt::UserRole, getIndex());
-	if(interactive)
-	{
-		item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-		item->setElement(this);
-	}
+	item->setElement(this);
+
 	connect(item->document(), SIGNAL(contentsChanged()), this, SLOT(textChanged()));
 	scene->addItem(item);
 }

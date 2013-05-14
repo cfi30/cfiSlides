@@ -46,12 +46,8 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 	GraphicsPixmapItem *item = new GraphicsPixmapItem();
 	item->setPixmap(spixmap);
 	item->setPos(getValue("position").toPoint());
-	item->setData(Qt::UserRole, getIndex());
-	if(interactive)
-	{
-		item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-		item->setElement(this);
-	}
+	item->setElement(this);
+
 	scene->addItem(item);
 }
 

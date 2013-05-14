@@ -37,12 +37,8 @@ void HelloElement::render(QGraphicsScene *scene, const bool interactive)
 	item->setPen(QPen(Qt::NoPen));
 	item->setBrush(brush);
 	item->setPos(getValue("position").toPoint());
-	item->setData(Qt::UserRole, getIndex());
-	if(interactive)
-	{
-		item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-		item->setElement(this);
-	}
+	item->setElement(this);
+
 	scene->addItem(item);
 
 	QFont font(QString(), 42, QFont::Bold);

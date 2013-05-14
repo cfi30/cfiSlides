@@ -39,12 +39,8 @@ void RectElement::render(QGraphicsScene *scene, const bool interactive)
 	item->setPen(pen);
 	item->setRect(QRectF(QPointF(), getValue("size").toSizeF()));
 	item->setPos(getValue("position").toPoint());
-	item->setData(Qt::UserRole, getIndex());
-	if(interactive)
-	{
-		item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-		item->setElement(this);
-	}
+	item->setElement(this);
+
 	scene->addItem(item);
 }
 
