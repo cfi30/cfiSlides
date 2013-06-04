@@ -1187,12 +1187,17 @@ void MainWindow::displayContextMenu(const QPoint &pos)
 {
 	GraphicsView *view = qobject_cast<GraphicsView *>(sender());
 	QGraphicsItem *item = view->scene()->itemAt(view->mapToScene(pos));
-	while(item->parentItem())
-		item = item->parentItem();
-	if(item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+
+	if(item)
 	{
-		view->scene()->clearSelection();
-		item->setSelected(true);
+		while(item->parentItem())
+			item = item->parentItem();
+
+		if(item->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+		{
+			view->scene()->clearSelection();
+			item->setSelected(true);
+		}
 	}
 
 	QMenu *menu = new QMenu(this);
