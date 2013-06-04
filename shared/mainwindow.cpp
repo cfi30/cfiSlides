@@ -89,7 +89,7 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	if(openFile.isEmpty() || !openSlideshow(openFile))
 	{
 		newSlideshow();
-		statusBar()->showMessage(tr("Merci d'utiliser cfiSlides !"), STATUS_TIMEOUT);
+		statusBar()->showMessage(tr("Merci d'utiliser %1 !").arg(qApp->applicationName()), STATUS_TIMEOUT);
 	}
 
 	moveFinishTimer.setInterval(REFRESH_INTERVAL);
@@ -163,7 +163,7 @@ void MainWindow::setWindowModified(const bool modified)
 
 void MainWindow::setWindowTitle(const QString &fileName)
 {
-	QMainWindow::setWindowTitle(tr("%1[*] - cfiSlides").arg(fileName));
+	QMainWindow::setWindowTitle(tr("%1[*] - %2").arg(fileName, qApp->applicationName()));
 }
 
 void MainWindow::newSlideshow()
@@ -213,7 +213,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	in >> fileAppName;
 	if(fileAppName != qApp->applicationName())
 	{
-		QMessageBox::critical(this, ui->actionOpen->text(), tr("Le fichier demandé ne peut pas être ouvert avec cfiSlides."));
+		QMessageBox::critical(this, ui->actionOpen->text(), tr("Le fichier demandé ne peut pas être ouvert avec %1.").arg(qApp->applicationName()));
 		return false;
 	}
 
@@ -381,7 +381,7 @@ bool MainWindow::closeSlideshow()
 
 	statusBar()->showMessage(tr("Fermeture du diaporama..."));
 
-	QMainWindow::setWindowTitle("[*]cfiSlides");
+	QMainWindow::setWindowTitle(QString("[*]%1").arg(qApp->applicationName()));
 	this->setWindowModified(false);
 	delete this->slideshow;
 
@@ -729,24 +729,24 @@ void MainWindow::slideElementMoved()
 
 void MainWindow::about()
 {
-	QMessageBox::about(this, tr("À propos de %1 - %2").arg(qApp->applicationName()).arg(qApp->applicationPid()),
-					   QString("<p><strong>%1 %2</strong><br /><kbd>%3</kbd></p>")
-					   .arg(qApp->applicationName(), qApp->applicationVersion(), commandLineHelp) +
+	QMessageBox::about(this, tr("À propos de %1 - %2").arg(qApp->applicationName()).arg(qApp->applicationPid()), QString(
+		QString("<p><strong>%1 %2</strong><br /><kbd>%3</kbd></p>") +
 
-					   "<p>Copyright (C) 2013  Christian Fillion</p>" +
+		"<p>Copyright (C) 2013  Christian Fillion</p>" +
 
-					   "<p>cfiSlides is free software: you can redistribute it and/or modify" +
-					   " it under the terms of the GNU General Public License as published by" +
-					   " the Free Software Foundation, either version 3 of the License, or" +
-					   " (at your option) any later version.</p>" +
+		"<p>%1 is free software: you can redistribute it and/or modify" +
+		"   it under the terms of the GNU General Public License as published by" +
+		"   the Free Software Foundation, either version 3 of the License, or" +
+		"   (at your option) any later version.</p>" +
 
-					   "<p>cfiSlides is distributed in the hope that it will be useful," +
-					   " but WITHOUT ANY WARRANTY; without even the implied warranty of" +
-					   " MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the" +
-					   " GNU General Public License for more details.</p>" +
+		"<p>%1 is distributed in the hope that it will be useful," +
+		"   but WITHOUT ANY WARRANTY; without even the implied warranty of" +
+		"   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the" +
+		"   GNU General Public License for more details.</p>" +
 
-					   "<p>You should have received a copy of the GNU General Public License along with cfiSlides." +
-					   " If not, see <a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>.</p>");
+		"<p>You should have received a copy of the GNU General Public License along with %1." +
+		"   If not, see <a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>.</p>"
+	).arg(qApp->applicationName(), qApp->applicationVersion(), commandLineHelp));
 }
 
 void MainWindow::currentSlideChanged(int currentRow)
