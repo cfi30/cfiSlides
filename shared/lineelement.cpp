@@ -20,7 +20,8 @@
 
 LineElement::LineElement() : SlideElement()
 {
-
+	setValue("size", 4);
+	setValue("stop", QPoint(300, 0));
 }
 
 void LineElement::render(QGraphicsScene *scene, const bool interactive)

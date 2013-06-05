@@ -23,10 +23,7 @@
 #define ZOOM_FACTOR            1.25
 #define ZOOM_LIMIT             10
 #define MOVE_STEPS             2
-#define DEFAULT_SIZE           100
-#define DEFAULT_SIZE_SCALE     2
-#define DEFAULT_TEXT_WIDTH     400
-#define DEFAULT_LINE_THICKNESS 2
+#define DEFAULT_SIZE_SCALE     2 // TODO: remove (use movie's size)
 #define FILE_FILTER            tr("Diaporama au format cfiSlides (*.csl)")
 #define IMAGE_FILTER           tr("Image (*.bmp *.gif *.jpg *.jpeg *.mng *.png *.pbm *.pgm *.ppm *.tiff *.xbm *.xpm)")
 #define MOVIE_FILTER           tr("Vidéo (*.mpg *.mpeg *.mp4 *.m4v *.ogv *.mkv *.mks *.mov *.qt *.avi *.mng *.mp2 *.wmv *.flv *.m2ts *.mts *.webm)")
@@ -37,7 +34,6 @@
 #define FALLBACK_ICON_THEME    "oxygen"
 #define REFRESH_INTERVAL       100
 #define PLUGINS_PATH           QCoreApplication::applicationDirPath() + "/plugins/"
-#define RELOAD_PLUGINS         10000
 #define RECENT_FILES_MAX       6
 #define MAX_LOADED_SLIDES      20
 

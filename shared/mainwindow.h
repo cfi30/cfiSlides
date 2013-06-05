@@ -84,11 +84,14 @@ public:
 	void updatePropertiesEditor(const SlideshowElement *element);
 	void clearPropertiesEditor();
 	QGraphicsItem *sceneItemFromIndex(const int index) const;
-	void addElement(SlideElement *element);
+	void insertElement(SlideElement *element);
 	void moveElement(const int before, const int after);
 
 	static bool validateSlideName(const QString &name);
 	static bool validateElementName(const QString &name);
+
+	void registerElementType(const int typeId, const QString label, const QIcon icon = QIcon());
+	void unregisterElementType(const int typeId);
 
 public slots:
 	void newSlideshow();
@@ -123,14 +126,6 @@ public slots:
 	void displayInsertElemMenu();
 	void resizeSlideshow();
 
-	void addImageElement();
-	void addRectElement();
-	void addEllipseElement();
-	void addTextElement();
-	void addMovieElement();
-	void addAudioElement();
-	void addLineElement();
-
 	void currentSlideChanged(int currentRow);
 	void slideItemChanged(QListWidgetItem *item);
 	void elementItemChanged(QTreeWidgetItem *item, int column);
@@ -144,8 +139,8 @@ public slots:
 	void moveSlideRight();
 	void duplicateElements();
 
-signals:
-	void insertElemMenu(QMenu *);
+private slots:
+	void insertElementFromAction();
 
 private:
 	Ui::MainWindow *ui;
@@ -154,7 +149,7 @@ protected:
 	Slideshow *slideshow;
 	int newSlideshowCount;
 	QTimer moveFinishTimer;
-	void setInsertElemMenu(QMenu *menu);
+	QList<QAction *> insertActions;
 	QList<QPluginLoader *> plugins;
 	QString commandLineHelp;
 	QActionGroup *currentSlideActions;

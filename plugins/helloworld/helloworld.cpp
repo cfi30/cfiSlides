@@ -25,27 +25,23 @@ HelloWorld::HelloWorld()
 	helloAction->setCheckable(true);
 	hiAction = helloMenu->addAction(QIcon::fromTheme("call-stop"), "This one won't do a thing.", this, SLOT(doNothing()));
 
-	elementAction = new QAction(QIcon::fromTheme("applications-internet"), "Hello World", this);
-	connect(elementAction, SIGNAL(triggered()), this, SLOT(addHelloElement()));
-
 	hiActionState = false;
 }
 
 void HelloWorld::initialize()
 {
-	qRegisterMetaType<HelloElement>("HelloElement");
+	window->registerElementType(qRegisterMetaType<HelloElement>(), "Hello World", QIcon::fromTheme("applications-internet"));
 
 	window->menuBar()->insertMenu(window->findChild<QMenu *>("menuConfiguration")->menuAction(), helloMenu);
 	window->findChild<QToolBar *>("toolBar")->addAction(helloAction);
-	connect(window, SIGNAL(insertElemMenu(QMenu *)), this, SLOT(insertElemMenu(QMenu *)));
 }
 
 HelloWorld::~HelloWorld()
 {
-	QMetaType::unregisterType("HelloElement");
+	if(window)
+		window->unregisterElementType(QMetaType::type("HelloElement"));
 
 	delete helloMenu;
-	delete elementAction;
 }
 
 QString HelloWorld::name() const
@@ -126,19 +122,6 @@ void HelloWorld::doNothing()
 			hiAction->setDisabled(true);
 			break;
 	}
-}
-
-void HelloWorld::insertElemMenu(QMenu *menu)
-{
-	menu->addAction(elementAction);
-}
-
-void HelloWorld::addHelloElement()
-{
-	HelloElement *element = new HelloElement;
-	element->setValue("name", "HelloWorld %1");
-
-	window->addElement(element);
 }
 
 Q_EXPORT_PLUGIN2(hello_world, HelloWorld)

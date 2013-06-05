@@ -21,6 +21,7 @@
 MovieElement::MovieElement() : SlideElement()
 {
 	playbackFinished = false;
+	setValue("size", QSize(600, 400));
 }
 
 QString MovieElement::previewUrl() const

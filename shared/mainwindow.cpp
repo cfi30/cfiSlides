@@ -23,13 +23,13 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 {
 	ui->setupUi(this);
 
-	qRegisterMetaType<AudioElement>("AudioElement");
-	qRegisterMetaType<EllipseElement>("EllipseElement");
-	qRegisterMetaType<ImageElement>("ImageElement");
-	qRegisterMetaType<LineElement>("LineElement");
-	qRegisterMetaType<MovieElement>("MovieElement");
-	qRegisterMetaType<RectElement>("RectElement");
-	qRegisterMetaType<TextElement>("TextElement");
+	registerElementType(qRegisterMetaType<RectElement>(), tr("Rectangle"), QIcon::fromTheme("insert-rectangle"));
+	registerElementType(qRegisterMetaType<EllipseElement>(), tr("Ellipse"), QIcon::fromTheme("insert-ellipse"));
+	registerElementType(qRegisterMetaType<LineElement>(), tr("Ligne"), QIcon::fromTheme("insert-horizontal-rule"));
+	registerElementType(qRegisterMetaType<TextElement>(), tr("Texte"), QIcon::fromTheme("insert-text"));
+	registerElementType(qRegisterMetaType<ImageElement>(), tr("Image"), QIcon::fromTheme("insert-image"));
+	registerElementType(qRegisterMetaType<MovieElement>(), tr("Vidéo"), QIcon::fromTheme("insert-video"));
+	registerElementType(qRegisterMetaType<AudioElement>(), tr("Son"), QIcon::fromTheme("insert-audio"));
 
 	new QShortcut(QKeySequence("Shift+Tab"), this, SLOT(selectNextSlide()));
 	new QShortcut(QKeySequence("Ctrl+Shift+Tab"), this, SLOT(selectPrevSlide()));
@@ -116,43 +116,6 @@ MainWindow::~MainWindow()
 Slideshow *MainWindow::getSlideshow() const
 {
 	return slideshow;
-}
-
-void MainWindow::setInsertElemMenu(QMenu *addElemMenu)
-{
-	QAction *separator = addElemMenu->addSeparator();
-	separator->setText(ui->menuInsertElement->menuAction()->text());
-	separator->setVisible(true);
-
-	QAction *actionRect = new QAction(QIcon::fromTheme("insert-rectangle"), tr("Rectangle"), this);
-	connect(actionRect, SIGNAL(triggered()), this, SLOT(addRectElement()));
-	addElemMenu->addAction(actionRect);
-
-	QAction *actionEllipse = new QAction(QIcon::fromTheme("insert-ellipse"), tr("Ellipse"), this);
-	connect(actionEllipse, SIGNAL(triggered()), this, SLOT(addEllipseElement()));
-	addElemMenu->addAction(actionEllipse);
-
-	QAction *actionLine = new QAction(QIcon::fromTheme("insert-horizontal-rule"), tr("Ligne"), this);
-	connect(actionLine, SIGNAL(triggered()), this, SLOT(addLineElement()));
-	addElemMenu->addAction(actionLine);
-
-	QAction *actionText = new QAction(QIcon::fromTheme("insert-text"), tr("Texte"), this);
-	connect(actionText, SIGNAL(triggered()), this, SLOT(addTextElement()));
-	addElemMenu->addAction(actionText);
-
-	QAction *actionPixmap = new QAction(QIcon::fromTheme("insert-image"), tr("Image"), this);
-	connect(actionPixmap, SIGNAL(triggered()), this, SLOT(addImageElement()));
-	addElemMenu->addAction(actionPixmap);
-
-	QAction *actionMovie = new QAction(QIcon::fromTheme("insert-video"), tr("Vidéo"), this);
-	connect(actionMovie, SIGNAL(triggered()), this, SLOT(addMovieElement()));
-	addElemMenu->addAction(actionMovie);
-
-	QAction *actionAudio = new QAction(QIcon::fromTheme("insert-audio"), tr("Son"), this);
-	connect(actionAudio, SIGNAL(triggered()), this, SLOT(addAudioElement()));
-	addElemMenu->addAction(actionAudio);
-
-	emit insertElemMenu(addElemMenu);
 }
 
 void MainWindow::setWindowModified(const bool modified)
@@ -961,109 +924,6 @@ void MainWindow::moveSlideRight()
 	statusBar()->showMessage(tr("La diapositive a été déplacée vers la droite."), STATUS_TIMEOUT);
 }
 
-void MainWindow::addElement(SlideElement *element)
-{
-	const int index = ui->slideList->currentRow();
-	Slide *slide = this->slideshow->getSlide(index);
-	element->setValue("name", element->getValue("name").toString().arg(slide->getElements().size() + 1));
-	slide->addElement(element);
-
-	updateSlide(index);
-	updateSlideTree(index);
-
-	ui->slideTree->clearSelection();
-	ui->slideTree->topLevelItem(0)->child(0)->setSelected(true);
-	elementSelectionChanged();
-
-	setWindowModified(true);
-}
-
-void MainWindow::addImageElement()
-{
-	QString image = QFileDialog::getOpenFileName(this, tr("Ajouter une image"), QFileInfo(this->windowFilePath()).absolutePath(), IMAGE_FILTER);
-	if(image.isEmpty())
-		return;
-
-	ImageElement *element = new ImageElement;
-	element->setValue("name", tr("Image %1"));
-	element->setValue("src", image);
-	element->setValue("size", QPixmap(image).size());
-
-	addElement(element);
-}
-
-void MainWindow::addRectElement()
-{
-	RectElement *element = new RectElement;
-	element->setValue("name", tr("Rectangle %1"));
-	element->setValue("size", QSize(DEFAULT_SIZE, DEFAULT_SIZE));
-
-	addElement(element);
-}
-
-void MainWindow::addEllipseElement()
-{
-	EllipseElement *element = new EllipseElement;
-	element->setValue("name", tr("Ellipse %1"));
-	element->setValue("size", QSize(DEFAULT_SIZE, DEFAULT_SIZE));
-
-	addElement(element);
-}
-
-void MainWindow::addTextElement()
-{
-	TextInputDialog *dialog = new TextInputDialog(this);
-	dialog->setWindowTitle(tr("Ajouter du texte"));
-	if(dialog->exec() == QDialog::Rejected)
-		return;
-
-	TextElement *element = new TextElement;
-	element->setValue("name", tr("Texte %1"));
-	element->setValue("width", DEFAULT_TEXT_WIDTH);
-	element->setValue("text", dialog->text());
-
-	addElement(element);
-}
-
-void MainWindow::addMovieElement()
-{
-	QString movie = QFileDialog::getOpenFileName(this, tr("Ajouter une vidéo"), QFileInfo(this->windowFilePath()).absolutePath(), MOVIE_FILTER);
-	if(movie.isEmpty())
-		return;
-
-	GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->currentWidget());
-
-	MovieElement *element = new MovieElement;
-	element->setValue("name", tr("Vidéo %1"));
-	element->setValue("src", movie);
-	element->setValue("size", view->scene()->sceneRect().size().toSize() / DEFAULT_SIZE_SCALE); // TODO: use movie size
-
-	addElement(element);
-}
-
-void MainWindow::addAudioElement()
-{
-	QString soundPath = QFileDialog::getOpenFileName(this, tr("Ajouter un son"), QFileInfo(this->windowFilePath()).absolutePath(), AUDIO_FILTER);
-	if(soundPath.isEmpty())
-		return;
-
-	AudioElement *element = new AudioElement;
-	element->setValue("name", tr("Son %1"));
-	element->setValue("src", soundPath);
-
-	addElement(element);
-}
-
-void MainWindow::addLineElement()
-{
-	LineElement *element = new LineElement;
-	element->setValue("name", tr("Ligne %1"));
-	element->setValue("size", DEFAULT_LINE_THICKNESS);
-	element->setValue("stop", QPoint(DEFAULT_SIZE, 0));
-
-	addElement(element);
-}
-
 void MainWindow::launchViewer()
 {
 	if(this->slideshow->getSlides().isEmpty())
@@ -1208,7 +1068,13 @@ void MainWindow::displayContextMenu(const QPoint &pos)
 	}
 	menu->addAction(ui->actionSelectAll);
 	menu->addAction(ui->actionRepaint);
-	setInsertElemMenu(menu);
+
+	QAction *separator = menu->addSeparator();
+	separator->setText(ui->menuInsertElement->menuAction()->text());
+	separator->setVisible(true);
+
+	menu->addActions(insertActions);
+
 	menu->exec(view->mapToGlobal(pos));
 	delete menu;
 }
@@ -1290,7 +1156,7 @@ void MainWindow::openRecentFile(QAction *action)
 void MainWindow::displayInsertElemMenu()
 {
 	ui->menuInsertElement->clear();
-	setInsertElemMenu(ui->menuInsertElement);
+	ui->menuInsertElement->addActions(insertActions);
 }
 
 void MainWindow::resizeSlideshow()
@@ -1332,4 +1198,54 @@ void MainWindow::resizeSlideshow()
 
 	progress->close();
 	progress->deleteLater();
+}
+
+void MainWindow::registerElementType(const int typeId, const QString label, const QIcon icon)
+{
+	QAction *action = new QAction(icon, label, this);
+	action->setData(typeId);
+	connect(action, SIGNAL(triggered()), this, SLOT(insertElementFromAction()));
+
+	insertActions.append(action);
+}
+
+void MainWindow::unregisterElementType(const int typeId)
+{
+	const int actionCount = insertActions.size();
+	for(int i = 0; i < actionCount; i++)
+	{
+		QAction *action = insertActions[i];
+		if(action->data().toInt() != typeId)
+			continue;
+
+		insertActions.takeAt(i)->deleteLater();
+		break;
+	}
+}
+
+void MainWindow::insertElement(SlideElement *element)
+{
+	const int index = ui->slideList->currentRow();
+	Slide *slide = this->slideshow->getSlide(index);
+	element->setValue("name", element->getValue("name").toString().arg(slide->getElements().size() + 1));
+	slide->addElement(element);
+
+	updateSlide(index);
+	updateSlideTree(index);
+
+	ui->slideTree->clearSelection();
+	ui->slideTree->topLevelItem(0)->child(0)->setSelected(true);
+	elementSelectionChanged();
+
+	setWindowModified(true);
+}
+
+void MainWindow::insertElementFromAction()
+{
+	QAction *action = qobject_cast<QAction *>(sender());
+
+	SlideElement *element = (SlideElement *)QMetaType::construct(action->data().toInt());
+	element->setValue("name", tr("%1 %2").arg(action->text()));
+
+	insertElement(element);
 }

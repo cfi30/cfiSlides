@@ -18,8 +18,11 @@
 
 #include "textelement.h"
 
-TextElement::TextElement() :  SlideElement()
+TextElement::TextElement() : SlideElement()
 {
+	setValue("text", "Lorem ipsum dolor sit amet");
+	setValue("font", QFont(QString(), 20));
+	setValue("width", 400);
 }
 
 void TextElement::render(QGraphicsScene *scene, const bool interactive)

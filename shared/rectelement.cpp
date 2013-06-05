@@ -20,7 +20,7 @@
 
 RectElement::RectElement() : SlideElement()
 {
-
+	setValue("size", QSize(100, 100));
 }
 
 void RectElement::render(QGraphicsScene *scene, const bool interactive)

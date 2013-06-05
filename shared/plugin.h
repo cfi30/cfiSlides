@@ -28,6 +28,7 @@ class Plugin : public QObject
 {
 	Q_OBJECT
 public:
+	Plugin() { window = 0; }
 	virtual ~Plugin() {}
 	virtual QString name() const = 0;
 	virtual QString version() const = 0;

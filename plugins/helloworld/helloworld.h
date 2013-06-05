@@ -45,14 +45,12 @@ public:
 public slots:
 	void doSomething();
 	void doNothing();
-	void insertElemMenu(QMenu *);
 	void addHelloElement();
 
 protected:
 	QMenu *helloMenu;
 	QAction *helloAction;
 	QAction *hiAction;
-	QAction *elementAction;
 	int hiActionState;
 };
 

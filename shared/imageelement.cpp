@@ -20,6 +20,7 @@
 
 ImageElement::ImageElement() : SlideElement()
 {
+	setValue("size", QSize(600, 400));
 }
 
 void ImageElement::render(QGraphicsScene *scene, const bool interactive)
@@ -40,15 +41,27 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 			break;
 	}
 
-	QPixmap pixmap(getValue("src").toString());
-	QPixmap spixmap = pixmap.scaled(getValue("size").toSize(), scalingMode, Qt::SmoothTransformation);
+	if(!getValue("src").toString().isEmpty())
+	{
+		QPixmap pixmap(getValue("src").toString());
+		QPixmap spixmap = pixmap.scaled(getValue("size").toSize(), scalingMode, Qt::SmoothTransformation);
 
-	GraphicsPixmapItem *item = new GraphicsPixmapItem();
-	item->setPixmap(spixmap);
-	item->setPos(getValue("position").toPoint());
-	item->setElement(this);
+		GraphicsPixmapItem *item = new GraphicsPixmapItem();
+		item->setPixmap(spixmap);
+		item->setPos(getValue("position").toPoint());
+		item->setElement(this);
 
-	scene->addItem(item);
+		scene->addItem(item);
+	}
+	else
+	{
+		GraphicsMoviePreviewItem *item = new GraphicsMoviePreviewItem; // FIXME: should display an image placeholder
+		item->setSize(getValue("size").toSize());
+		item->setPos(getValue("position").toPoint());
+		item->setElement(this);
+
+		scene->addItem(item);
+	}
 }
 
 void ImageElement::bindProperties(QtTreePropertyBrowser *browser) const

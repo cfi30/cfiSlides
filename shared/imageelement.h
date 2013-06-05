@@ -25,6 +25,7 @@
 #include "filepathmanager.h"
 #include "fileeditfactory.h"
 #include "graphicspixmapitem.h"
+#include "graphicsmoviepreviewitem.h"
 #include "configuration.h"
 #include "shared.h"
 
