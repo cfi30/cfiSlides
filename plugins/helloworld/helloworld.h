@@ -45,7 +45,6 @@ public:
 public slots:
 	void doSomething();
 	void doNothing();
-	void addHelloElement();
 
 protected:
 	QMenu *helloMenu;
