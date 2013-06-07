@@ -1259,3 +1259,24 @@ void MainWindow::insertElementFromAction()
 
 	insertElement(element);
 }
+
+void MainWindow::displaySlideListContextMenu(const QPoint &pos)
+{
+	QListWidgetItem *item = ui->slideList->itemAt(pos);
+
+	QMenu *menu = new QMenu(this);
+	menu->addAction(ui->actionAddSlide);
+
+	if(item)
+	{
+		menu->addSeparator();
+		menu->addAction(ui->actionRenameSlide);
+		menu->addAction(ui->actionDuplicateSlide);
+		menu->addAction(ui->actionMoveSlideLeft);
+		menu->addAction(ui->actionMoveSlideRight);
+		menu->addAction(ui->actionDeleteSlide);
+	}
+
+	menu->exec(ui->slideList->mapToGlobal(pos));
+	delete menu;
+}

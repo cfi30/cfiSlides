@@ -113,6 +113,7 @@ public slots:
 	void managePlugins();
 	void print();
 	void moveFinishTimerTimeout();
+	QMenu *createSlideContextMenu();
 	void loadPlugins();
 	void unloadPlugins();
 	void aboutPlugins();
@@ -121,7 +122,7 @@ public slots:
 	void openRecentFile(QAction *);
 	void displayInsertElemMenu();
 	void resizeSlideshow();
-	QMenu *createSlideContextMenu();
+
 	void currentSlideChanged(int currentRow);
 	void slideItemChanged(QListWidgetItem *item);
 	void elementItemChanged(QTreeWidgetItem *item, int column);
@@ -138,6 +139,7 @@ public slots:
 private slots:
 	void displayViewContextMenu(const QPoint &);
 	void displaySlideTreeContextMenu(const QPoint &);
+	void displaySlideListContextMenu(const QPoint &pos);
 	void insertElementFromAction();
 
 private:

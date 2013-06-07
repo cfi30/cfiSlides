@@ -185,6 +185,9 @@
      </property>
      <item>
       <widget class="QListWidget" name="slideList">
+       <property name="contextMenuPolicy">
+        <enum>Qt::CustomContextMenu</enum>
+       </property>
        <property name="iconSize">
         <size>
          <width>110</width>
@@ -1473,6 +1476,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>slideList</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>displaySlideListContextMenu(QPoint)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>156</x>
+     <y>225</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>createEmptySlide()</slot>
@@ -1505,5 +1524,6 @@
   <slot>bringElementToFront()</slot>
   <slot>resizeSlideshow()</slot>
   <slot>displaySlideTreeContextMenu(QPoint)</slot>
+  <slot>displaySlideListContextMenu(QPoint)</slot>
  </slots>
 </ui>
