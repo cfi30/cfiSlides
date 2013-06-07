@@ -330,7 +330,7 @@ bool MainWindow::closeSlideshow()
 {
 	if(this->isWindowModified())
 	{
-		const int choice = QMessageBox::warning(this, tr("Sauvegarder les changements"), tr("Voulez-vous enregistrer les changements apportés à ce diaporama avant de le fermer ?"), QMessageBox::Save, QMessageBox::Discard, QMessageBox::Cancel);
+		const int choice = QMessageBox::warning(this, tr("Sauvegarder les changements"), tr("Voulez-vous enregistrer les changements apportés à ce diaporama avant de le fermer ?"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel);
 		switch(choice)
 		{
 			case QMessageBox::Save:
