@@ -27,6 +27,7 @@
 class CFISLIDES_DLLSPEC GraphicsLineItem : public QGraphicsLineItem
 {
 	GRAPHICS_ITEM
+
 public:
 	explicit GraphicsLineItem(QGraphicsItem *parent = 0);
 };

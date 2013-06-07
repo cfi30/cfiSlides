@@ -23,6 +23,8 @@
 #define ZOOM_FACTOR            1.25
 #define ZOOM_LIMIT             10
 #define MOVE_STEPS             2
+#define MINIMUM_SIZE           QSize(10, 10)
+#define MAXIMUM_THICKNESS      50
 #define DEFAULT_SIZE_SCALE     2 // TODO: remove (use movie's size)
 #define FILE_FILTER            tr("Diaporama au format cfiSlides (*.csl)")
 #define IMAGE_FILTER           tr("Image (*.bmp *.gif *.jpg *.jpeg *.mng *.png *.pbm *.pgm *.ppm *.tiff *.xbm *.xpm)")

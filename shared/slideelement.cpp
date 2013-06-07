@@ -27,7 +27,7 @@ SlideElement::SlideElement() : SlideshowElement()
 SlideElement::SlideElement(const SlideElement &copy) : SlideshowElement()
 {
 	SlideElement();
-	setProperties(copy.getProperties());
+	setValues(copy.getValues());
 }
 
 const char *SlideElement::type() const
@@ -46,78 +46,40 @@ void SlideElement::render(QGraphicsScene *scene, const bool interactive)
 		this->scene = scene;
 }
 
-void SlideElement::bindProperties(QtTreePropertyBrowser *browser) const
+PropertyList SlideElement::getProperties() const
 {
-	SlideshowElement::bindProperties(browser);
+	BoolPropertyManager *boolManager = new BoolPropertyManager;
+	connect(boolManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtBoolPropertyManager *boolManager = new QtBoolPropertyManager();
-	QtCheckBoxFactory *checkBoxFactory = new QtCheckBoxFactory(browser);
-	QtGroupPropertyManager *groupManager = new QtGroupPropertyManager();
-	QtSizePropertyManager *sizeManager = new QtSizePropertyManager();
-	QtPointPropertyManager *pointManager = new QtPointPropertyManager();
-	QtSpinBoxFactory *spinboxFactory = new QtSpinBoxFactory();
+	SizePropertyManager *sizeManager = new SizePropertyManager;
+	connect(sizeManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtProperty *visible = boolManager->addProperty(tr("Visible"));
-	visible->setWhatsThis("visible");
+	PointPropertyManager *pointManager = new PointPropertyManager;
+	connect(pointManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	Property *visible = new Property(boolManager, tr("Visible"), "visible");
 	visible->setToolTip(tr("Visibilité de l'élément"));
-	boolManager->setValue(visible, getValue("visible").toBool());
-	browser->addProperty(visible);
+	visible->setValue(this->getValue("visible"));
 
-	QtProperty *geometry = groupManager->addProperty(tr("Géométrie"));
-	geometry->setModified(true);
+	Property *geometry = new Property(0, tr("Géométrie"));
 
-	QtProperty *size = sizeManager->addProperty(tr("Taille"));
-	size->setWhatsThis("size");
-	size->setToolTip(tr("Taille de l'élément"));
-	sizeManager->setValue(size, getValue("size").toSize());
-	sizeManager->setMinimum(size, QSize(10, 10));
-	if(this->scene != 0)
-		sizeManager->setMaximum(size, scene->sceneRect().size().toSize());
-	geometry->addSubProperty(size);
-
-	QtProperty *position = pointManager->addProperty(tr("Position"));
-	position->setWhatsThis("position");
+	Property *position = new Property(pointManager, tr("Position"), "position");
 	position->setToolTip(tr("Position de l'élément"));
-	pointManager->setValue(position, getValue("position").toPoint());
-	geometry->addSubProperty(position);
+	position->setValue(this->getValue("position"));
+	geometry->addProperty(position);
 
-	browser->addProperty(geometry);
+	Property *size = new Property(sizeManager, tr("Taille"), "size");
+	size->setToolTip(tr("Taille de l'élément"));
+	size->setValue(getValue("size"));
+	sizeManager->setMinimum("size", MINIMUM_SIZE);
+	if(this->scene != 0)
+		sizeManager->setMaximum("size", scene->sceneRect().size().toSize());
+	geometry->addProperty(size);
 
-	foreach(QtProperty *prop, pointManager->subIntPropertyManager()->properties())
-		pointManager->subIntPropertyManager()->setMinimum(prop, 0);
-
-	browser->setFactoryForManager(boolManager, checkBoxFactory);
-	browser->setFactoryForManager(sizeManager->subIntPropertyManager(), spinboxFactory);
-	browser->setFactoryForManager(pointManager->subIntPropertyManager(), spinboxFactory);
-
-	connect(boolManager, SIGNAL(valueChanged(QtProperty*,bool)), this, SLOT(boolValueChanged(QtProperty*,bool)));
-	connect(sizeManager, SIGNAL(valueChanged(QtProperty*,QSize)), this, SLOT(sizeValueChanged(QtProperty*,QSize)));
-	connect(pointManager, SIGNAL(valueChanged(QtProperty*,QPoint)), this, SLOT(pointValueChanged(QtProperty*,QPoint)));
-}
-
-void SlideElement::play()
-{
-
-}
-
-void SlideElement::pause()
-{
-
-}
-
-void SlideElement::stop()
-{
-
-}
-
-void SlideElement::toggleMute()
-{
-
-}
-
-void SlideElement::destroy()
-{
-
+	return PropertyList()
+		<< SlideshowElement::getProperties()
+		<< visible
+		<< geometry;
 }
 
 void SlideElement::movedTo(QPoint pos)

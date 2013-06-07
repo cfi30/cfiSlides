@@ -22,6 +22,7 @@ MovieElement::MovieElement() : SlideElement()
 {
 	playbackFinished = false;
 	setValue("size", QSize(600, 400));
+	setValue("volume", 100);
 }
 
 QString MovieElement::previewUrl() const
@@ -71,6 +72,51 @@ void MovieElement::render(QGraphicsScene *scene, const bool interactive)
 	}
 }
 
+PropertyList MovieElement::getProperties() const
+{
+	FilePropertyManager *fileManager = new FilePropertyManager;
+	connect(fileManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	BoolPropertyManager *boolManager = new BoolPropertyManager;
+	connect(boolManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	IntSliderPropertyManager *sliderManager = new IntSliderPropertyManager;
+	connect(sliderManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	EnumPropertyManager *enumManager = new EnumPropertyManager;
+	connect(enumManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	Property *group = new Property(0, tr("Vidéo"));
+
+	Property *src = new Property(fileManager, tr("Source"), "src");
+	src->setToolTip(tr("Chemin de la vidéo"));
+	src->setValue(this->getValue("src"));
+	fileManager->setRequired("src", true);
+	fileManager->setFilter("src", MOVIE_FILTER);
+	group->addProperty(src);
+
+	Property *loop = new Property(boolManager, tr("Boucle"), "loop");
+	loop->setToolTip(tr("Lire la vidéo en boucle"));
+	loop->setValue(this->getValue("loop"));
+	group->addProperty(loop);
+
+	Property *volume = new Property(sliderManager, tr("Volume"), "volume");
+	volume->setToolTip(tr("Volume de la vidéo"));
+	volume->setValue(this->getValue("volume"));
+	sliderManager->setMaximum("volume", 100);
+	group->addProperty(volume);
+
+	Property *scaleMode = new Property(enumManager, tr("Mise à l'échelle"), "scaleMode");
+	scaleMode->setToolTip(tr("Mode de mise à l'échelle de la vidéo"));
+	scaleMode->setValue(this->getValue("scaleMode"));
+	enumManager->setEnumNames("scaleMode", QStringList() << tr("Remplir") << tr("Conserver"));
+	group->addProperty(scaleMode);
+
+	return PropertyList()
+		<< SlideElement::getProperties()
+		<< group;
+}
+
 void MovieElement::restart()
 {
 	if(getValue("loop").toBool())
@@ -107,62 +153,4 @@ void MovieElement::toggleMute()
 void MovieElement::destroy()
 {
 	player->deleteLater();
-}
-
-void MovieElement::bindProperties(QtTreePropertyBrowser *browser) const
-{
-	SlideElement::bindProperties(browser);
-
-	QtGroupPropertyManager *groupManager = new QtGroupPropertyManager();
-	FilePathManager *filePathManager = new FilePathManager();
-	FileEditFactory *fileEditFactory = new FileEditFactory(browser);
-	QtBoolPropertyManager *boolManager = new QtBoolPropertyManager();
-	QtCheckBoxFactory *checkBoxFactory = new QtCheckBoxFactory(browser);
-	QtIntPropertyManager *intManager = new QtIntPropertyManager();
-	QtSliderFactory *sliderFactory = new QtSliderFactory(browser);
-	QtEnumPropertyManager *enumManager = new QtEnumPropertyManager();
-	QtEnumEditorFactory *enumEditorFactory = new QtEnumEditorFactory(browser);
-
-	QtProperty *group = groupManager->addProperty(tr("Vidéo"));
-	group->setModified(true);
-
-	QtProperty *src = filePathManager->addProperty(tr("Source"));
-	src->setWhatsThis("src");
-	src->setToolTip(tr("Chemin de la vidéo"));
-	filePathManager->setValue(src, getValue("src").toString());
-	filePathManager->setFilter(src, MOVIE_FILTER);
-	group->addSubProperty(src);
-
-	QtProperty *loop = boolManager->addProperty(tr("Boucle"));
-	loop->setWhatsThis("loop");
-	loop->setToolTip(tr("Lire la vidéo en boucle"));
-	boolManager->setValue(loop, getValue("loop").toBool());
-	group->addSubProperty(loop);
-
-	QtProperty *volume = intManager->addProperty(tr("Volume"));
-	volume->setWhatsThis("volume");
-	volume->setToolTip(tr("Volume de la vidéo"));
-	intManager->setValue(volume, getValue("volume", 100).toInt());
-	intManager->setMinimum(volume, 0);
-	intManager->setMaximum(volume, 100);
-	group->addSubProperty(volume);
-
-	QtProperty *scalingMode = enumManager->addProperty(tr("Mise à l'échelle"));
-	scalingMode->setWhatsThis("scaleMode");
-	scalingMode->setToolTip(tr("Mode de mise à l'échelle de la vidéo"));
-	enumManager->setEnumNames(scalingMode, QStringList() << tr("Remplir") << tr("Conserver"));
-	enumManager->setValue(scalingMode, getValue("scaleMode").toInt());
-	group->addSubProperty(scalingMode);
-
-	browser->addProperty(group);
-
-	browser->setFactoryForManager(filePathManager, fileEditFactory);
-	browser->setFactoryForManager(boolManager, checkBoxFactory);
-	browser->setFactoryForManager(intManager, sliderFactory);
-	browser->setFactoryForManager(enumManager, enumEditorFactory);
-
-	connect(filePathManager, SIGNAL(valueChanged(QtProperty*,QString)), this, SLOT(stringValueChanged(QtProperty*,QString)));
-	connect(boolManager, SIGNAL(valueChanged(QtProperty*,bool)), this, SLOT(boolValueChanged(QtProperty*,bool)));
-	connect(intManager, SIGNAL(valueChanged(QtProperty*,int)), this, SLOT(intValueChanged(QtProperty*,int)));
-	connect(enumManager, SIGNAL(valueChanged(QtProperty*,int)), this, SLOT(intValueChanged(QtProperty*,int)));
 }

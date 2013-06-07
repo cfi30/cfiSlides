@@ -116,16 +116,16 @@
        </item>
       </layout>
      </widget>
-     <widget class="QtTreePropertyBrowser" name="propertiesEditor" native="true"/>
+     <widget class="PropertyEditor" name="propertiesEditor" native="true"/>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QtTreePropertyBrowser</class>
+   <class>PropertyEditor</class>
    <extends>QWidget</extends>
-   <header>qttreepropertybrowser.h</header>
+   <header>propertyeditor.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

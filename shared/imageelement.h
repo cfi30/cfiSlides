@@ -22,20 +22,18 @@
 #include <QLabel>
 
 #include "slideelement.h"
-#include "filepathmanager.h"
-#include "fileeditfactory.h"
 #include "graphicspixmapitem.h"
 #include "graphicsmoviepreviewitem.h"
-#include "configuration.h"
 #include "shared.h"
 
 class CFISLIDES_DLLSPEC ImageElement : public SlideElement
 {
 	Q_OBJECT
+
 public:
-	explicit ImageElement();
+	ImageElement();
 	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual void bindProperties(QtTreePropertyBrowser *browser) const;
+	virtual PropertyList getProperties() const;
 };
 
 Q_DECLARE_METATYPE(ImageElement)

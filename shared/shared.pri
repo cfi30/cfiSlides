@@ -20,8 +20,6 @@ cfislides-uselib:!cfislides-buildlib {
 		graphicstextitem.h \
 		textelement.h \
 		textinputdialog.h \
-		texteditfactory.h \
-		textedit.h \
 		movieelement.h \
 		graphicsellipseitem.h \
 		ellipseelement.h \
@@ -35,6 +33,10 @@ cfislides-uselib:!cfislides-buildlib {
 		graphicsmoviepreviewitem.h \
 		slideshowelement.h \
 		geometrydialog.h \
+		property.h \
+		propertymanager.h \
+		propertyeditor.h \
+		propertyeditordelegate.h \
 
 	SOURCES += \
 		mainwindow.cpp \
@@ -50,8 +52,6 @@ cfislides-uselib:!cfislides-buildlib {
 		graphicstextitem.cpp \
 		textelement.cpp \
 		textinputdialog.cpp \
-		texteditfactory.cpp \
-		textedit.cpp \
 		movieelement.cpp \
 		graphicsellipseitem.cpp \
 		ellipseelement.cpp \
@@ -63,6 +63,10 @@ cfislides-uselib:!cfislides-buildlib {
 		graphicsmoviepreviewitem.cpp \
 		slideshowelement.cpp \
 		geometrydialog.cpp \
+		property.cpp \
+		propertymanager.cpp \
+		propertyeditor.cpp \
+		propertyeditordelegate.cpp \
 
 	FORMS += \
 		mainwindow.ui \
@@ -76,7 +80,3 @@ win32 {
     contains(TEMPLATE, lib):contains(CONFIG, shared):DEFINES += CFISLIDES_EXPORT
 	else:cfislides-uselib:DEFINES += CFISLIDES_IMPORT
 }
-
-CONFIG += qtpropertybrowser-uselib
-include(../qtpropertybrowser/qtpropertybrowser.pri)
-include(../qtpropertybrowser/extension/extension.pri)

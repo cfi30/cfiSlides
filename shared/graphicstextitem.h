@@ -21,6 +21,7 @@
 
 #include <QGraphicsTextItem>
 #include <QTextDocument>
+#include <QTextCursor>
 
 #include "graphicsitem.h"
 #include "shared.h"
@@ -28,8 +29,9 @@
 class CFISLIDES_DLLSPEC GraphicsTextItem : public QGraphicsTextItem
 {
 	GRAPHICS_ITEM
+
 public:
-	GraphicsTextItem(QGraphicsItem *parent = 0);
+	explicit GraphicsTextItem(QGraphicsItem *parent = 0);
 	
 protected:
 	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);

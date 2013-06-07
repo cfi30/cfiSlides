@@ -30,8 +30,9 @@
 class CFISLIDES_DLLSPEC GraphicsMoviePreviewItem : public QGraphicsRectItem
 {
 	GRAPHICS_ITEM
+
 public:
-	GraphicsMoviePreviewItem(QGraphicsItem *parent = 0);
+	explicit GraphicsMoviePreviewItem(QGraphicsItem *parent = 0);
 	void setSize(const QSize &size);
 	void setSource(const QString &src);
 

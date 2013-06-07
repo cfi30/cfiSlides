@@ -28,10 +28,11 @@
 class CFISLIDES_DLLSPEC LineElement : public SlideElement
 {
 	Q_OBJECT
+
 public:
-	explicit LineElement();
+	LineElement();
 	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual void bindProperties(QtTreePropertyBrowser *browser) const;
+	virtual PropertyList getProperties() const;
 };
 
 Q_DECLARE_METATYPE(LineElement)

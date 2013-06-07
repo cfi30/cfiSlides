@@ -30,6 +30,7 @@
 class CFISLIDES_DLLSPEC GraphicsView : public QGraphicsView
 {
 	Q_OBJECT
+
 public:
 	explicit GraphicsView(QGraphicsScene *scene, QWidget *parent = 0);
 

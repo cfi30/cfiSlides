@@ -21,6 +21,8 @@
 RectElement::RectElement() : SlideElement()
 {
 	setValue("size", QSize(100, 100));
+	setValue("bgStyle", 1);
+	setValue("borderSize", 1);
 }
 
 void RectElement::render(QGraphicsScene *scene, const bool interactive)
@@ -44,25 +46,23 @@ void RectElement::render(QGraphicsScene *scene, const bool interactive)
 	scene->addItem(item);
 }
 
-void RectElement::bindProperties(QtTreePropertyBrowser *browser) const
+PropertyList RectElement::getProperties() const
 {
-	SlideElement::bindProperties(browser);
+	EnumPropertyManager *enumManager = new EnumPropertyManager;
+	connect(enumManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtGroupPropertyManager *groupManager = new QtGroupPropertyManager();
-	QtColorPropertyManager *colorManager = new QtColorPropertyManager();
-	QtColorEditorFactory *colorEditorFactory = new QtColorEditorFactory(browser);
-	QtIntPropertyManager *intManager = new QtIntPropertyManager();
-	QtSpinBoxFactory *spinboxFactory = new QtSpinBoxFactory(browser);
-	QtEnumPropertyManager *enumManager = new QtEnumPropertyManager();
-	QtEnumEditorFactory *enumEditorFactory = new QtEnumEditorFactory(browser);
+	ColorPropertyManager *colorManager = new ColorPropertyManager;
+	connect(colorManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtProperty *background = groupManager->addProperty(tr("Remplissage"));
-	background->setModified(true);
+	IntPropertyManager *intManager = new IntPropertyManager;
+	connect(intManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtProperty *bgStyle = enumManager->addProperty(tr("Style"));
-	bgStyle->setWhatsThis("bgStyle");
+	Property *background = new Property(0, tr("Remplissage"));
+
+	Property *bgStyle = new Property(enumManager, tr("Style"), "bgStyle");
 	bgStyle->setToolTip(tr("Mode de remplissage"));
-	enumManager->setEnumNames(bgStyle,
+	bgStyle->setValue(this->getValue("bgStyle"));
+	enumManager->setEnumNames("bgStyle",
 		QStringList()
 			<< tr("Aucun remplissage")
 			<< tr("Uni")
@@ -80,24 +80,18 @@ void RectElement::bindProperties(QtTreePropertyBrowser *browser) const
 			<< tr("Diagonal inversé")
 			<< tr("Diagonal croisé")
 	);
-	enumManager->setValue(bgStyle, getValue("bgStyle", 1).toInt());
-	background->addSubProperty(bgStyle);
+	background->addProperty(bgStyle);
 
-	QtProperty *color = colorManager->addProperty(tr("Couleur"));
-	color->setWhatsThis("color");
+	Property *color = new Property(colorManager, tr("Couleur"), "color");
 	color->setToolTip(tr("Couleur de remplissage"));
-	colorManager->setValue(color, getValue("color").value<QColor>());
-	background->addSubProperty(color);
+	color->setValue(this->getValue("color"));
+	background->addProperty(color);
 
-	browser->addProperty(background);
+	Property *border = new Property(0, tr("Bordure"));
 
-	QtProperty *border = groupManager->addProperty(tr("Bordure"));
-	border->setModified(true);
-
-	QtProperty *borderStyle = enumManager->addProperty(tr("Style"));
-	borderStyle->setWhatsThis("borderStyle");
+	Property *borderStyle = new Property(enumManager, tr("Style"), "borderStyle");
 	borderStyle->setToolTip(tr("Style de la bordure"));
-	enumManager->setEnumNames(borderStyle,
+	enumManager->setEnumNames("borderStyle",
 		QStringList()
 			<< tr("Aucune bordure")
 			<< tr("Ligne")
@@ -106,33 +100,26 @@ void RectElement::bindProperties(QtTreePropertyBrowser *browser) const
 			<< tr("Point-tiret")
 			<< tr("Point-point-tiret")
 	);
-	enumManager->setValue(borderStyle, getValue("borderStyle").toInt());
-	border->addSubProperty(borderStyle);
+	borderStyle->setValue(this->getValue("borderStyle"));
+	border->addProperty(borderStyle);
 
-	QtProperty *borderSize = intManager->addProperty(tr("Taille"));
-	borderSize->setWhatsThis("borderSize");
+	Property *borderSize = new Property(intManager, tr("Taille"), "borderSize");
 	borderSize->setToolTip(tr("Épaisseur de la bordure"));
-	intManager->setValue(borderSize, getValue("borderSize").toInt());
-	intManager->setMinimum(borderSize, 1);
-	intManager->setMaximum(borderSize, 50);
-	border->addSubProperty(borderSize);
+	borderSize->setValue(this->getValue("borderSize"));
+	intManager->setMinimum("borderSize", 1);
+	intManager->setMaximum("borderSize", MAXIMUM_THICKNESS);
+	intManager->setSuffix("borderSize", tr(" px"));
+	border->addProperty(borderSize);
 
-	QtProperty *borderColor = colorManager->addProperty(tr("Couleur"));
-	borderColor->setWhatsThis("borderColor");
-	color->setToolTip(tr("Couleur de la bordure"));
-	colorManager->setValue(borderColor, getValue("borderColor").value<QColor>());
-	border->addSubProperty(borderColor);
+	Property *borderColor = new Property(colorManager, tr("Couleur"), "borderColor");
+	borderColor->setToolTip(tr("Couleur de la bordure"));
+	borderColor->setValue(this->getValue("borderColor"));
+	border->addProperty(borderColor);
 
-	browser->addProperty(border);
-
-	browser->setFactoryForManager(colorManager, colorEditorFactory);
-	browser->setFactoryForManager(colorManager->subIntPropertyManager(), spinboxFactory);
-	browser->setFactoryForManager(enumManager, enumEditorFactory);
-	browser->setFactoryForManager(intManager, spinboxFactory);
-
-	connect(colorManager, SIGNAL(valueChanged(QtProperty*,QColor)), this, SLOT(colorValueChanged(QtProperty*,QColor)));
-	connect(enumManager, SIGNAL(valueChanged(QtProperty*,int)), this, SLOT(intValueChanged(QtProperty*,int)));
-	connect(intManager, SIGNAL(valueChanged(QtProperty*,int)), this, SLOT(intValueChanged(QtProperty*,int)));
+	return PropertyList()
+		<< SlideElement::getProperties()
+		<< background
+		<< border;
 }
 
 Qt::PenStyle RectElement::penStyle() const

@@ -27,8 +27,9 @@
 class CFISLIDES_DLLSPEC GraphicsPixmapItem : public QGraphicsPixmapItem
 {
 	GRAPHICS_ITEM
+
 public:
-	GraphicsPixmapItem(QGraphicsItem *parent = 0);
+	explicit GraphicsPixmapItem(QGraphicsItem *parent = 0);
 };
 
 #endif // GRAPHICSPIXMAPITEM_H

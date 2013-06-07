@@ -29,19 +29,17 @@
 
 #include "slideelement.h"
 #include "graphicsmoviepreviewitem.h"
-#include "filepathmanager.h"
-#include "fileeditfactory.h"
-#include "configuration.h"
 #include "shared.h"
 
 class CFISLIDES_DLLSPEC MovieElement : public SlideElement
 {
 	Q_OBJECT
+
 public:
-	explicit MovieElement();
+	MovieElement();
 	virtual QString previewUrl() const;
 	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual void bindProperties(QtTreePropertyBrowser *browser) const;
+	virtual PropertyList getProperties() const;
 
 public slots:
 	virtual void play();

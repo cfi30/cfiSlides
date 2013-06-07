@@ -18,11 +18,7 @@
 
 #include "slide.h"
 
-Slide::Slide() : SlideshowElement()
-{
-}
-
-Slide::Slide(const QString name) : SlideshowElement()
+Slide::Slide(const QString &name) : SlideshowElement()
 {
 	this->setValue("name", name);
 	this->setValue("backgroundColor", Qt::white);
@@ -91,7 +87,7 @@ void Slide::addElement(SlideElement *element)
 {
 	connect(element, SIGNAL(modified()), this, SLOT(elementChanged()));
 	connect(element, SIGNAL(moved()), this, SLOT(elementMoved()));
-	connect(element, SIGNAL(refresh()), this, SLOT(refreshQuery()));
+	connect(element, SIGNAL(refresh()), this, SLOT(refreshRequest()));
 	element->setIndex(this->elements.count());
 	this->elements.append(element);
 }
@@ -115,52 +111,39 @@ void Slide::moveElement(const int from, const int to)
 		this->elements[i]->setIndex(i);
 }
 
-void Slide::bindProperties(QtTreePropertyBrowser *browser) const
+PropertyList Slide::getProperties() const
 {
-	SlideshowElement::bindProperties(browser);
+	ColorPropertyManager *colorManager = new ColorPropertyManager;
+	connect(colorManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtGroupPropertyManager *groupManager = new QtGroupPropertyManager();
-	QtColorPropertyManager *colorManager = new QtColorPropertyManager();
-	QtColorEditorFactory *colorEditorFactory = new QtColorEditorFactory(browser);
-	QtSpinBoxFactory *spinboxFactory = new QtSpinBoxFactory(browser);
-	FilePathManager *filePathManager = new FilePathManager();
-	FileEditFactory *fileEditFactory = new FileEditFactory(browser);
-	QtEnumPropertyManager *enumManager = new QtEnumPropertyManager();
-	QtEnumEditorFactory *enumEditorFactory = new QtEnumEditorFactory(browser);
+	FilePropertyManager *fileManager = new FilePropertyManager;
+	connect(fileManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtProperty *background = groupManager->addProperty(tr("Arrière-plan"));
-	background->setModified(true);
+	EnumPropertyManager *enumManager = new EnumPropertyManager;
+	connect(enumManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtProperty *backgroundColor = colorManager->addProperty(tr("Couleur"));
-	backgroundColor->setWhatsThis("backgroundColor");
-	backgroundColor->setToolTip(tr("Couleur de fond"));
-	colorManager->setValue(backgroundColor, getValue("backgroundColor").value<QColor>());
-	background->addSubProperty(backgroundColor);
+	Property *background = new Property(0, tr("Arrière-plan"));
 
-	QtProperty *backgroundImage = filePathManager->addProperty(tr("Image"));
-	backgroundImage->setWhatsThis("backgroundImage");
-	backgroundImage->setToolTip(tr("Image de fond"));
-	filePathManager->setValue(backgroundImage, getValue("backgroundImage").toString());
-	filePathManager->setFilter(backgroundImage, IMAGE_FILTER);
-	background->addSubProperty(backgroundImage);
+	Property *color = new Property(colorManager, tr("Couleur"), "backgroundColor");
+	color->setValue(this->getValue("backgroundColor"));
+	color->setToolTip(tr("Couleur de fond"));
+	background->addProperty(color);
 
-	QtProperty *backgroundImageStretch = enumManager->addProperty(tr("Mise à l'échelle"));
-	backgroundImageStretch->setWhatsThis("backgroundImageStretch");
-	backgroundImageStretch->setToolTip(tr("Mode de mise à l'échelle de l'image"));
-	enumManager->setEnumNames(backgroundImageStretch, QStringList() << tr("Remplir & Conserver") << tr("Répéter") << tr("Conserver"));
-	enumManager->setValue(backgroundImageStretch, getValue("backgroundImageStretch").toInt());
-	background->addSubProperty(backgroundImageStretch);
+	Property *image = new Property(fileManager, tr("Image"), "backgroundImage");
+	image->setValue(this->getValue("backgroundImage"));
+	image->setToolTip(tr("Image de fond"));
+	fileManager->setFilter("backgroundImage", IMAGE_FILTER);
+	background->addProperty(image);
 
-	browser->addProperty(background);
+	Property *stretchMode = new Property(enumManager, tr("Mise à l'échelle"), "backgroundImageStretch");
+	stretchMode->setValue(this->getValue("backgroundImageStretch"));
+	stretchMode->setToolTip(tr("Mode de mise à l'échelle de l'image"));
+	enumManager->setEnumNames("backgroundImageStretch", QStringList() << tr("Remplir & Conserver") << tr("Répéter") << tr("Conserver"));
+	image->addProperty(stretchMode);
 
-	browser->setFactoryForManager(colorManager, colorEditorFactory);
-	browser->setFactoryForManager(colorManager->subIntPropertyManager(), spinboxFactory);
-	browser->setFactoryForManager(filePathManager, fileEditFactory);
-	browser->setFactoryForManager(enumManager, enumEditorFactory);
-
-	connect(colorManager, SIGNAL(valueChanged(QtProperty*,QColor)), this, SLOT(colorValueChanged(QtProperty*,QColor)));
-	connect(filePathManager, SIGNAL(valueChanged(QtProperty*,QString)), this, SLOT(stringValueChanged(QtProperty*,QString)));
-	connect(enumManager, SIGNAL(valueChanged(QtProperty*,int)), this, SLOT(intValueChanged(QtProperty*,int)));
+	return PropertyList()
+		<< SlideshowElement::getProperties()
+		<< background;
 }
 
 void Slide::elementChanged()
@@ -173,7 +156,7 @@ void Slide::elementMoved()
 	emit moved();
 }
 
-void Slide::refreshQuery()
+void Slide::refreshRequest()
 {
 	emit refresh();
 }

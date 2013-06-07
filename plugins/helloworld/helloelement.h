@@ -19,6 +19,8 @@
 #ifndef HELLOELEMENT_H
 #define HELLOELEMENT_H
 
+#include <QFontMetrics>
+
 #include "slideelement.h"
 #include "hello2ditem.h"
 
@@ -28,7 +30,7 @@ class HelloElement : public SlideElement
 public:
 	explicit HelloElement();
 	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual void bindProperties(QtTreePropertyBrowser *browser) const;
+	virtual PropertyList getProperties() const;
 };
 
 Q_DECLARE_METATYPE(HelloElement)

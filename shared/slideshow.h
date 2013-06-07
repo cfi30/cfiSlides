@@ -29,14 +29,15 @@
 class CFISLIDES_DLLSPEC Slideshow : public BaseElement
 {
 	Q_OBJECT
+
 public:
-	Slideshow();
+	Slideshow() : BaseElement() {}
 	~Slideshow();
 
 	QList<Slide *> getSlides() const;
 	void setSlides(QList<Slide *>);
 	Slide *getSlide(const int index) const;
-	Slide *createSlide(const QString name);
+	Slide *createSlide(const QString &name);
 	void moveSlide(const int from, const int to);
 	int indexOf(Slide *) const;
 	void removeSlide(const int index);

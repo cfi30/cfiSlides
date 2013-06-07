@@ -353,16 +353,11 @@ void ImportDialog::on_propertiesButton_toggled(bool checked)
 
 void ImportDialog::on_treeWidget_itemSelectionChanged()
 {
-	foreach(QtProperty *prop, ui->propertiesEditor->properties())
-	{
-		ui->propertiesEditor->unsetFactoryForManager(prop->propertyManager());
-		prop->propertyManager()->deleteLater();
-	}
 	ui->propertiesEditor->clear();
 
 	if(ui->treeWidget->selectedItems().empty())
 		return;
 
 	SlideshowElement *element = (SlideshowElement *)ui->treeWidget->currentItem()->data(1, Qt::UserRole).value<void *>();
-	element->bindProperties(ui->propertiesEditor);
+	ui->propertiesEditor->addTopLevelProperties(element->getProperties());
 }

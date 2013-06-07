@@ -23,16 +23,16 @@
 
 #include "slideelement.h"
 #include "graphicstextitem.h"
-#include "texteditfactory.h"
 #include "shared.h"
 
 class CFISLIDES_DLLSPEC TextElement : public SlideElement
 {
 	Q_OBJECT
+
 public:
-	explicit TextElement();
+	TextElement();
 	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual void bindProperties(QtTreePropertyBrowser *browser) const;
+	virtual PropertyList getProperties() const;
 	
 private slots:
 	void textChanged();

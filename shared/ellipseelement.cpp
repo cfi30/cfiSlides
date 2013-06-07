@@ -18,10 +18,6 @@
 
 #include "ellipseelement.h"
 
-EllipseElement::EllipseElement() :  RectElement()
-{
-}
-
 void EllipseElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);

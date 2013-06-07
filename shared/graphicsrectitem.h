@@ -27,8 +27,9 @@
 class CFISLIDES_DLLSPEC GraphicsRectItem : public QGraphicsRectItem
 {
 	GRAPHICS_ITEM
+
 public:
-	GraphicsRectItem(QGraphicsItem *parent = 0);
+	explicit GraphicsRectItem(QGraphicsItem *parent = 0);
 };
 
 #endif // GRAPHICSRECTITEM_H

@@ -21,6 +21,7 @@
 AudioElement::AudioElement() : SlideElement()
 {
 	playbackFinished = false;
+	setValue("volume", 100);
 }
 
 QString AudioElement::previewUrl() const
@@ -41,6 +42,48 @@ void AudioElement::render(QGraphicsScene *scene, const bool interactive)
 	audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, mediaObject);
 	Phonon::createPath(mediaObject, audioOutput);
 	audioOutput->setVolume(getValue("volume", 100).toFloat() / 100);
+}
+
+PropertyList AudioElement::getProperties() const
+{
+	BoolPropertyManager *boolManager = new BoolPropertyManager;
+	connect(boolManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	FilePropertyManager *fileManager = new FilePropertyManager;
+	connect(fileManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	IntSliderPropertyManager *sliderManager = new IntSliderPropertyManager;
+	connect(sliderManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	Property *visible = new Property(boolManager, tr("Activer"), "visible");
+	visible->setToolTip(tr("Activer l'élément"));
+	visible->setValue(this->getValue("visible"));
+
+	Property *group = new Property(0, tr("Son"));
+
+	Property *src = new Property(fileManager, tr("Source"), "src");
+	src->setToolTip(tr("Source du fichier audio"));
+	src->setValue(this->getValue("src"));
+	fileManager->setRequired("src", true);
+	fileManager->setFilter("src", AUDIO_FILTER);
+	group->addProperty(src);
+
+	Property *loop = new Property(boolManager, tr("Boucle"), "loop");
+	loop->setToolTip(tr("Lire le son en boucle"));
+	loop->setValue(this->getValue("loop"));
+	group->addProperty(loop);
+
+	Property *volume = new Property(sliderManager, tr("Volume"), "volume");
+	volume->setToolTip(tr("Volume deu son"));
+	volume->setValue(this->getValue("volume"));
+	sliderManager->setMaximum("volume", 100);
+	sliderManager->setSuffix("volume", tr(" %"));
+	group->addProperty(volume);
+
+	return PropertyList()
+		<< SlideshowElement::getProperties()
+		<< visible
+		<< group;
 }
 
 void AudioElement::restart()
@@ -86,57 +129,4 @@ void AudioElement::toggleMute()
 void AudioElement::destroy()
 {
 	mediaObject->deleteLater();
-}
-
-void AudioElement::bindProperties(QtTreePropertyBrowser *browser) const
-{
-	SlideshowElement::bindProperties(browser);
-
-	QtBoolPropertyManager *boolManager = new QtBoolPropertyManager();
-	QtCheckBoxFactory *checkBoxFactory = new QtCheckBoxFactory(browser);
-	QtGroupPropertyManager *groupManager = new QtGroupPropertyManager();
-	FilePathManager *filePathManager = new FilePathManager();
-	FileEditFactory *fileEditFactory = new FileEditFactory(browser);
-	QtIntPropertyManager *intManager = new QtIntPropertyManager();
-	QtSliderFactory *sliderFactory = new QtSliderFactory(browser);
-
-	QtProperty *visible = boolManager->addProperty(tr("Activer"));
-	visible->setWhatsThis("visible");
-	visible->setToolTip(tr("Activer l'élément"));
-	boolManager->setValue(visible, getValue("visible").toBool());
-	browser->addProperty(visible);
-
-	QtProperty *group = groupManager->addProperty(tr("Son"));
-	group->setModified(true);
-
-	QtProperty *src = filePathManager->addProperty(tr("Source"));
-	src->setWhatsThis("src");
-	src->setToolTip(tr("Chemin du son"));
-	filePathManager->setValue(src, getValue("src").toString());
-	filePathManager->setFilter(src, AUDIO_FILTER);
-	group->addSubProperty(src);
-
-	QtProperty *loop = boolManager->addProperty(tr("Boucle"));
-	loop->setWhatsThis("loop");
-	loop->setToolTip(tr("Lire la vidéo en boucle"));
-	boolManager->setValue(loop, getValue("loop").toBool());
-	group->addSubProperty(loop);
-
-	QtProperty *volume = intManager->addProperty(tr("Volume"));
-	volume->setWhatsThis("volume");
-	volume->setToolTip(tr("Volume de la vidéo"));
-	intManager->setValue(volume, getValue("volume", 100).toInt());
-	intManager->setMinimum(volume, 0);
-	intManager->setMaximum(volume, 100);
-	group->addSubProperty(volume);
-
-	browser->addProperty(group);
-
-	browser->setFactoryForManager(boolManager, checkBoxFactory);
-	browser->setFactoryForManager(filePathManager, fileEditFactory);
-	browser->setFactoryForManager(intManager, sliderFactory);
-
-	connect(boolManager, SIGNAL(valueChanged(QtProperty*,bool)), this, SLOT(boolValueChanged(QtProperty*,bool)));
-	connect(filePathManager, SIGNAL(valueChanged(QtProperty*,QString)), this, SLOT(stringValueChanged(QtProperty*,QString)));
-	connect(intManager, SIGNAL(valueChanged(QtProperty*,int)), this, SLOT(intValueChanged(QtProperty*,int)));
 }

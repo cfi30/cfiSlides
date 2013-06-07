@@ -20,8 +20,11 @@
 
 TextElement::TextElement() : SlideElement()
 {
+	QFont font;
+	font.setPointSize(20);
+
 	setValue("text", "Lorem ipsum dolor sit amet");
-	setValue("font", QFont(QString(), 20));
+	setValue("font", font);
 	setValue("width", 400);
 }
 
@@ -44,90 +47,69 @@ void TextElement::render(QGraphicsScene *scene, const bool interactive)
 	scene->addItem(item);
 }
 
-void TextElement::bindProperties(QtTreePropertyBrowser *browser) const
+PropertyList TextElement::getProperties() const
 {
-	SlideshowElement::bindProperties(browser);
+	BoolPropertyManager *boolManager = new BoolPropertyManager;
+	connect(boolManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtBoolPropertyManager *boolManager = new QtBoolPropertyManager();
-	QtCheckBoxFactory *checkBoxFactory = new QtCheckBoxFactory(browser);
-	QtGroupPropertyManager *groupManager = new QtGroupPropertyManager();
-	QtIntPropertyManager *intManager = new QtIntPropertyManager();
-	QtPointPropertyManager *pointManager = new QtPointPropertyManager();
-	QtColorPropertyManager *colorManager = new QtColorPropertyManager();
-	QtColorEditorFactory *colorEditorFactory = new QtColorEditorFactory(browser);
-	QtSpinBoxFactory *spinboxFactory = new QtSpinBoxFactory(browser);
-	QtFontPropertyManager *fontManager = new QtFontPropertyManager();
-	QtFontEditorFactory *fontEditorFactory = new QtFontEditorFactory(browser);
-	QtEnumEditorFactory *enumEditorFactory = new QtEnumEditorFactory(browser);
-	QtStringPropertyManager *stringManager = new QtStringPropertyManager();
-	TextEditFactory *textEditFactory = new TextEditFactory(browser);
+	PointPropertyManager *pointManager = new PointPropertyManager;
+	connect(pointManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtProperty *visible = boolManager->addProperty(tr("Visible"));
-	visible->setWhatsThis("visible");
+	IntPropertyManager *intManager = new IntPropertyManager;
+	connect(intManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	TextPropertyManager *textManager = new TextPropertyManager;
+	connect(textManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	ColorPropertyManager *colorManager = new ColorPropertyManager;
+	connect(colorManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	FontPropertyManager *fontManager = new FontPropertyManager;
+	connect(fontManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	Property *visible = new Property(boolManager, tr("Visible"), "visible");
 	visible->setToolTip(tr("Visibilité de l'élément"));
-	boolManager->setValue(visible, getValue("visible").toBool());
-	browser->addProperty(visible);
+	visible->setValue(this->getValue("visible"));
 
-	QtProperty *geometry = groupManager->addProperty(tr("Géométrie"));
-	geometry->setModified(true);
+	Property *geometry = new Property(0, tr("Géométrie"));
 
-	QtProperty *width = intManager->addProperty(tr("Largeur"));
-	width->setWhatsThis("width");
-	width->setToolTip(tr("Taille de l'élément"));
-	intManager->setValue(width, getValue("width").toInt());
-	intManager->setMinimum(width, 50);
-	if(this->scene != 0)
-		intManager->setMaximum(width, scene->sceneRect().width());
-	geometry->addSubProperty(width);
-
-	QtProperty *position = pointManager->addProperty(tr("Position"));
-	position->setWhatsThis("position");
+	Property *position = new Property(pointManager, tr("Position"), "position");
 	position->setToolTip(tr("Position de l'élément"));
-	pointManager->setValue(position, getValue("position").toPoint());
-	geometry->addSubProperty(position);
+	position->setValue(this->getValue("position"));
+	geometry->addProperty(position);
 
-	browser->addProperty(geometry);
+	Property *width = new Property(intManager, tr("Largeur"), "width");
+	width->setToolTip(tr("Taille de l'élément"));
+	width->setValue(this->getValue("width"));
+	intManager->setMinimum("width", 50);
+	if(this->scene != 0)
+		intManager->setMaximum("width", scene->sceneRect().width());
+	intManager->setSuffix("width", tr(" px"));
+	geometry->addProperty(width);
 
-	QtProperty *text = groupManager->addProperty(tr("Texte"));
-	//text->setModified(true);
+	Property *text = new Property(0, tr("Texte"));
 
-	QtProperty *body = stringManager->addProperty(tr("Modifier"));
-	body->setWhatsThis("text");
+	Property *body = new Property(textManager, tr("Contenu"), "text");
 	body->setToolTip(tr("Corps du texte"));
-	stringManager->setValue(body, getValue("text").toString());
-	text->addSubProperty(body);
+	body->setValue(this->getValue("text"));
+	textManager->setRequired("text", true);
+	text->addProperty(body);
 
-	QtProperty *color = colorManager->addProperty(tr("Couleur"));
-	color->setWhatsThis("color");
+	Property *color = new Property(colorManager, tr("Couleur"), "color");
 	color->setToolTip(tr("Couleur du texte"));
-	colorManager->setValue(color, getValue("color").value<QColor>());
-	text->addSubProperty(color);
+	color->setValue(this->getValue("color"));
+	text->addProperty(color);
 
-	QtProperty *font = fontManager->addProperty(tr("Police"));
-	font->setWhatsThis("font");
+	Property *font = new Property(fontManager, tr("Police"), "font");
 	font->setToolTip(tr("Police du texte"));
-	fontManager->setValue(font, getValue("font").value<QFont>());
-	text->addSubProperty(font);
+	font->setValue(this->getValue("font"));
+	text->addProperty(font);
 
-	browser->addProperty(text);
-
-	browser->setFactoryForManager(boolManager, checkBoxFactory);
-	browser->setFactoryForManager(intManager, spinboxFactory);
-	browser->setFactoryForManager(pointManager->subIntPropertyManager(), spinboxFactory);
-	browser->setFactoryForManager(colorManager, colorEditorFactory);
-	browser->setFactoryForManager(colorManager->subIntPropertyManager(), spinboxFactory);
-	browser->setFactoryForManager(fontManager, fontEditorFactory);
-	browser->setFactoryForManager(fontManager->subBoolPropertyManager(), checkBoxFactory);
-	browser->setFactoryForManager(fontManager->subEnumPropertyManager(), enumEditorFactory);
-	browser->setFactoryForManager(fontManager->subIntPropertyManager(), spinboxFactory);
-	browser->setFactoryForManager(stringManager, textEditFactory);
-
-	connect(boolManager, SIGNAL(valueChanged(QtProperty*,bool)), this, SLOT(boolValueChanged(QtProperty*,bool)));
-	connect(intManager, SIGNAL(valueChanged(QtProperty*,int)), this, SLOT(intValueChanged(QtProperty*,int)));
-	connect(pointManager, SIGNAL(valueChanged(QtProperty*,QPoint)), this, SLOT(pointValueChanged(QtProperty*,QPoint)));
-	connect(colorManager, SIGNAL(valueChanged(QtProperty*,QColor)), this, SLOT(colorValueChanged(QtProperty*,QColor)));
-	connect(fontManager, SIGNAL(valueChanged(QtProperty*,QFont)), this, SLOT(fontValueChanged(QtProperty*,QFont)));
-	connect(stringManager, SIGNAL(valueChanged(QtProperty*,QString)), this, SLOT(stringValueChanged(QtProperty*,QString)));
+	return PropertyList()
+		<< SlideshowElement::getProperties()
+		<< visible
+		<< geometry
+		<< text;
 }
 
 void TextElement::textChanged()

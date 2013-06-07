@@ -46,29 +46,24 @@ void HelloElement::render(QGraphicsScene *scene, const bool interactive)
 	subitem->setFont(font);
 	subitem->setHtml(QString("<span style=\"color: green\">HELLO <i style=\"color: purple\">%1</i> !!</span>").arg(getValue("hello").toString()));
 
-	item->setRect(QRectF(QPointF(), QFontMetrics(font).boundingRect(subitem->toPlainText()).size() + QSize(50, 20)));
+	item->setRect(QRect(QPoint(), QFontMetrics(font).boundingRect(subitem->toPlainText()).size() + QSize(50, 20)));
 }
 
-void HelloElement::bindProperties(QtTreePropertyBrowser *browser) const
+PropertyList HelloElement::getProperties() const
 {
-	SlideElement::bindProperties(browser);
+	StringPropertyManager *stringManager = new StringPropertyManager;
+	connect(stringManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtGroupPropertyManager *groupManager = new QtGroupPropertyManager;
-	QtStringPropertyManager *stringManager = new QtStringPropertyManager;
-	QtLineEditFactory *lineEditFactory = new QtLineEditFactory(browser);
+	Property *group = new Property(0, "Hello World");
 
-	QtProperty *group = groupManager->addProperty("Hello World");
-	group->setModified(true); // groups should be displayed in bold
-
-	QtProperty *text = stringManager->addProperty("Hello");
-	text->setWhatsThis("hello");
+	Property *text = new Property(stringManager, "Hello", "hello");
 	text->setToolTip("Say hello to who?");
-	stringManager->setValue(text, getValue("hello").toString());
-	group->addSubProperty(text);
+	text->setValue(this->getValue("hello"));
+	stringManager->setPlaceholder("hello", "(nobody)");
+	stringManager->setRequired("hello", true);
+	group->addProperty(text);
 
-	browser->addProperty(group);
-
-	browser->setFactoryForManager(stringManager, lineEditFactory);
-
-	connect(stringManager, SIGNAL(valueChanged(QtProperty*,QString)), this, SLOT(stringValueChanged(QtProperty*,QString)));
+	return PropertyList()
+		<< SlideElement::getProperties()
+		<< group;
 }

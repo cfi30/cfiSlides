@@ -22,18 +22,20 @@
 #include <QObject>
 
 #include "slideshowelement.h"
+#include "configuration.h"
 #include "shared.h"
 
 class CFISLIDES_DLLSPEC SlideElement : public SlideshowElement
 {
 	Q_OBJECT
+
 public:
 	SlideElement();
 	SlideElement(const SlideElement &copy);
 	virtual QString previewUrl() const;
 	const char *type() const;
 	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual void bindProperties(QtTreePropertyBrowser *browser) const;
+	virtual PropertyList getProperties() const;
 	int getIndex() const;
 	void setIndex(const int newIndex);
 	
@@ -44,11 +46,11 @@ signals:
 
 public slots:
 	void movedTo(QPoint);
-	virtual void play();
-	virtual void pause();
-	virtual void stop();
-	virtual void toggleMute();
-	virtual void destroy();
+	virtual void play() {}
+	virtual void pause() {}
+	virtual void stop() {}
+	virtual void toggleMute() {}
+	virtual void destroy() {}
 
 private:
 	int elementIndex;

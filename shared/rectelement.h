@@ -28,10 +28,11 @@
 class CFISLIDES_DLLSPEC RectElement : public SlideElement
 {
 	Q_OBJECT
+
 public:
-	explicit RectElement();
+	RectElement();
 	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual void bindProperties(QtTreePropertyBrowser *browser) const;
+	virtual PropertyList getProperties() const;
 
 protected:
 	Qt::PenStyle penStyle() const;

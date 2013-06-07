@@ -32,7 +32,6 @@
 #include <QListWidgetItem>
 #include <QTreeWidgetItem>
 #include <QInputDialog>
-#include <QtTreePropertyBrowser>
 #include <QShortcut>
 #include <QPrinter>
 #include <QPrintDialog>
@@ -82,7 +81,6 @@ public:
 	void updateIcon(const int index);
 	void updateSlideTree(const int index);
 	void updatePropertiesEditor(const SlideshowElement *element);
-	void clearPropertiesEditor();
 	QGraphicsItem *sceneItemFromIndex(const int index) const;
 	void insertElement(SlideElement *element);
 	void moveElement(const int before, const int after);
@@ -90,7 +88,7 @@ public:
 	static bool validateSlideName(const QString &name);
 	static bool validateElementName(const QString &name);
 
-	void registerElementType(const int typeId, const QString label, const QIcon icon = QIcon());
+	void registerElementType(const int typeId, const QString &label, const QIcon &icon = QIcon());
 	void unregisterElementType(const int typeId);
 
 public slots:

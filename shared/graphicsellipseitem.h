@@ -27,8 +27,9 @@
 class CFISLIDES_DLLSPEC GraphicsEllipseItem : public QGraphicsEllipseItem
 {
 	GRAPHICS_ITEM
+
 public:
-	GraphicsEllipseItem(QGraphicsItem *parent = 0);
+	explicit GraphicsEllipseItem(QGraphicsItem *parent = 0);
 };
 
 #endif // GRAPHICSELLIPSEITEM_H

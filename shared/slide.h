@@ -29,8 +29,6 @@
 
 #include "slideshowelement.h"
 #include "slideelement.h"
-#include "filepathmanager.h"
-#include "fileeditfactory.h"
 #include "configuration.h"
 #include "shared.h"
 
@@ -39,8 +37,8 @@ class CFISLIDES_DLLSPEC Slide : public SlideshowElement
 	Q_OBJECT
 
 public:
-	Slide();
-	Slide(const QString name);
+	Slide() : SlideshowElement() {}
+	explicit Slide(const QString &name);
 	~Slide();
 
 	void render(QGraphicsScene *scene, const bool interactive);
@@ -49,7 +47,7 @@ public:
 	void addElement(SlideElement *);
 	void removeElement(const int index);
 	void moveElement(const int from, const int to);
-	virtual void bindProperties(QtTreePropertyBrowser *browser) const;
+	virtual PropertyList getProperties() const;
 
 signals:
 	void moved();
@@ -65,7 +63,7 @@ public slots:
 protected slots:
 	void elementChanged();
 	void elementMoved();
-	void refreshQuery();
+	void refreshRequest();
 
 protected:
 	enum ImageStretch

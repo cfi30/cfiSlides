@@ -18,10 +18,6 @@
 
 #include "slideshow.h"
 
-Slideshow::Slideshow() : BaseElement()
-{
-}
-
 Slideshow::~Slideshow()
 {
 	while(!this->slides.isEmpty())
@@ -38,7 +34,7 @@ Slide *Slideshow::getSlide(const int index) const
 	return this->slides[index];
 }
 
-Slide *Slideshow::createSlide(const QString name)
+Slide *Slideshow::createSlide(const QString &name)
 {
 	Slide *slide = new Slide(name);
 	this->slides.append(slide);

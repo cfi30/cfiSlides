@@ -190,7 +190,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	in >> metadata;
 
 	this->slideshow = new Slideshow();
-	this->slideshow->setProperties(metadata);
+	this->slideshow->setValues(metadata);
 	this->currentSlideActions->setEnabled(false);
 
 	int slidesCount = 0;
@@ -212,7 +212,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 		in >> properties;
 
 		Slide *slide = this->slideshow->createSlide(QString::number(si));
-		slide->setProperties(properties);
+		slide->setValues(properties);
 
 		int elementsCount = 0;
 		in >> elementsCount;
@@ -241,7 +241,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 				continue;
 			}
 
-			element->setProperties(properties);
+			element->setValues(properties);
 			slide->addElement(element);
 		}
 
@@ -295,17 +295,17 @@ bool MainWindow::saveSlideshow()
 
 	QList<Slide *> slides = slideshow->getSlides();
 	out << qApp->applicationName();
-	out << slideshow->getProperties();
+	out << slideshow->getValues();
 	out << slides.size();
 	foreach(Slide *slide, slides)
 	{
-		out << slide->getProperties();
+		out << slide->getValues();
 		QList<SlideElement *> elements = slide->getElements();
 		out << elements.size();
 		foreach(SlideElement *element, elements)
 		{
 			out << element->type();
-			out << element->getProperties();
+			out << element->getValues();
 		}
 	}
 	file.close();
@@ -350,7 +350,7 @@ bool MainWindow::closeSlideshow()
 
 	ui->slideList->clear();
 	ui->slideTree->clear();
-	clearPropertiesEditor();
+	ui->propertiesEditor->clear();
 	updateMediaPreview();
 
 	while(ui->displayWidget->count() > 0)
@@ -504,20 +504,8 @@ void MainWindow::updateCurrentSlideTree()
 
 void MainWindow::updatePropertiesEditor(const SlideshowElement *element)
 {
-	clearPropertiesEditor();
-	element->bindProperties(ui->propertiesEditor);
-}
-
-void MainWindow::clearPropertiesEditor()
-{
-	foreach(QtProperty *prop, ui->propertiesEditor->properties())
-	{
-		ui->propertiesEditor->unsetFactoryForManager(prop->propertyManager());
-		prop->propertyManager()->deleteLater();
-		delete prop;
-	}
-
 	ui->propertiesEditor->clear();
+	ui->propertiesEditor->addTopLevelProperties(element->getProperties());
 }
 
 void MainWindow::updateCurrentPropertiesEditor()
@@ -946,7 +934,7 @@ void MainWindow::copySlide()
 	Slide *sourceSlide = this->slideshow->getSlide(ui->slideList->currentRow());
 	int errorsCount = 0;
 	Slide *newSlide = this->slideshow->createSlide("");
-	newSlide->setProperties(sourceSlide->getProperties());
+	newSlide->setValues(sourceSlide->getValues());
 	newSlide->setValue("name", tr("Copie de %1").arg(sourceSlide->getValue("name").toString()));
 	foreach(SlideElement *sourceElement, sourceSlide->getElements())
 	{
@@ -1200,7 +1188,7 @@ void MainWindow::resizeSlideshow()
 	progress->deleteLater();
 }
 
-void MainWindow::registerElementType(const int typeId, const QString label, const QIcon icon)
+void MainWindow::registerElementType(const int typeId, const QString &label, const QIcon &icon)
 {
 	QAction *action = new QAction(icon, label, this);
 	action->setData(typeId);

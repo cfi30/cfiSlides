@@ -27,8 +27,9 @@
 class CFISLIDES_DLLSPEC EllipseElement : public RectElement
 {
 	Q_OBJECT
+
 public:
-	explicit EllipseElement();
+	EllipseElement() : RectElement() {}
 	virtual void render(QGraphicsScene *scene, const bool interactive);
 };
 

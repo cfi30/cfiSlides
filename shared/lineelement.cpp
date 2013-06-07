@@ -65,92 +65,69 @@ void LineElement::render(QGraphicsScene *scene, const bool interactive)
 	scene->addItem(item);
 }
 
-void LineElement::bindProperties(QtTreePropertyBrowser *browser) const
+PropertyList LineElement::getProperties() const
 {
-	SlideshowElement::bindProperties(browser);
+	BoolPropertyManager *boolManager = new BoolPropertyManager;
+	connect(boolManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtBoolPropertyManager *boolManager = new QtBoolPropertyManager();
-	QtCheckBoxFactory *checkBoxFactory = new QtCheckBoxFactory(browser);
-	QtGroupPropertyManager *groupManager = new QtGroupPropertyManager();
-	QtPointPropertyManager *pointManager = new QtPointPropertyManager();
-	QtSpinBoxFactory *spinboxFactory = new QtSpinBoxFactory();
-	QtColorPropertyManager *colorManager = new QtColorPropertyManager();
-	QtColorEditorFactory *colorEditorFactory = new QtColorEditorFactory(browser);
-	QtIntPropertyManager *intManager = new QtIntPropertyManager();
-	QtEnumPropertyManager *enumManager = new QtEnumPropertyManager();
-	QtEnumEditorFactory *enumEditorFactory = new QtEnumEditorFactory(browser);
+	PointPropertyManager *pointManager = new PointPropertyManager;
+	connect(pointManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtProperty *visible = boolManager->addProperty(tr("Visible"));
-	visible->setWhatsThis("visible");
+	IntPropertyManager *intManager = new IntPropertyManager;
+	connect(intManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	ColorPropertyManager *colorManager = new ColorPropertyManager;
+	connect(colorManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	EnumPropertyManager *enumManager = new EnumPropertyManager;
+	connect(enumManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+
+	Property *visible = new Property(boolManager, tr("Visible"), "visible");
 	visible->setToolTip(tr("Visibilité de l'élément"));
-	boolManager->setValue(visible, getValue("visible").toBool());
-	browser->addProperty(visible);
+	visible->setValue(this->getValue("visible"));
 
-	QtProperty *geometry = groupManager->addProperty(tr("Géométrie"));
-	geometry->setModified(true);
+	Property *geometry = new Property(0, tr("Géométrie"));
 
-	QtProperty *position = pointManager->addProperty(tr("Position"));
-	position->setWhatsThis("position");
+	Property *position = new Property(pointManager, tr("Position"), "position");
 	position->setToolTip(tr("Position de l'élément"));
-	pointManager->setValue(position, getValue("position").toPoint());
-	geometry->addSubProperty(position);
+	position->setValue(this->getValue("position"));
+	geometry->addProperty(position);
 
-	QtProperty *start = intManager->addProperty(tr("Départ"));
-	start->setWhatsThis("start");
+	Property *start = new Property(intManager, tr("Départ"), "start");
 	start->setToolTip(tr("Point de départ vertical de la ligne"));
-	intManager->setValue(start, getValue("start").toInt());
-	intManager->setMinimum(start, 0);
-	geometry->addSubProperty(start);
+	start->setValue(this->getValue("start"));
+	intManager->setSuffix("start", tr(" px"));
+	geometry->addProperty(start);
 
-	QtProperty *stop = pointManager->addProperty(tr("Arrivée"));
-	stop->setWhatsThis("stop");
+	Property *stop = new Property(pointManager, tr("Arrivée"), "stop");
 	stop->setToolTip(tr("Point d'arrivée de la ligne"));
-	pointManager->setValue(stop, getValue("stop").toPoint());
-	geometry->addSubProperty(stop);
+	stop->setValue(this->getValue("stop"));
+	geometry->addProperty(stop);
 
-	QtProperty *size = intManager->addProperty(tr("Épaisseur"));
-	size->setWhatsThis("size");
+	Property *group = new Property(0, tr("Ligne"));
+
+	Property *size = new Property(intManager, tr("Épaisseur"), "size");
 	size->setToolTip(tr("Épaisseur de la bordure"));
-	intManager->setValue(size, getValue("size").toInt());
-	intManager->setMinimum(size, 1);
-	intManager->setMaximum(size, 50);
-	geometry->addSubProperty(size);
+	size->setValue(this->getValue("size"));
+	intManager->setMinimum("size", 1);
+	intManager->setMaximum("size", MAXIMUM_THICKNESS);
+	intManager->setSuffix("size", tr(" px"));
+	group->addProperty(size);
 
-	browser->addProperty(geometry);
-
-	QtProperty *group = groupManager->addProperty(tr("Ligne"));
-	group->setModified(true);
-
-	QtProperty *color = colorManager->addProperty(tr("Couleur"));
-	color->setWhatsThis("color");
+	Property *color = new Property(colorManager, tr("Couleur"), "color");
 	color->setToolTip(tr("Couleur de la ligne"));
-	colorManager->setValue(color, getValue("color").value<QColor>());
-	group->addSubProperty(color);
+	color->setValue(this->getValue("color"));
+	group->addProperty(color);
 
-	QtProperty *style = enumManager->addProperty(tr("Style"));
-	style->setWhatsThis("style");
+	Property *style = new Property(enumManager, tr("Style"), "style");
 	style->setToolTip(tr("Style de la ligne"));
-	enumManager->setEnumNames(style, QStringList() << tr("Solide") << tr("Pointillés") << tr("Points") << tr("Point-tiret") << tr("Point-point-tiret"));
-	enumManager->setValue(style, getValue("style").toInt());
-	group->addSubProperty(style);
+	style->setValue(this->getValue("style"));
+	enumManager->setEnumNames("style", QStringList() << tr("Solide") << tr("Pointillés") << tr("Points") << tr("Point-tiret") << tr("Point-point-tiret"));
+	group->addProperty(style);
 
-	browser->addProperty(group);
-
-	foreach(QtProperty *prop, pointManager->subIntPropertyManager()->properties())
-		pointManager->subIntPropertyManager()->setMinimum(prop, 0);
-
-	browser->setFactoryForManager(boolManager, checkBoxFactory);
-	browser->setFactoryForManager(pointManager->subIntPropertyManager(), spinboxFactory);
-	browser->setFactoryForManager(pointManager->subIntPropertyManager(), spinboxFactory);
-	browser->setFactoryForManager(colorManager, colorEditorFactory);
-	browser->setFactoryForManager(colorManager->subIntPropertyManager(), spinboxFactory);
-	browser->setFactoryForManager(enumManager, enumEditorFactory);
-	browser->setFactoryForManager(intManager, spinboxFactory);
-
-	connect(boolManager, SIGNAL(valueChanged(QtProperty*,bool)), this, SLOT(boolValueChanged(QtProperty*,bool)));
-	connect(pointManager, SIGNAL(valueChanged(QtProperty*,QPoint)), this, SLOT(pointValueChanged(QtProperty*,QPoint)));
-	connect(pointManager, SIGNAL(valueChanged(QtProperty*,QPoint)), this, SLOT(pointValueChanged(QtProperty*,QPoint)));
-	connect(colorManager, SIGNAL(valueChanged(QtProperty*,QColor)), this, SLOT(colorValueChanged(QtProperty*,QColor)));
-	connect(enumManager, SIGNAL(valueChanged(QtProperty*,int)), this, SLOT(intValueChanged(QtProperty*,int)));
-	connect(intManager, SIGNAL(valueChanged(QtProperty*,int)), this, SLOT(intValueChanged(QtProperty*,int)));
+	return PropertyList()
+		<< SlideshowElement::getProperties()
+		<< visible
+		<< geometry
+		<< group;
 }

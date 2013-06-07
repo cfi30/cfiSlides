@@ -27,6 +27,7 @@ class MainWindow;
 class Plugin : public QObject
 {
 	Q_OBJECT
+
 public:
 	Plugin() { window = 0; }
 	virtual ~Plugin() {}

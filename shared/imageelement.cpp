@@ -64,38 +64,30 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 	}
 }
 
-void ImageElement::bindProperties(QtTreePropertyBrowser *browser) const
+PropertyList ImageElement::getProperties() const
 {
-	SlideElement::bindProperties(browser);
+	FilePropertyManager *fileManager = new FilePropertyManager;
+	connect(fileManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtGroupPropertyManager *groupManager = new QtGroupPropertyManager();
-	FilePathManager *filePathManager = new FilePathManager();
-	FileEditFactory *fileEditFactory = new FileEditFactory(browser);
-	QtEnumPropertyManager *enumManager = new QtEnumPropertyManager();
-	QtEnumEditorFactory *enumEditorFactory = new QtEnumEditorFactory(browser);
+	EnumPropertyManager *enumManager = new EnumPropertyManager;
+	connect(enumManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	QtProperty *group = groupManager->addProperty(tr("Image"));
-	group->setModified(true);
+	Property *group = new Property(0, tr("Image"));
 
-	QtProperty *src = filePathManager->addProperty(tr("Source"));
-	src->setWhatsThis("src");
+	Property *src = new Property(fileManager, tr("Source"), "src");
 	src->setToolTip(tr("Chemin de l'image"));
-	filePathManager->setValue(src, getValue("src").toString());
-	filePathManager->setFilter(src, IMAGE_FILTER);
-	group->addSubProperty(src);
+	src->setValue(this->getValue("src"));
+	fileManager->setRequired("src", true);
+	fileManager->setFilter("src", IMAGE_FILTER);
+	group->addProperty(src);
 
-	QtProperty *scalingMode = enumManager->addProperty(tr("Mise à l'échelle"));
-	scalingMode->setWhatsThis("scaleMode");
-	scalingMode->setToolTip(tr("Mode de mise à l'échelle de l'image"));
-	enumManager->setEnumNames(scalingMode, QStringList() << tr("Remplir") << tr("Conserver") << tr("Remplir & Conserver"));
-	enumManager->setValue(scalingMode, getValue("scaleMode").toInt());
-	group->addSubProperty(scalingMode);
+	Property *scaleMode = new Property(enumManager, tr("Mise à l'échelle"), "scaleMode");
+	scaleMode->setToolTip(tr("Mode de mise à l'échelle de l'image"));
+	scaleMode->setValue(this->getValue("scaleMode"));
+	enumManager->setEnumNames("scaleMode", QStringList() << tr("Remplir") << tr("Conserver") << tr("Remplir & Conserver"));
+	group->addProperty(scaleMode);
 
-	browser->addProperty(group);
-
-	browser->setFactoryForManager(filePathManager, fileEditFactory);
-	browser->setFactoryForManager(enumManager, enumEditorFactory);
-
-	connect(filePathManager, SIGNAL(valueChanged(QtProperty*,QString)), this, SLOT(stringValueChanged(QtProperty*,QString)));
-	connect(enumManager, SIGNAL(valueChanged(QtProperty*,int)), this, SLOT(intValueChanged(QtProperty*,int)));
+	return PropertyList()
+		<< SlideElement::getProperties()
+		<< group;
 }

@@ -156,7 +156,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QtTreePropertyBrowser" name="propertiesEditor" native="true">
+      <widget class="PropertyEditor" name="propertiesEditor" native="true">
        <property name="rootIsDecorated" stdset="0">
         <bool>false</bool>
        </property>
@@ -745,22 +745,22 @@
   <customwidget>
    <class>Phonon::SeekSlider</class>
    <extends>QWidget</extends>
-   <header location="global">phonon/seekslider.h</header>
+   <header>phonon/seekslider.h</header>
   </customwidget>
   <customwidget>
    <class>Phonon::VideoPlayer</class>
    <extends>QWidget</extends>
-   <header location="global">phonon/videoplayer.h</header>
+   <header>phonon/videoplayer.h</header>
   </customwidget>
   <customwidget>
    <class>Phonon::VolumeSlider</class>
    <extends>QWidget</extends>
-   <header location="global">phonon/volumeslider.h</header>
+   <header>phonon/volumeslider.h</header>
   </customwidget>
   <customwidget>
-   <class>QtTreePropertyBrowser</class>
+   <class>PropertyEditor</class>
    <extends>QWidget</extends>
-   <header>qttreepropertybrowser.h</header>
+   <header>propertyeditor.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

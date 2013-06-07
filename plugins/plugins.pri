@@ -11,7 +11,3 @@ HEADERS += \
 
 CONFIG += cfislides-uselib
 include(../shared/shared.pri)
-
-CONFIG += qtpropertybrowser-uselib
-include(../qtpropertybrowser/qtpropertybrowser.pri)
-include(../qtpropertybrowser/extension/extension.pri)

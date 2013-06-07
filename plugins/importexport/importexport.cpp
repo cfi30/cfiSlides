@@ -89,7 +89,7 @@ void ImportExport::launchImport()
 		progress->setValue(index);
 
 		Slide *slide = window->getSlideshow()->createSlide("temp-name");
-		slide->setProperties(tempSlide->getProperties());
+		slide->setValues(tempSlide->getValues());
 
 		foreach(SlideElement *element, tempSlide->getElements())
 			slide->addElement(element);

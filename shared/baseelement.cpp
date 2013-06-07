@@ -18,10 +18,6 @@
 
 #include "baseelement.h"
 
-BaseElement::BaseElement() : QObject()
-{
-}
-
 QVariant BaseElement::getValue(const QString &name, QVariant defaultValue) const
 {
 	return this->properties.value(name, defaultValue);
@@ -37,14 +33,14 @@ int BaseElement::unsetValue(const QString &name)
 	return this->properties.remove(name);
 }
 
-void BaseElement::setProperties(QMap<QString, QVariant> properties)
+void BaseElement::setValues(QMap<QString, QVariant> properties)
 {
 	QMap<QString, QVariant>::iterator iterator;
 	for(iterator = properties.begin(); iterator != properties.end(); ++iterator)
 		this->properties[iterator.key()] = iterator.value();
 }
 
-QMap<QString, QVariant> BaseElement::getProperties() const
+QMap<QString, QVariant> BaseElement::getValues() const
 {
 	return this->properties;
 }
