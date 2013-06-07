@@ -406,7 +406,7 @@ void MainWindow::displaySlide(Slide *slide)
 
 	GraphicsView *view = new GraphicsView(scene);
 	view->setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(view, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(displayContextMenu(const QPoint &)));
+	connect(view, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(displayViewContextMenu(const QPoint &)));
 	ui->displayWidget->addWidget(view);
 
 	QPixmap pixmap(scene->sceneRect().size().toSize());
@@ -1031,7 +1031,26 @@ void MainWindow::moveFinishTimerTimeout()
 	updateCurrentPropertiesEditor();
 }
 
-void MainWindow::displayContextMenu(const QPoint &pos)
+QMenu *MainWindow::createSlideContextMenu()
+{
+	QMenu *menu = new QMenu(this);
+	if(!ui->slideTree->selectedItems().isEmpty())
+	{
+		menu->addActions(selectionActions->actions());
+		menu->addSeparator();
+	}
+	menu->addAction(ui->actionSelectAll);
+	menu->addAction(ui->actionRepaint);
+
+	QAction *separator = menu->addSeparator();
+	separator->setText(ui->menuInsertElement->menuAction()->text());
+	separator->setVisible(true);
+
+	menu->addActions(insertActions);
+	return menu;
+}
+
+void MainWindow::displayViewContextMenu(const QPoint &pos)
 {
 	GraphicsView *view = qobject_cast<GraphicsView *>(sender());
 	QGraphicsItem *item = view->scene()->itemAt(view->mapToScene(pos));
@@ -1048,22 +1067,25 @@ void MainWindow::displayContextMenu(const QPoint &pos)
 		}
 	}
 
-	QMenu *menu = new QMenu(this);
-	if(!view->scene()->selectedItems().isEmpty())
-	{
-		menu->addActions(selectionActions->actions());
-		menu->addSeparator();
-	}
-	menu->addAction(ui->actionSelectAll);
-	menu->addAction(ui->actionRepaint);
-
-	QAction *separator = menu->addSeparator();
-	separator->setText(ui->menuInsertElement->menuAction()->text());
-	separator->setVisible(true);
-
-	menu->addActions(insertActions);
-
+	QMenu *menu = createSlideContextMenu();
 	menu->exec(view->mapToGlobal(pos));
+	delete menu;
+}
+
+void MainWindow::displaySlideTreeContextMenu(const QPoint &pos)
+{
+	if(ui->slideTree->selectedItems().isEmpty())
+	{
+		QTreeWidgetItem *item = ui->slideTree->itemAt(pos);
+		if(item && item->flags().testFlag(Qt::ItemIsSelectable))
+		{
+			ui->slideTree->clearSelection();
+			item->setSelected(true);
+		}
+	}
+
+	QMenu *menu = createSlideContextMenu();
+	menu->exec(ui->slideTree->mapToGlobal(pos));
 	delete menu;
 }
 

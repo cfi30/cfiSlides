@@ -311,6 +311,9 @@
      </property>
      <item>
       <widget class="QTreeWidget" name="slideTree">
+       <property name="contextMenuPolicy">
+        <enum>Qt::CustomContextMenu</enum>
+       </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::MultiSelection</enum>
        </property>
@@ -1454,6 +1457,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>slideTree</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>displaySlideTreeContextMenu(QPoint)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>127</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>createEmptySlide()</slot>
@@ -1485,5 +1504,6 @@
   <slot>bringElementToBack()</slot>
   <slot>bringElementToFront()</slot>
   <slot>resizeSlideshow()</slot>
+  <slot>displaySlideTreeContextMenu(QPoint)</slot>
  </slots>
 </ui>
