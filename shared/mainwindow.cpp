@@ -1074,6 +1074,9 @@ void MainWindow::displayViewContextMenu(const QPoint &pos)
 
 void MainWindow::displaySlideTreeContextMenu(const QPoint &pos)
 {
+	if(ui->slideList->currentRow() == -1)
+		return;
+
 	if(ui->slideTree->selectedItems().isEmpty())
 	{
 		QTreeWidgetItem *item = ui->slideTree->itemAt(pos);
