@@ -47,7 +47,6 @@
 #include "rectelement.h"
 #include "ellipseelement.h"
 #include "textelement.h"
-#include "textinputdialog.h"
 #include "movieelement.h"
 #include "audioelement.h"
 #include "lineelement.h"
