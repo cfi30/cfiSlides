@@ -432,14 +432,20 @@ void MainWindow::displaySlide(Slide *slide)
 
 	slide->render(scene, true);
 	scene->render(&painter, scene->sceneRect());
-	scene->clear();
+
+	const int slideIndex = ui->slideList->count();
+	const int currentRow = ui->slideList->currentRow();
+	const int keepStart = currentRow - (MAX_LOADED_SLIDES / 2);
+	const int keepEnd = currentRow + (MAX_LOADED_SLIDES / 2);
+	if(slideIndex < keepStart || slideIndex > keepEnd)
+		scene->clear();
 
 	QIcon icon(pixmap.scaledToWidth(ui->slideList->iconSize().width()));
 	QListWidgetItem *newItem = new QListWidgetItem(icon, slide->getValue("name").toString());
 	newItem->setFlags(newItem->flags() ^ Qt::ItemIsEditable);
 	ui->slideList->addItem(newItem);
 
-	if(ui->slideList->count() == 1)
+	if(currentRow == -1)
 		ui->slideList->setCurrentRow(0);
 
 	this->currentSlideActions->setEnabled(true);
