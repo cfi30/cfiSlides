@@ -24,6 +24,8 @@
 #include <QMenu>
 #include <QToolBar>
 #include <QApplication>
+#include <QDesktopServices>
+#include <QUrl>
 
 #include "plugin.h"
 #include "helloelement.h"
@@ -41,6 +43,7 @@ public:
 	virtual QString author() const;
 	virtual QString about() const;
 	virtual void initialize();
+	virtual SlideElementTypeList getElementTypes() const;
 
 public slots:
 	void doSomething();

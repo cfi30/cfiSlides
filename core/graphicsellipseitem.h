@@ -16,26 +16,19 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IMAGEELEMENT_H
-#define IMAGEELEMENT_H
+#ifndef GRAPHICSELLIPSEITEM_H
+#define GRAPHICSELLIPSEITEM_H
 
-#include <QLabel>
+#include <QGraphicsEllipseItem>
 
-#include "slideelement.h"
-#include "graphicspixmapitem.h"
-#include "graphicsmoviepreviewitem.h"
-#include "shared.h"
+#include "graphicsitem.h"
 
-class CFISLIDES_DLLSPEC ImageElement : public SlideElement
+class GraphicsEllipseItem : public QGraphicsEllipseItem
 {
-	Q_OBJECT
+	GRAPHICS_ITEM
 
 public:
-	ImageElement();
-	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual PropertyList getProperties() const;
+	explicit GraphicsEllipseItem(QGraphicsItem *parent = 0);
 };
 
-Q_DECLARE_METATYPE(ImageElement)
-
-#endif // IMAGEELEMENT_H
+#endif // GRAPHICSELLIPSEITEM_H

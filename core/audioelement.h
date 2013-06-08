@@ -16,42 +16,40 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PLUGIN_H
-#define PLUGIN_H
+#ifndef AudioElement_H
+#define AudioElement_H
 
-#include <QtPlugin>
-#include <QMainWindow>
+#include <phonon/MediaObject>
+#include <phonon/AudioOutput>
 
-#include "slideelementtype.h"
+#include "slideelement.h"
 
-class MainWindow;
-
-class Plugin : public QObject
+class AudioElement : public SlideElement
 {
 	Q_OBJECT
 
 public:
-	Plugin() {}
-	virtual QString name() const = 0;
-	virtual QString version() const = 0;
-	virtual QString author() const = 0;
-	virtual QString about() const = 0;
-	virtual SlideElementTypeList getElementTypes() const
-	{
-		return SlideElementTypeList();
-	}
+	AudioElement();
+	virtual QString previewUrl() const;
+	virtual void render(QGraphicsScene *scene, const bool interactive);
+	virtual PropertyList getProperties() const;
 
-	void setWindow(QMainWindow *window)
-	{
-		this->window = window;
-		initialize();
-	}
+public slots:
+	virtual void play();
+	virtual void pause();
+	virtual void stop();
+	virtual void toggleMute();
+	virtual void destroy();
+
+private slots:
+	void restart();
 
 protected:
-	QMainWindow *window;
-	virtual void initialize() = 0;
+	Phonon::MediaObject *mediaObject;
+	Phonon::AudioOutput *audioOutput;
+	bool playbackFinished;
 };
 
-Q_DECLARE_INTERFACE(Plugin, "cfiSlides.Plugin")
+Q_DECLARE_METATYPE(AudioElement)
 
-#endif // PLUGIN_H
+#endif // AudioElement_H

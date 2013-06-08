@@ -16,29 +16,27 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GRAPHICSMOVIEPREVIEWITEM_H
-#define GRAPHICSMOVIEPREVIEWITEM_H
+#ifndef TEXTELEMENT_H
+#define TEXTELEMENT_H
 
-#include <QGraphicsRectItem>
-#include <QGraphicsPixmapItem>
-#include <QGraphicsTextItem>
-#include <QIcon>
+#include <QGraphicsScene>
 
-#include "graphicsitem.h"
-#include "shared.h"
+#include "slideelement.h"
+#include "graphicstextitem.h"
 
-class CFISLIDES_DLLSPEC GraphicsMoviePreviewItem : public QGraphicsRectItem
+class TextElement : public SlideElement
 {
-	GRAPHICS_ITEM
+	Q_OBJECT
 
 public:
-	explicit GraphicsMoviePreviewItem(QGraphicsItem *parent = 0);
-	void setSize(const QSize &size);
-	void setSource(const QString &src);
-
-protected:
-	QGraphicsPixmapItem *icon;
-	QGraphicsTextItem *label;
+	TextElement();
+	virtual void render(QGraphicsScene *scene, const bool interactive);
+	virtual PropertyList getProperties() const;
+	
+private slots:
+	void textChanged();
 };
 
-#endif // GRAPHICSMOVIEPREVIEWITEM_H
+Q_DECLARE_METATYPE(TextElement)
+
+#endif // TEXTELEMENT_H

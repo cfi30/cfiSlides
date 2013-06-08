@@ -16,28 +16,19 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TEXTELEMENT_H
-#define TEXTELEMENT_H
+#ifndef GRAPHICSLINEITEM_H
+#define GRAPHICSLINEITEM_H
 
-#include <QGraphicsScene>
+#include <QGraphicsLineItem>
 
-#include "slideelement.h"
-#include "graphicstextitem.h"
-#include "shared.h"
+#include "graphicsitem.h"
 
-class CFISLIDES_DLLSPEC TextElement : public SlideElement
+class GraphicsLineItem : public QGraphicsLineItem
 {
-	Q_OBJECT
+	GRAPHICS_ITEM
 
 public:
-	TextElement();
-	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual PropertyList getProperties() const;
-	
-private slots:
-	void textChanged();
+	explicit GraphicsLineItem(QGraphicsItem *parent = 0);
 };
 
-Q_DECLARE_METATYPE(TextElement)
-
-#endif // TEXTELEMENT_H
+#endif // GRAPHICSLINEITEM_H

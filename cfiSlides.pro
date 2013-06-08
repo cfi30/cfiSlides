@@ -7,5 +7,5 @@ SUBDIRS += \
 build-plugins {
 	SUBDIRS += \
 		plugins/helloworld \
-		plugins/importexport
+		plugins/importexport \
 }

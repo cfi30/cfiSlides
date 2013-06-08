@@ -30,17 +30,18 @@ HelloWorld::HelloWorld()
 
 void HelloWorld::initialize()
 {
-	window->registerElementType(qRegisterMetaType<HelloElement>(), "Hello World", QIcon::fromTheme("applications-internet"));
-
 	window->menuBar()->insertMenu(window->findChild<QMenu *>("menuConfiguration")->menuAction(), helloMenu);
 	window->findChild<QToolBar *>("toolBar")->addAction(helloAction);
 }
 
+SlideElementTypeList HelloWorld::getElementTypes() const
+{
+	return SlideElementTypeList()
+		<< SlideElementType(qRegisterMetaType<HelloElement>(), "Hello World", QIcon::fromTheme("applications-internet"));
+}
+
 HelloWorld::~HelloWorld()
 {
-	if(window)
-		window->unregisterElementType(QMetaType::type("HelloElement"));
-
 	delete helloMenu;
 }
 

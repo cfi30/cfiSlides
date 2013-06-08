@@ -16,41 +16,57 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef AudioElement_H
-#define AudioElement_H
+#ifndef VIEWWIDGET_H
+#define VIEWWIDGET_H
 
-#include <phonon/MediaObject>
-#include <phonon/AudioOutput>
+#include <QWidget>
+#include <QDesktopWidget>
+#include <QGraphicsView>
+#include <QProgressDialog>
+#include <QInputDialog>
+#include <QShortcut>
 
-#include "shared.h"
-#include "slideelement.h"
+#include "slideshow.h"
 
-class CFISLIDES_DLLSPEC AudioElement : public SlideElement
+namespace Ui
+{
+	class ViewWidget;
+}
+
+class ViewWidget : public QWidget
 {
 	Q_OBJECT
-
+	
 public:
-	AudioElement();
-	virtual QString previewUrl() const;
-	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual PropertyList getProperties() const;
+	explicit ViewWidget(QWidget *parent = 0);
+	~ViewWidget();
+	void setSlideshow(Slideshow *slideshow, const int startIndex = 0);
+	
+signals:
+	void closed(int);
 
 public slots:
-	virtual void play();
-	virtual void pause();
-	virtual void stop();
-	virtual void toggleMute();
-	virtual void destroy();
-
-private slots:
+	void prev();
+	void next();
+	void first();
+	void last();
+	void play();
+	void pause();
+	void togglePlayPause();
+	void stop();
+	void toggleMute();
+	void destroy();
 	void restart();
+	void goTo();
+
+private:
+	Ui::ViewWidget *ui;
+	void lazyLoad();
 
 protected:
-	Phonon::MediaObject *mediaObject;
-	Phonon::AudioOutput *audioOutput;
-	bool playbackFinished;
+	bool paused;
+	Slideshow *slideshow;
+	void closeEvent(QCloseEvent *);
 };
 
-Q_DECLARE_METATYPE(AudioElement)
-
-#endif // AudioElement_H
+#endif // VIEWWIDGET_H

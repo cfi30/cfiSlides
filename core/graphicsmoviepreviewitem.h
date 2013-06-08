@@ -16,42 +16,28 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PLUGIN_H
-#define PLUGIN_H
+#ifndef GRAPHICSMOVIEPREVIEWITEM_H
+#define GRAPHICSMOVIEPREVIEWITEM_H
 
-#include <QtPlugin>
-#include <QMainWindow>
+#include <QGraphicsRectItem>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsTextItem>
+#include <QIcon>
 
-#include "slideelementtype.h"
+#include "graphicsitem.h"
 
-class MainWindow;
-
-class Plugin : public QObject
+class GraphicsMoviePreviewItem : public QGraphicsRectItem
 {
-	Q_OBJECT
+	GRAPHICS_ITEM
 
 public:
-	Plugin() {}
-	virtual QString name() const = 0;
-	virtual QString version() const = 0;
-	virtual QString author() const = 0;
-	virtual QString about() const = 0;
-	virtual SlideElementTypeList getElementTypes() const
-	{
-		return SlideElementTypeList();
-	}
-
-	void setWindow(QMainWindow *window)
-	{
-		this->window = window;
-		initialize();
-	}
+	explicit GraphicsMoviePreviewItem(QGraphicsItem *parent = 0);
+	void setSize(const QSize &size);
+	void setSource(const QString &src);
 
 protected:
-	QMainWindow *window;
-	virtual void initialize() = 0;
+	QGraphicsPixmapItem *icon;
+	QGraphicsTextItem *label;
 };
 
-Q_DECLARE_INTERFACE(Plugin, "cfiSlides.Plugin")
-
-#endif // PLUGIN_H
+#endif // GRAPHICSMOVIEPREVIEWITEM_H

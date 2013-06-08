@@ -16,20 +16,31 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GRAPHICSELLIPSEITEM_H
-#define GRAPHICSELLIPSEITEM_H
+#ifndef GRAPHICSVIEW_H
+#define GRAPHICSVIEW_H
 
-#include <QGraphicsEllipseItem>
+#include <QGraphicsView>
+#include <QMouseEvent>
+#include <QGraphicsItem>
 
-#include "graphicsitem.h"
-#include "shared.h"
+#include "math.h"
+#include "configuration.h"
 
-class CFISLIDES_DLLSPEC GraphicsEllipseItem : public QGraphicsEllipseItem
+class GraphicsView : public QGraphicsView
 {
-	GRAPHICS_ITEM
+	Q_OBJECT
 
 public:
-	explicit GraphicsEllipseItem(QGraphicsItem *parent = 0);
+	explicit GraphicsView(QGraphicsScene *scene, QWidget *parent = 0);
+
+protected:
+	int zoomCount;
+
+	void moveSelectedItemsBy(const qreal dx, const qreal dy);
+	virtual void mousePressEvent(QMouseEvent *event);
+	virtual void mouseReleaseEvent(QMouseEvent *event);
+	virtual void wheelEvent(QWheelEvent *event);
+	virtual void keyPressEvent(QKeyEvent *event);
 };
 
-#endif // GRAPHICSELLIPSEITEM_H
+#endif // GRAPHICSVIEW_H

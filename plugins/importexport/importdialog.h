@@ -26,8 +26,10 @@
 #include <QTreeWidgetItem>
 #include <QSettings>
 #include <QFileInfo>
+#include <QInputDialog>
+#include <QProgressDialog>
+#include <QDesktopWidget>
 
-#include "mainwindow.h"
 #include "slide.h"
 #include "configuration.h"
 

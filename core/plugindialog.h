@@ -30,13 +30,12 @@
 
 #include "plugin.h"
 #include "configuration.h"
-#include "shared.h"
 
 namespace Ui {
 	class PluginDialog;
 }
 
-class CFISLIDES_DLLSPEC PluginDialog : public QDialog
+class PluginDialog : public QDialog
 {
 	Q_OBJECT
 	

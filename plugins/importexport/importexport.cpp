@@ -66,7 +66,10 @@ QString ImportExport::about() const
 
 void ImportExport::launchImport()
 {
-	ImportDialog *dialog = new ImportDialog(window->getSlideshow()->getSlides().count(), window);
+	Slideshow *slideshow;
+	QMetaObject::invokeMethod(window, "getSlideshow", Qt::DirectConnection, Q_RETURN_ARG(Slideshow *, slideshow));
+
+	ImportDialog *dialog = new ImportDialog(slideshow->getSlides().count(), window);
 	connect(dialog, SIGNAL(finished(int)), dialog, SLOT(deleteLater()));
 
 	if(dialog->exec() == QDialog::Rejected)
@@ -88,13 +91,13 @@ void ImportExport::launchImport()
 		Slide *tempSlide = slides[index];
 		progress->setValue(index);
 
-		Slide *slide = window->getSlideshow()->createSlide("temp-name");
+		Slide *slide = slideshow->createSlide("temp-name");
 		slide->setValues(tempSlide->getValues());
 
 		foreach(SlideElement *element, tempSlide->getElements())
 			slide->addElement(element);
 
-		window->displaySlide(slide);
+		QMetaObject::invokeMethod(window, "displaySlide", Qt::DirectConnection, Q_ARG(Slide *, slide));
 		window->setWindowModified(true);
 	}
 
@@ -104,7 +107,10 @@ void ImportExport::launchImport()
 
 void ImportExport::launchExport()
 {
-	const int slideCount = window->getSlideshow()->getSlides().size();
+	Slideshow *slideshow;
+	QMetaObject::invokeMethod(window, "getSlideshow", Qt::DirectConnection, Q_RETURN_ARG(Slideshow *, slideshow));
+
+	const int slideCount = slideshow->getSlides().size();
 	if(slideCount < 1)
 	{
 		QMessageBox::critical(window, exportAction->text(), tr("Impossible d'exporter un diaporama vide."));
@@ -142,8 +148,8 @@ void ImportExport::launchExport()
 	{
 		progress->setValue(index + 1);
 
-		Slide *slide = window->getSlideshow()->getSlide(index);
-		GraphicsView *view = qobject_cast<GraphicsView *>(window->findChild<QStackedWidget *>("displayWidget")->widget(index));
+		Slide *slide = slideshow->getSlide(index);
+		QGraphicsView *view = qobject_cast<QGraphicsView *>(window->findChild<QStackedWidget *>("displayWidget")->widget(index));
 
 		QPixmap pixmap(view->scene()->sceneRect().size().toSize());
 		QPainter painter(&pixmap);

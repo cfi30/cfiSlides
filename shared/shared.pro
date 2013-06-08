@@ -1,4 +1,4 @@
-QT	   += core gui phonon
+QT	   += core gui
 TEMPLATE = lib
 CONFIG += shared plugin cfislides-buildlib
 TARGET = cfislides

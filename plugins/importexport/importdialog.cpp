@@ -205,19 +205,19 @@ SlideElement *ImportDialog::createElementFor(const QString file)
 	switch(type)
 	{
 		case ImageType:
-			element = new ImageElement;
+			element = (SlideElement *)QMetaType::construct(QMetaType::type("ImageElement"));
 			element->setValue("name", QFileInfo(file).baseName());
 			element->setValue("src", file);
 			element->setValue("size", QPixmap(file).size());
 			break;
 		case MovieType:
-			element = new MovieElement;
+			element = (SlideElement *)QMetaType::construct(QMetaType::type("MovieElement"));
 			element->setValue("name", QFileInfo(file).baseName());
 			element->setValue("src", file);
 			element->setValue("size", QDesktopWidget().screenGeometry().size() / DEFAULT_SIZE_SCALE);  // TODO: use movie size
 			break;
 		case AudioType:
-			element = new AudioElement;
+			element = (SlideElement *)QMetaType::construct(QMetaType::type("AudioElement"));
 			element->setValue("name", QFileInfo(file).baseName());
 			element->setValue("src", file);
 			break;
@@ -331,8 +331,9 @@ void ImportDialog::on_treeWidget_itemChanged(QTreeWidgetItem *item, int)
 	this->modified = true;
 	if(item->parent() == 0)
 	{
-		if(!MainWindow::validateSlideName(item->text(0)))
+		if(item->text(0).trimmed().isEmpty())
 		{
+			QMessageBox::critical(qApp->activeWindow(), tr("Renommer la diapositive"), tr("Le nom de la diapositive ne peut pas être vide."));
 			return item->setText(0, item->data(0, Qt::UserRole).toString());
 		}
 

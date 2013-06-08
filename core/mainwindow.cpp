@@ -23,13 +23,27 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 {
 	ui->setupUi(this);
 
-	registerElementType(qRegisterMetaType<RectElement>(), tr("Rectangle"), QIcon::fromTheme("insert-rectangle"));
-	registerElementType(qRegisterMetaType<EllipseElement>(), tr("Ellipse"), QIcon::fromTheme("insert-ellipse"));
-	registerElementType(qRegisterMetaType<LineElement>(), tr("Ligne"), QIcon::fromTheme("insert-horizontal-rule"));
-	registerElementType(qRegisterMetaType<TextElement>(), tr("Texte"), QIcon::fromTheme("insert-text"));
-	registerElementType(qRegisterMetaType<ImageElement>(), tr("Image"), QIcon::fromTheme("insert-image"));
-	registerElementType(qRegisterMetaType<MovieElement>(), tr("Vidéo"), QIcon::fromTheme("insert-video"));
-	registerElementType(qRegisterMetaType<AudioElement>(), tr("Son"), QIcon::fromTheme("insert-audio"));
+	registerElementType(SlideElementType(
+		qRegisterMetaType<RectElement>(), tr("Rectangle"), QIcon::fromTheme("insert-rectangle")
+	));
+	registerElementType(SlideElementType(
+		qRegisterMetaType<EllipseElement>(), tr("Ellipse"), QIcon::fromTheme("insert-ellipse")
+	));
+	registerElementType(SlideElementType(
+		qRegisterMetaType<LineElement>(), tr("Ligne"), QIcon::fromTheme("insert-horizontal-rule")
+	));
+	registerElementType(SlideElementType(
+		qRegisterMetaType<TextElement>(), tr("Texte"), QIcon::fromTheme("insert-text")
+	));
+	registerElementType(SlideElementType(
+		qRegisterMetaType<ImageElement>(), tr("Image"), QIcon::fromTheme("insert-image")
+	));
+	registerElementType(SlideElementType(
+		qRegisterMetaType<MovieElement>(), tr("Vidéo"), QIcon::fromTheme("insert-video")
+	));
+	registerElementType(SlideElementType(
+		qRegisterMetaType<AudioElement>(), tr("Son"), QIcon::fromTheme("insert-audio")
+	));
 
 	new QShortcut(QKeySequence("Shift+Tab"), this, SLOT(selectNextSlide()));
 	new QShortcut(QKeySequence("Ctrl+Shift+Tab"), this, SLOT(selectPrevSlide()));
@@ -590,7 +604,7 @@ bool MainWindow::validateSlideName(const QString &name)
 {
 	if(name.trimmed().isEmpty())
 	{
-		QMessageBox::critical(qApp->activeWindow(), tr("Renommer la diapositive"), tr("Le nom de la diapositive ne peut pas être vide."));
+		QMessageBox::critical(this, tr("Renommer la diapositive"), tr("Le nom de la diapositive ne peut pas être vide."));
 		return false;
 	}
 
@@ -601,7 +615,7 @@ bool MainWindow::validateElementName(const QString &name)
 {
 	if(name.trimmed().isEmpty())
 	{
-		QMessageBox::critical(qApp->activeWindow(), tr("Renommer l'élément"), tr("Le nom de l'élément ne peut pas être vide."));
+		QMessageBox::critical(this, tr("Renommer l'élément"), tr("Le nom de l'élément ne peut pas être vide."));
 		return false;
 	}
 	return true;
@@ -1124,7 +1138,12 @@ void MainWindow::loadPlugins()
 		}
 
 		plugin->setWindow(this);
-		plugins.append(loader);
+		plugins << loader;
+
+		SlideElementTypeList types = plugin->getElementTypes();
+		foreach(const SlideElementType type, types)
+			this->registerElementType(type);
+		pluginTypes << types;
 	}
 
 	ui->actionAboutPlugins->setDisabled(plugins.isEmpty());
@@ -1138,6 +1157,9 @@ void MainWindow::unloadPlugins()
 		loader->unload();
 		delete loader;
 	}
+
+	while(!pluginTypes.isEmpty())
+		this->unregisterElementType(pluginTypes.takeFirst());
 }
 
 void MainWindow::aboutPlugins()
@@ -1147,9 +1169,8 @@ void MainWindow::aboutPlugins()
 	foreach(QPluginLoader *loader, plugins)
 	{
 		Plugin *plugin = qobject_cast<Plugin *>(loader->instance());
-		text += QString("<p><strong>%1 %2</strong> <small>%3</small><br />Auteur : %4</p>")
-				.arg(plugin->name(), plugin->version(), dir.relativeFilePath(loader->fileName()), plugin->author()) +
-				"<p><i>" + plugin->about() + "</i></p>";
+		text += QString("<p><strong>%1 %2</strong> <small>%3</small><br />Auteur : %4</p><p><i>%5</i></p>")
+				.arg(plugin->name(), plugin->version(), dir.relativeFilePath(loader->fileName()), plugin->author(), plugin->about());
 	}
 
 	QMessageBox::about(this, ui->actionAboutPlugins->text(), text);
@@ -1219,22 +1240,22 @@ void MainWindow::resizeSlideshow()
 	progress->deleteLater();
 }
 
-void MainWindow::registerElementType(const int typeId, const QString &label, const QIcon &icon)
+void MainWindow::registerElementType(const SlideElementType &type)
 {
-	QAction *action = new QAction(icon, label, this);
-	action->setData(typeId);
+	QAction *action = new QAction(type.getIcon(), type.getLabel(), this);
+	action->setData(type.getTypeId());
 	connect(action, SIGNAL(triggered()), this, SLOT(insertElementFromAction()));
 
 	insertActions.append(action);
 }
 
-void MainWindow::unregisterElementType(const int typeId)
+void MainWindow::unregisterElementType(const SlideElementType &type)
 {
 	const int actionCount = insertActions.size();
 	for(int i = 0; i < actionCount; i++)
 	{
 		QAction *action = insertActions[i];
-		if(action->data().toInt() != typeId)
+		if(action->data().toInt() != type.getTypeId())
 			continue;
 
 		insertActions.takeAt(i)->deleteLater();

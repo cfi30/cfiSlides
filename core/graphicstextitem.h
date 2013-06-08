@@ -16,20 +16,25 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GRAPHICSLINEITEM_H
-#define GRAPHICSLINEITEM_H
+#ifndef GRAPHICSTEXTITEM_H
+#define GRAPHICSTEXTITEM_H
 
-#include <QGraphicsLineItem>
+#include <QGraphicsTextItem>
+#include <QTextDocument>
+#include <QTextCursor>
 
 #include "graphicsitem.h"
-#include "shared.h"
 
-class CFISLIDES_DLLSPEC GraphicsLineItem : public QGraphicsLineItem
+class GraphicsTextItem : public QGraphicsTextItem
 {
 	GRAPHICS_ITEM
 
 public:
-	explicit GraphicsLineItem(QGraphicsItem *parent = 0);
+	explicit GraphicsTextItem(QGraphicsItem *parent = 0);
+	
+protected:
+	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+	void focusOutEvent(QFocusEvent *event);
 };
 
-#endif // GRAPHICSLINEITEM_H
+#endif // GRAPHICSTEXTITEM_H

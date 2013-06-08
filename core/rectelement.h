@@ -16,47 +16,28 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MOVIEELEMENT_H
-#define MOVIEELEMENT_H
+#ifndef RECTELEMENT_H
+#define RECTELEMENT_H
 
-#include <QGraphicsProxyWidget>
-#include <phonon/VideoPlayer>
-#include <phonon/VideoWidget>
-#include <phonon/AudioOutput>
-#include <phonon/MediaObject>
-#include <QPainter>
-#include <QTimer>
+#include <QGraphicsScene>
 
 #include "slideelement.h"
-#include "graphicsmoviepreviewitem.h"
-#include "shared.h"
+#include "graphicsrectitem.h"
 
-class CFISLIDES_DLLSPEC MovieElement : public SlideElement
+class RectElement : public SlideElement
 {
 	Q_OBJECT
 
 public:
-	MovieElement();
-	virtual QString previewUrl() const;
+	RectElement();
 	virtual void render(QGraphicsScene *scene, const bool interactive);
 	virtual PropertyList getProperties() const;
 
-public slots:
-	virtual void play();
-	virtual void pause();
-	virtual void stop();
-	virtual void toggleMute();
-	virtual void destroy();
-
-private slots:
-	void restart();
-
 protected:
-	Phonon::VideoPlayer *player;
-	QGraphicsProxyWidget *proxy;
-	bool playbackFinished;
+	Qt::PenStyle penStyle() const;
+	Qt::BrushStyle brushStyle() const;
 };
 
-Q_DECLARE_METATYPE(MovieElement)
+Q_DECLARE_METATYPE(RectElement)
 
-#endif // MOVIEELEMENT_H
+#endif // RECTELEMENT_H

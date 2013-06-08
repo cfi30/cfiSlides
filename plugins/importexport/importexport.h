@@ -26,8 +26,13 @@
 #include <QStatusBar>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QProgressDialog>
+#include <QListWidget>
+#include <QGraphicsView>
 
 #include "plugin.h"
+#include "slideshow.h"
+
 #include "exportdialog.h"
 #include "importdialog.h"
 

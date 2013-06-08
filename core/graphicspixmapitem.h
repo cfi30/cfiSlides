@@ -16,29 +16,19 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RECTELEMENT_H
-#define RECTELEMENT_H
+#ifndef GRAPHICSPIXMAPITEM_H
+#define GRAPHICSPIXMAPITEM_H
 
-#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 
-#include "slideelement.h"
-#include "graphicsrectitem.h"
-#include "shared.h"
+#include "graphicsitem.h"
 
-class CFISLIDES_DLLSPEC RectElement : public SlideElement
+class GraphicsPixmapItem : public QGraphicsPixmapItem
 {
-	Q_OBJECT
+	GRAPHICS_ITEM
 
 public:
-	RectElement();
-	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual PropertyList getProperties() const;
-
-protected:
-	Qt::PenStyle penStyle() const;
-	Qt::BrushStyle brushStyle() const;
+	explicit GraphicsPixmapItem(QGraphicsItem *parent = 0);
 };
 
-Q_DECLARE_METATYPE(RectElement)
-
-#endif // RECTELEMENT_H
+#endif // GRAPHICSPIXMAPITEM_H

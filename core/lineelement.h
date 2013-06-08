@@ -16,23 +16,24 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ELLIPSEELEMENT_H
-#define ELLIPSEELEMENT_H
+#ifndef LINEELEMENT_H
+#define LINEELEMENT_H
 
-#include "rectelement.h"
-#include "graphicsellipseitem.h"
+#include <QGraphicsScene>
 
-#include "shared.h"
+#include "slideelement.h"
+#include "graphicslineitem.h"
 
-class CFISLIDES_DLLSPEC EllipseElement : public RectElement
+class LineElement : public SlideElement
 {
 	Q_OBJECT
 
 public:
-	EllipseElement() : RectElement() {}
+	LineElement();
 	virtual void render(QGraphicsScene *scene, const bool interactive);
+	virtual PropertyList getProperties() const;
 };
 
-Q_DECLARE_METATYPE(EllipseElement)
+Q_DECLARE_METATYPE(LineElement)
 
-#endif // ELLIPSEELEMENT_H
+#endif // LINEELEMENT_H

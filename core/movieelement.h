@@ -16,58 +16,46 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VIEWWIDGET_H
-#define VIEWWIDGET_H
+#ifndef MOVIEELEMENT_H
+#define MOVIEELEMENT_H
 
-#include <QWidget>
-#include <QDesktopWidget>
-#include <QGraphicsView>
-#include <QProgressDialog>
-#include <QInputDialog>
-#include <QShortcut>
+#include <QGraphicsProxyWidget>
+#include <phonon/VideoPlayer>
+#include <phonon/VideoWidget>
+#include <phonon/AudioOutput>
+#include <phonon/MediaObject>
+#include <QPainter>
+#include <QTimer>
 
-#include "slideshow.h"
-#include "shared.h"
+#include "slideelement.h"
+#include "graphicsmoviepreviewitem.h"
 
-namespace Ui
-{
-	class ViewWidget;
-}
-
-class ViewWidget : public QWidget
+class MovieElement : public SlideElement
 {
 	Q_OBJECT
-	
+
 public:
-	explicit ViewWidget(QWidget *parent = 0);
-	~ViewWidget();
-	void setSlideshow(Slideshow *slideshow, const int startIndex = 0);
-	
-signals:
-	void closed(int);
+	MovieElement();
+	virtual QString previewUrl() const;
+	virtual void render(QGraphicsScene *scene, const bool interactive);
+	virtual PropertyList getProperties() const;
 
 public slots:
-	void prev();
-	void next();
-	void first();
-	void last();
-	void play();
-	void pause();
-	void togglePlayPause();
-	void stop();
-	void toggleMute();
-	void destroy();
-	void restart();
-	void goTo();
+	virtual void play();
+	virtual void pause();
+	virtual void stop();
+	virtual void toggleMute();
+	virtual void destroy();
 
-private:
-	Ui::ViewWidget *ui;
-	void lazyLoad();
+private slots:
+	void restart();
 
 protected:
-	bool paused;
-	Slideshow *slideshow;
-	void closeEvent(QCloseEvent *);
+	Phonon::VideoPlayer *player;
+	QGraphicsProxyWidget *proxy;
+	bool playbackFinished;
 };
 
-#endif // VIEWWIDGET_H
+Q_DECLARE_METATYPE(MovieElement)
+
+#endif // MOVIEELEMENT_H

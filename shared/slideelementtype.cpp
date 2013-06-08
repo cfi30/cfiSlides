@@ -16,20 +16,26 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GRAPHICSRECTITEM_H
-#define GRAPHICSRECTITEM_H
+#include "slideelementtype.h"
 
-#include <QGraphicsRectItem>
-
-#include "graphicsitem.h"
-#include "shared.h"
-
-class CFISLIDES_DLLSPEC GraphicsRectItem : public QGraphicsRectItem
+SlideElementType::SlideElementType(const int typeId, const QString &label, const QIcon &icon)
 {
-	GRAPHICS_ITEM
+	this->typeId = typeId;
+	this->label = label;
+	this->icon = icon;
+}
 
-public:
-	explicit GraphicsRectItem(QGraphicsItem *parent = 0);
-};
+int SlideElementType::getTypeId() const
+{
+	return typeId;
+}
 
-#endif // GRAPHICSRECTITEM_H
+QString SlideElementType::getLabel() const
+{
+	return label;
+}
+
+QIcon SlideElementType::getIcon() const
+{
+	return icon;
+}

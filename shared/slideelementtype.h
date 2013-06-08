@@ -16,25 +16,29 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LINEELEMENT_H
-#define LINEELEMENT_H
+#ifndef SLIDEELEMENTTYPE_H
+#define SLIDEELEMENTTYPE_H
 
-#include <QGraphicsScene>
+#include <QString>
+#include <QIcon>
+#include <QList>
 
-#include "slideelement.h"
-#include "graphicslineitem.h"
 #include "shared.h"
 
-class CFISLIDES_DLLSPEC LineElement : public SlideElement
+class CFISLIDES_DLLSPEC SlideElementType
 {
-	Q_OBJECT
-
 public:
-	LineElement();
-	virtual void render(QGraphicsScene *scene, const bool interactive);
-	virtual PropertyList getProperties() const;
+	SlideElementType(const int typeId, const QString &label, const QIcon &icon = QIcon());
+	int getTypeId() const;
+	QString getLabel() const;
+	QIcon getIcon() const;
+
+private:
+	int typeId;
+	QString label;
+	QIcon icon;
 };
 
-Q_DECLARE_METATYPE(LineElement)
+typedef QList<SlideElementType> SlideElementTypeList;
 
-#endif // LINEELEMENT_H
+#endif // SLIDEELEMENTTYPE_H

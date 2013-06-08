@@ -55,14 +55,13 @@
 #include "plugin.h"
 #include "geometrydialog.h"
 #include "configuration.h"
-#include "shared.h"
 
 namespace Ui
 {
 	class MainWindow;
 }
 
-class CFISLIDES_DLLSPEC MainWindow : public QMainWindow
+class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
@@ -72,23 +71,14 @@ public:
 	void setWindowModified(const bool);
 	void setWindowTitle(const QString &);
 
-	Slideshow *getSlideshow() const;
-	void displaySlideshow();
-	bool closeSlideshow();
-	void displaySlide(Slide *slide);
-	void updateSlide(const int index);
-	void updateIcon(const int index);
-	void updateSlideTree(const int index);
-	void updatePropertiesEditor(const SlideshowElement *element);
-	QGraphicsItem *sceneItemFromIndex(const int index) const;
-	void insertElement(SlideElement *element);
-	void moveElement(const int before, const int after);
-
-	static bool validateSlideName(const QString &name);
-	static bool validateElementName(const QString &name);
-
-	void registerElementType(const int typeId, const QString &label, const QIcon &icon = QIcon());
-	void unregisterElementType(const int typeId);
+	Q_INVOKABLE Slideshow *getSlideshow() const;
+	Q_INVOKABLE bool closeSlideshow();
+	Q_INVOKABLE void displaySlide(Slide *slide);
+	Q_INVOKABLE void updateSlide(const int index);
+	Q_INVOKABLE void updateIcon(const int index);
+	Q_INVOKABLE void updateSlideTree(const int index);
+	Q_INVOKABLE QGraphicsItem *sceneItemFromIndex(const int index) const;
+	Q_INVOKABLE void insertElement(SlideElement *element);
 
 public slots:
 	void newSlideshow();
@@ -113,7 +103,6 @@ public slots:
 	void managePlugins();
 	void print();
 	void moveFinishTimerTimeout();
-	QMenu *createSlideContextMenu();
 	void loadPlugins();
 	void unloadPlugins();
 	void aboutPlugins();
@@ -136,16 +125,16 @@ public slots:
 	void moveSlideRight();
 	void duplicateElements();
 
-private slots:
-	void displayViewContextMenu(const QPoint &);
-	void displaySlideTreeContextMenu(const QPoint &);
-	void displaySlideListContextMenu(const QPoint &pos);
-	void insertElementFromAction();
-
 private:
-	Ui::MainWindow *ui;
+	void updatePropertiesEditor(const SlideshowElement *element);
+	void moveElement(const int before, const int after);
+	bool validateSlideName(const QString &name);
+	bool validateElementName(const QString &name);
+	void registerElementType(const SlideElementType &type);
+	void unregisterElementType(const SlideElementType &type);
+	QMenu *createSlideContextMenu();
 
-protected:
+	Ui::MainWindow *ui;
 	Slideshow *slideshow;
 	int newSlideshowCount;
 	QTimer moveFinishTimer;
@@ -154,6 +143,15 @@ protected:
 	QString commandLineHelp;
 	QActionGroup *currentSlideActions;
 	QActionGroup *selectionActions;
+	SlideElementTypeList pluginTypes;
+
+private slots:
+	void displayViewContextMenu(const QPoint &);
+	void displaySlideTreeContextMenu(const QPoint &);
+	void displaySlideListContextMenu(const QPoint &pos);
+	void insertElementFromAction();
+
+protected:
 	virtual void closeEvent(QCloseEvent *);
 };
 
