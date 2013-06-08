@@ -9,11 +9,7 @@ DEFINES += CFISLIDES_VERSION=\\\"$$VERSION\\\"
 
 HEADERS += \
 	mainwindow.h \
-	slideshow.h \
-	slide.h \
 	graphicsview.h \
-	baseelement.h \
-	slideelement.h \
 	imageelement.h \
 	graphicsitem.h \
 	graphicspixmapitem.h \
@@ -32,21 +28,12 @@ HEADERS += \
 	plugin.h \
 	shared.h \
 	graphicsmoviepreviewitem.h \
-	slideshowelement.h \
 	geometrydialog.h \
-	property.h \
-	propertymanager.h \
-	propertyeditor.h \
-	propertyeditordelegate.h \
 
 SOURCES += \
 	main.cpp \
 	mainwindow.cpp \
-	slideshow.cpp \
-	slide.cpp \
 	graphicsview.cpp \
-	baseelement.cpp \
-	slideelement.cpp \
 	imageelement.cpp \
 	graphicspixmapitem.cpp \
 	graphicsrectitem.cpp \
@@ -62,12 +49,7 @@ SOURCES += \
 	lineelement.cpp \
 	plugindialog.cpp \
 	graphicsmoviepreviewitem.cpp \
-	slideshowelement.cpp \
 	geometrydialog.cpp \
-	property.cpp \
-	propertymanager.cpp \
-	propertyeditor.cpp \
-	propertyeditordelegate.cpp \
 
 FORMS += \
 	mainwindow.ui \
