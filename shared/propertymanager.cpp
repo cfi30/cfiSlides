@@ -218,13 +218,13 @@ QWidget *FilePropertyManager::createEditor(const QString &propName, const QVaria
 	connect(fileEdit, SIGNAL(textChanged(QString)), this, SLOT(filePathChanged(QString)));
 	connect(button, SIGNAL(clicked()), this, SLOT(buttonClicked()));
 
-	widget->setFocusProxy(button);
+	widget->setFocusProxy(fileEdit);
 	return widget;
 }
 
 bool FilePropertyManager::isValid(const QString &propName, const QVariant &value) const
 {
-	return isRequired[propName] ? !value.toString().isEmpty() : true;
+	return isRequired[propName] ? QFile(value.toString()).exists() : true;
 }
 
 void FilePropertyManager::setFilter(const QString &propName, const QString &filter)
