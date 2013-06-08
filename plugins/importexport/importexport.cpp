@@ -98,7 +98,7 @@ void ImportExport::launchImport()
 			slide->addElement(element);
 
 		QMetaObject::invokeMethod(window, "displaySlide", Qt::DirectConnection, Q_ARG(Slide *, slide));
-		window->setWindowModified(true);
+		QMetaObject::invokeMethod(window, "setWindowModified", Qt::DirectConnection, Q_ARG(bool, true));
 	}
 
 	progress->close();

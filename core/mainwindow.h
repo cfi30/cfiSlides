@@ -68,9 +68,9 @@ class MainWindow : public QMainWindow
 public:
 	explicit MainWindow(QString commandLineHelp = QString(), QString openFile = QString(), bool disablePlugins = true, QWidget *parent = 0);
 	~MainWindow();
-	void setWindowModified(const bool);
-	void setWindowTitle(const QString &);
 
+	Q_INVOKABLE void setWindowModified(const bool);
+	Q_INVOKABLE void setWindowTitle(const QString &);
 	Q_INVOKABLE Slideshow *getSlideshow() const;
 	Q_INVOKABLE bool closeSlideshow();
 	Q_INVOKABLE void displaySlide(Slide *slide);
