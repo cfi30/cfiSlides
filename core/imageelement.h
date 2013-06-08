@@ -32,6 +32,9 @@ public:
 	ImageElement();
 	virtual void render(QGraphicsScene *scene, const bool interactive);
 	virtual PropertyList getProperties() const;
+
+protected:
+	virtual void propertyChanged(QString, QVariant);
 };
 
 class GraphicsPixmapItem : public QGraphicsPixmapItem

@@ -20,7 +20,7 @@
 
 ImageElement::ImageElement() : SlideElement()
 {
-	setValue("size", QSize(600, 400));
+	setValue("size", QSize(400, 300));
 }
 
 void ImageElement::render(QGraphicsScene *scene, const bool interactive)
@@ -106,4 +106,15 @@ PropertyList ImageElement::getProperties() const
 	return PropertyList()
 		<< SlideElement::getProperties()
 		<< group;
+}
+
+void ImageElement::propertyChanged(QString name, QVariant value)
+{
+	if(getValue("src").toString().isEmpty())
+	{
+		const QSize size = QPixmap(value.toString()).size();
+		if(!size.isNull())
+			setValue("size", size);
+	}
+	SlideshowElement::propertyChanged(name, value);
 }
