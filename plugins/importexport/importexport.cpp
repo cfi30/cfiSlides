@@ -61,7 +61,7 @@ QString ImportExport::author() const
 
 QString ImportExport::about() const
 {
-	return "Demo plugin for cfiSlides.";
+	return "Add import/export functionalities to cfiSlides.";
 }
 
 void ImportExport::launchImport()
