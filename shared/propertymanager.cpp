@@ -89,6 +89,11 @@ void StringPropertyManager::textChanged(QString newValue)
 		emit modified(currentProperty, newValue);
 }
 
+QString TextPropertyManager::valueToString(const QString &, const QVariant &value) const
+{
+	return value.toString().replace("\n", " ");
+}
+
 QWidget *TextPropertyManager::createEditor(const QString &propName, const QVariant &value, QWidget *parent)
 {
 	if(isReadOnly[propName]) return 0;

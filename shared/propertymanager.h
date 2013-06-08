@@ -89,6 +89,7 @@ class CFISLIDES_DLLSPEC TextPropertyManager : public StringPropertyManager
 	Q_OBJECT
 
 public:
+	virtual QString valueToString(const QString &, const QVariant &) const;
 	virtual QWidget *createEditor(const QString &, const QVariant &, QWidget *);
 
 protected slots:
