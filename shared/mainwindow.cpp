@@ -384,9 +384,12 @@ void MainWindow::createEmptySlide()
 	Slide *slide = this->slideshow->createSlide(tr("Diapositive %1").arg(this->slideshow->getSlides().size() + 1));
 	displaySlide(slide);
 
-	QListWidgetItem *item = ui->slideList->item(ui->slideList->count() - 1);
-	ui->slideList->scrollToItem(item);
-	ui->slideList->setCurrentItem(item);
+	if(ui->slideList->count() > 1)
+	{
+		QListWidgetItem *item = ui->slideList->item(ui->slideList->count() - 1);
+		ui->slideList->scrollToItem(item);
+		ui->slideList->setCurrentItem(item);
+	}
 
 	setWindowModified(true);
 	statusBar()->showMessage(tr("Diapositive créée."), STATUS_TIMEOUT);
@@ -421,6 +424,9 @@ void MainWindow::displaySlide(Slide *slide)
 	QListWidgetItem *newItem = new QListWidgetItem(icon, slide->getValue("name").toString());
 	newItem->setFlags(newItem->flags() ^ Qt::ItemIsEditable);
 	ui->slideList->addItem(newItem);
+
+	if(ui->slideList->count() == 1)
+		ui->slideList->setCurrentRow(0);
 
 	this->currentSlideActions->setEnabled(true);
 
