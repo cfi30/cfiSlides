@@ -19,10 +19,12 @@
 #ifndef TEXTELEMENT_H
 #define TEXTELEMENT_H
 
-#include <QGraphicsScene>
+#include <QGraphicsTextItem>
+#include <QTextDocument>
+#include <QTextCursor>
 
 #include "slideelement.h"
-#include "graphicstextitem.h"
+#include "graphicsitem.h"
 
 class TextElement : public SlideElement
 {
@@ -35,6 +37,15 @@ public:
 	
 private slots:
 	void textChanged();
+};
+
+class GraphicsTextItem : public QGraphicsTextItem
+{
+	GRAPHICS_ITEM(GraphicsTextItem, QGraphicsTextItem)
+
+protected:
+	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+	void focusOutEvent(QFocusEvent *event);
 };
 
 Q_DECLARE_METATYPE(TextElement)

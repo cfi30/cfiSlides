@@ -30,6 +30,9 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 	if(!getValue("visible").toBool())
 		return;
 
+	const QSize size = getValue("size").toSize();
+	const QPoint pos = getValue("position").toPoint();
+
 	Qt::AspectRatioMode scalingMode = Qt::IgnoreAspectRatio;
 	switch(getValue("scaleMode").toInt())
 	{
@@ -41,24 +44,37 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 			break;
 	}
 
-	if(!getValue("src").toString().isEmpty())
+	const QPixmap pixmap(getValue("src").toString());
+	if(pixmap.isNull())
 	{
-		QPixmap pixmap(getValue("src").toString());
-		QPixmap spixmap = pixmap.scaled(getValue("size").toSize(), scalingMode, Qt::SmoothTransformation);
+		MissingImagePlaceholderItem *item = new MissingImagePlaceholderItem(this);
+		item->setPos(pos);
+		item->setRect(QRect(QPoint(), size));
+		item->setBrush(Qt::darkGray);
+		item->setPen(QPen(Qt::black));
 
-		GraphicsPixmapItem *item = new GraphicsPixmapItem();
-		item->setPixmap(spixmap);
-		item->setPos(getValue("position").toPoint());
-		item->setElement(this);
+		QGraphicsPixmapItem *icon = new QGraphicsPixmapItem(item);
+		icon->setPixmap(QIcon::fromTheme("image-missing").pixmap(QSize(128, 128)));
+
+		icon->setVisible(
+			size.width() > icon->pixmap().size().width() &&
+			size.height() > icon->pixmap().size().height()
+		);
+
+		icon->setPos(
+			(size.width() - icon->pixmap().width()) / 2,
+			(size.height() - icon->pixmap().height()) / 2
+		);
 
 		scene->addItem(item);
 	}
 	else
 	{
-		GraphicsMoviePreviewItem *item = new GraphicsMoviePreviewItem; // FIXME: should display an image placeholder
-		item->setSize(getValue("size").toSize());
+		const QPixmap spixmap = pixmap.scaled(size, scalingMode, Qt::SmoothTransformation);
+
+		GraphicsPixmapItem *item = new GraphicsPixmapItem(this);
+		item->setPixmap(spixmap);
 		item->setPos(getValue("position").toPoint());
-		item->setElement(this);
 
 		scene->addItem(item);
 	}

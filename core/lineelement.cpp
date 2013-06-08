@@ -55,12 +55,10 @@ void LineElement::render(QGraphicsScene *scene, const bool interactive)
 	pen.setColor(getValue("color").value<QColor>());
 	pen.setWidth(getValue("size").toInt());
 
-	const QPoint pos = getValue("position").toPoint();
-	GraphicsLineItem *item = new GraphicsLineItem();
+	GraphicsLineItem *item = new GraphicsLineItem(this);
 	item->setPen(pen);
-	item->setPos(pos);
-	item->setLine(QLineF(QPoint(0, getValue("start").toInt()), getValue("stop").toPoint()));
-	item->setElement(this);
+	item->setPos(getValue("position").toPoint());
+	item->setLine(QLine(QPoint(0, getValue("start").toInt()), getValue("stop").toPoint()));
 
 	scene->addItem(item);
 }

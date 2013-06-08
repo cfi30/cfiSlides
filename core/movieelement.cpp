@@ -50,11 +50,32 @@ void MovieElement::render(QGraphicsScene *scene, const bool interactive)
 
 	if(interactive)
 	{
-		GraphicsMoviePreviewItem *item = new GraphicsMoviePreviewItem;
-		item->setSource(getValue("src").toString());
-		item->setSize(size);
+		MoviePlaceholderItem *item = new MoviePlaceholderItem(this);
+		item->setRect(QRect(QPoint(), size));
 		item->setPos(pos);
-		item->setElement(this);
+
+		item->setBrush(Qt::darkGray);
+		item->setPen(QPen(Qt::black));
+
+		QGraphicsPixmapItem *icon = new QGraphicsPixmapItem(item);
+		icon->setPixmap(QIcon::fromTheme("applications-multimedia").pixmap(QSize(128, 128)));
+
+		QGraphicsTextItem *label = new QGraphicsTextItem(item);
+		label->setDefaultTextColor(Qt::black);
+		label->setPlainText(getValue("src").toString());
+
+		icon->setVisible(
+			size.width() > icon->pixmap().size().width() &&
+			size.height() > icon->pixmap().size().height()
+		);
+
+		icon->setPos(
+			(size.width() - icon->pixmap().width()) / 2,
+			(size.height() - icon->pixmap().height()) / 2
+		);
+
+		label->setTextWidth(size.width());
+		label->setVisible(icon->isVisible());
 
 		scene->addItem(item);
 	}

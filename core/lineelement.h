@@ -19,10 +19,10 @@
 #ifndef LINEELEMENT_H
 #define LINEELEMENT_H
 
-#include <QGraphicsScene>
+#include <QGraphicsLineItem>
 
 #include "slideelement.h"
-#include "graphicslineitem.h"
+#include "graphicsitem.h"
 
 class LineElement : public SlideElement
 {
@@ -32,6 +32,11 @@ public:
 	LineElement();
 	virtual void render(QGraphicsScene *scene, const bool interactive);
 	virtual PropertyList getProperties() const;
+};
+
+class GraphicsLineItem : public QGraphicsLineItem
+{
+	GRAPHICS_ITEM(GraphicsLineItem, QGraphicsLineItem)
 };
 
 Q_DECLARE_METATYPE(LineElement)

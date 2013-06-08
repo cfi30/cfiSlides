@@ -36,12 +36,11 @@ void RectElement::render(QGraphicsScene *scene, const bool interactive)
 	pen.setColor(getValue("borderColor").value<QColor>());
 	pen.setWidth(getValue("borderSize", 1).toInt());
 
-	GraphicsRectItem *item = new GraphicsRectItem();
+	GraphicsRectItem *item = new GraphicsRectItem(this);
 	item->setBrush(QBrush(getValue("color").value<QColor>(), brushStyle()));
 	item->setPen(pen);
-	item->setRect(QRectF(QPointF(), getValue("size").toSizeF()));
+	item->setRect(QRect(QPoint(), getValue("size").toSize()));
 	item->setPos(getValue("position").toPoint());
-	item->setElement(this);
 
 	scene->addItem(item);
 }

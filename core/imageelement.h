@@ -19,11 +19,10 @@
 #ifndef IMAGEELEMENT_H
 #define IMAGEELEMENT_H
 
-#include <QLabel>
+#include <QGraphicsPixmapItem>
 
 #include "slideelement.h"
-#include "graphicspixmapitem.h"
-#include "graphicsmoviepreviewitem.h"
+#include "graphicsitem.h"
 
 class ImageElement : public SlideElement
 {
@@ -33,6 +32,16 @@ public:
 	ImageElement();
 	virtual void render(QGraphicsScene *scene, const bool interactive);
 	virtual PropertyList getProperties() const;
+};
+
+class GraphicsPixmapItem : public QGraphicsPixmapItem
+{
+	GRAPHICS_ITEM(GraphicsPixmapItem, QGraphicsPixmapItem)
+};
+
+class MissingImagePlaceholderItem : public QGraphicsRectItem
+{
+	GRAPHICS_ITEM(MissingImagePlaceholderItem, QGraphicsRectItem)
 };
 
 Q_DECLARE_METATYPE(ImageElement)

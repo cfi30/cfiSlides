@@ -11,23 +11,16 @@ HEADERS += \
 	mainwindow.h \
 	graphicsview.h \
 	imageelement.h \
-	graphicsitem.h \
-	graphicspixmapitem.h \
-	graphicsrectitem.h \
 	rectelement.h \
-	graphicstextitem.h \
 	textelement.h \
 	movieelement.h \
-	graphicsellipseitem.h \
 	ellipseelement.h \
 	viewwidget.h \
 	audioelement.h \
-	graphicslineitem.h \
 	lineelement.h \
 	plugindialog.h \
 	plugin.h \
 	shared.h \
-	graphicsmoviepreviewitem.h \
 	geometrydialog.h \
 
 SOURCES += \
@@ -35,20 +28,14 @@ SOURCES += \
 	mainwindow.cpp \
 	graphicsview.cpp \
 	imageelement.cpp \
-	graphicspixmapitem.cpp \
-	graphicsrectitem.cpp \
 	rectelement.cpp \
-	graphicstextitem.cpp \
 	textelement.cpp \
 	movieelement.cpp \
-	graphicsellipseitem.cpp \
 	ellipseelement.cpp \
 	viewwidget.cpp \
 	audioelement.cpp \
-	graphicslineitem.cpp \
 	lineelement.cpp \
 	plugindialog.cpp \
-	graphicsmoviepreviewitem.cpp \
 	geometrydialog.cpp \
 
 FORMS += \

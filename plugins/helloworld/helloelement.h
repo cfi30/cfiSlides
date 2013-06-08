@@ -19,18 +19,24 @@
 #ifndef HELLOELEMENT_H
 #define HELLOELEMENT_H
 
+#include <QGraphicsRectItem>
 #include <QFontMetrics>
 
 #include "slideelement.h"
-#include "hello2ditem.h"
+#include "graphicsitem.h"
 
 class HelloElement : public SlideElement
 {
 	Q_OBJECT
 public:
-	explicit HelloElement();
+	HelloElement() : SlideElement() {}
 	virtual void render(QGraphicsScene *scene, const bool interactive);
 	virtual PropertyList getProperties() const;
+};
+
+class Hello2DItem : public QGraphicsRectItem
+{
+	GRAPHICS_ITEM(Hello2DItem, QGraphicsRectItem)
 };
 
 Q_DECLARE_METATYPE(HelloElement)

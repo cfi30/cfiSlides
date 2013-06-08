@@ -21,9 +21,9 @@
 
 #include "slideelement.h"
 
-#define GRAPHICS_ITEM \
+#define GRAPHICS_ITEM(className, parentClass) \
 public:\
-void setElement(SlideElement *parent)\
+explicit className(SlideElement *parent) : parentClass()\
 {\
 	this->slideElement = parent;\
 	this->setData(Qt::UserRole, parent->getIndex());\
@@ -32,25 +32,24 @@ protected:\
 SlideElement *slideElement;\
 virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value)\
 {\
-	if(change == ItemPositionChange && scene())\
-	{\
-		QPointF newPos = value.toPointF();\
-		QRectF rect = scene()->sceneRect();\
-		if(newPos.x() < 0)\
-			newPos.setX(0);\
-		if(newPos.y() < 0)\
-			newPos.setY(0);\
+	if(change != ItemPositionChange || !scene())\
+		return QGraphicsItem::itemChange(change, value);\
 \
-		if(newPos.x() + boundingRect().right() > rect.right())\
-			newPos.setX(rect.right() - boundingRect().right());\
-		if(newPos.y() + boundingRect().bottom() > rect.bottom())\
-			newPos.setY(rect.bottom() - boundingRect().bottom());\
+	QPointF newPos = value.toPointF();\
+	QRectF rect = scene()->sceneRect();\
+	if(newPos.x() < 0)\
+		newPos.setX(0);\
+	if(newPos.y() < 0)\
+		newPos.setY(0);\
 \
-		if(this->slideElement != 0)\
-			this->slideElement->movedTo(newPos.toPoint());\
-		return newPos;\
-	}\
-	return QGraphicsItem::itemChange(change, value);\
+	if(newPos.x() + boundingRect().right() > rect.right())\
+		newPos.setX(rect.right() - boundingRect().right());\
+	if(newPos.y() + boundingRect().bottom() > rect.bottom())\
+		newPos.setY(rect.bottom() - boundingRect().bottom());\
+\
+	if(this->slideElement != 0)\
+		this->slideElement->movedTo(newPos.toPoint());\
+	return newPos;\
 }
 
 #endif // GRAPHICSITEM_H

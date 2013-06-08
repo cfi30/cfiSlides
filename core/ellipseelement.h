@@ -19,8 +19,10 @@
 #ifndef ELLIPSEELEMENT_H
 #define ELLIPSEELEMENT_H
 
+#include <QGraphicsEllipseItem>
+
 #include "rectelement.h"
-#include "graphicsellipseitem.h"
+#include "graphicsitem.h"
 
 class EllipseElement : public RectElement
 {
@@ -29,6 +31,11 @@ class EllipseElement : public RectElement
 public:
 	EllipseElement() : RectElement() {}
 	virtual void render(QGraphicsScene *scene, const bool interactive);
+};
+
+class GraphicsEllipseItem : public QGraphicsEllipseItem
+{
+	GRAPHICS_ITEM(GraphicsEllipseItem, QGraphicsEllipseItem)
 };
 
 Q_DECLARE_METATYPE(EllipseElement)

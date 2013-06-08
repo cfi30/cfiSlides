@@ -18,10 +18,6 @@
 
 #include "helloelement.h"
 
-HelloElement::HelloElement() : SlideElement()
-{
-}
-
 void HelloElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
@@ -33,11 +29,10 @@ void HelloElement::render(QGraphicsScene *scene, const bool interactive)
 	brush.setStyle(Qt::DiagCrossPattern);
 	brush.setColor(Qt::black);
 
-	Hello2DItem *item = new Hello2DItem();
+	Hello2DItem *item = new Hello2DItem(this);
 	item->setPen(QPen(Qt::NoPen));
 	item->setBrush(brush);
 	item->setPos(getValue("position").toPoint());
-	item->setElement(this);
 
 	scene->addItem(item);
 

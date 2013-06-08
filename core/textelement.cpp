@@ -35,13 +35,12 @@ void TextElement::render(QGraphicsScene *scene, const bool interactive)
 	if(!getValue("visible").toBool())
 		return;
 
-	GraphicsTextItem *item = new GraphicsTextItem();
+	GraphicsTextItem *item = new GraphicsTextItem(this);
 	item->setPlainText(getValue("text").toString());
 	item->setFont(getValue("font").value<QFont>());
 	item->setDefaultTextColor(getValue("color").value<QColor>());
 	item->setTextWidth(getValue("width").toInt());
 	item->setPos(getValue("position").toPoint());
-	item->setElement(this);
 
 	connect(item->document(), SIGNAL(contentsChanged()), this, SLOT(textChanged()));
 	scene->addItem(item);
@@ -117,4 +116,26 @@ void TextElement::textChanged()
 	QTextDocument *document = qobject_cast<QTextDocument *>(sender());
 	setValue("text", document->toPlainText());
 	emit moved();
+}
+
+void GraphicsTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+	QGraphicsTextItem::mouseDoubleClickEvent(event);
+	if(!this->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+		return;
+
+	setTextInteractionFlags(Qt::TextEditorInteraction);
+}
+
+void GraphicsTextItem::focusOutEvent(QFocusEvent *event)
+{
+	QGraphicsTextItem::focusOutEvent(event);
+
+	if(!this->flags().testFlag(QGraphicsItem::ItemIsSelectable))
+		return;
+
+	setTextInteractionFlags(Qt::NoTextInteraction);
+	QTextCursor c(document());
+	c.clearSelection();
+	setTextCursor(c);
 }

@@ -19,16 +19,18 @@
 #ifndef MOVIEELEMENT_H
 #define MOVIEELEMENT_H
 
+#include <QGraphicsRectItem>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsTextItem>
 #include <QGraphicsProxyWidget>
 #include <phonon/VideoPlayer>
 #include <phonon/VideoWidget>
 #include <phonon/AudioOutput>
 #include <phonon/MediaObject>
 #include <QPainter>
-#include <QTimer>
 
 #include "slideelement.h"
-#include "graphicsmoviepreviewitem.h"
+#include "graphicsitem.h"
 
 class MovieElement : public SlideElement
 {
@@ -54,6 +56,11 @@ protected:
 	Phonon::VideoPlayer *player;
 	QGraphicsProxyWidget *proxy;
 	bool playbackFinished;
+};
+
+class MoviePlaceholderItem : public QGraphicsRectItem
+{
+	GRAPHICS_ITEM(MoviePlaceholderItem, QGraphicsRectItem)
 };
 
 Q_DECLARE_METATYPE(MovieElement)

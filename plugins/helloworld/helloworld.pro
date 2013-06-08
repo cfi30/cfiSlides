@@ -6,13 +6,11 @@ VERSION = 1.0
 
 HEADERS += \
 	helloworld.h \
-    helloelement.h \
-    hello2ditem.h
+	helloelement.h \
 
 SOURCES += \
 	helloworld.cpp \
-    helloelement.cpp \
-    hello2ditem.cpp
+	helloelement.cpp \
 
 RESOURCES += \
 	helloworld.qrc

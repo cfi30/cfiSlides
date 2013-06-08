@@ -33,6 +33,7 @@
 <file>./icons/oxygen/22x22/window-new.png</file>
 
 <file>./icons/oxygen/128x128/applications-multimedia.png</file>
+<file>./icons/oxygen/128x128/image-missing.png</file>
 <file>./icons/oxygen/index.theme</file>
 </qresource>
 </RCC>

@@ -19,10 +19,10 @@
 #ifndef RECTELEMENT_H
 #define RECTELEMENT_H
 
-#include <QGraphicsScene>
+#include <QGraphicsRectItem>
 
 #include "slideelement.h"
-#include "graphicsrectitem.h"
+#include "graphicsitem.h"
 
 class RectElement : public SlideElement
 {
@@ -36,6 +36,11 @@ public:
 protected:
 	Qt::PenStyle penStyle() const;
 	Qt::BrushStyle brushStyle() const;
+};
+
+class GraphicsRectItem : public QGraphicsRectItem
+{
+	GRAPHICS_ITEM(GraphicsRectItem, QGraphicsRectItem)
 };
 
 Q_DECLARE_METATYPE(RectElement)
