@@ -44,26 +44,6 @@ ImportExport::~ImportExport()
 	delete exportAction;
 }
 
-QString ImportExport::name() const
-{
-	return tr("Importer / Exporter");
-}
-
-QString ImportExport::version() const
-{
-	return "1.0";
-}
-
-QString ImportExport::author() const
-{
-	return "<a href=\"http://mysite.com\">Christian Fillion</a>";
-}
-
-QString ImportExport::about() const
-{
-	return "Add import/export functionalities to cfiSlides.";
-}
-
 void ImportExport::launchImport()
 {
 	Slideshow *slideshow;
@@ -179,5 +159,3 @@ void ImportExport::launchExport()
 
 	QDesktopServices::openUrl(QUrl::fromLocalFile(directory));
 }
-
-Q_EXPORT_PLUGIN2(import_export, ImportExport)

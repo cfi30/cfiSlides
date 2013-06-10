@@ -38,6 +38,8 @@
 #include <QTimer>
 #include <QPluginLoader>
 #include <QActionGroup>
+#include <QMediaPlayer>
+#include <QJsonObject>
 
 #include "graphicsview.h"
 #include "slideshow.h"
@@ -111,7 +113,6 @@ public slots:
 	void openRecentFile(QAction *);
 	void displayInsertElemMenu();
 	void resizeSlideshow();
-
 	void currentSlideChanged(int currentRow);
 	void slideItemChanged(QListWidgetItem *item);
 	void elementItemChanged(QTreeWidgetItem *item, int column);
@@ -124,6 +125,14 @@ public slots:
 	void moveSlideLeft();
 	void moveSlideRight();
 	void duplicateElements();
+	void playPreview();
+	void pausePreview();
+	void setPreviewVolume(int);
+	void setPreviewPosition(int);
+	void previewSeekableChanged(bool);
+	void previewDurationChanged(qint64);
+	void previewPositionChanged(qint64);
+	void previewStateChanged(QMediaPlayer::State);
 
 private:
 	void updatePropertiesEditor(const SlideshowElement *element);
@@ -133,6 +142,8 @@ private:
 	void registerElementType(const SlideElementType &type);
 	void unregisterElementType(const SlideElementType &type);
 	QMenu *createSlideContextMenu();
+	QString msToString(const int ms) const;
+	QString formatInt(const int in) const;
 
 	Ui::MainWindow *ui;
 	Slideshow *slideshow;
@@ -144,6 +155,7 @@ private:
 	QActionGroup *currentSlideActions;
 	QActionGroup *selectionActions;
 	SlideElementTypeList pluginTypes;
+	QMediaPlayer *previewPlayer;
 
 private slots:
 	void displayViewContextMenu(const QPoint &);

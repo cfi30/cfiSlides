@@ -205,19 +205,19 @@ SlideElement *ImportDialog::createElementFor(const QString file)
 	switch(type)
 	{
 		case ImageType:
-			element = (SlideElement *)QMetaType::construct(QMetaType::type("ImageElement"));
+			element = (SlideElement *)QMetaType::create(QMetaType::type("ImageElement"));
 			element->setValue("name", QFileInfo(file).baseName());
 			element->setValue("src", file);
 			element->setValue("size", QPixmap(file).size());
 			break;
 		case MovieType:
-			element = (SlideElement *)QMetaType::construct(QMetaType::type("MovieElement"));
+			element = (SlideElement *)QMetaType::create(QMetaType::type("MovieElement"));
 			element->setValue("name", QFileInfo(file).baseName());
 			element->setValue("src", file);
 			element->setValue("size", QDesktopWidget().screenGeometry().size() / DEFAULT_SIZE_SCALE);  // TODO: use movie size
 			break;
 		case AudioType:
-			element = (SlideElement *)QMetaType::construct(QMetaType::type("AudioElement"));
+			element = (SlideElement *)QMetaType::create(QMetaType::type("AudioElement"));
 			element->setValue("name", QFileInfo(file).baseName());
 			element->setValue("src", file);
 			break;

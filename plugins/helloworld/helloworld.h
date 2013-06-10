@@ -33,15 +33,12 @@
 class HelloWorld : public Plugin
 {
 	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "HelloWorld" FILE "helloworld.json")
 	Q_INTERFACES(Plugin)
 
 public:
 	HelloWorld();
 	virtual ~HelloWorld();
-	virtual QString name() const;
-	virtual QString version() const;
-	virtual QString author() const;
-	virtual QString about() const;
 	virtual void initialize();
 	virtual SlideElementTypeList getElementTypes() const;
 

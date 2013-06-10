@@ -19,15 +19,11 @@
 #ifndef MOVIEELEMENT_H
 #define MOVIEELEMENT_H
 
+#include <QMediaPlayer>
+#include <QGraphicsVideoItem>
 #include <QGraphicsRectItem>
-#include <QGraphicsPixmapItem>
-#include <QGraphicsTextItem>
-#include <QGraphicsProxyWidget>
-#include <phonon/VideoPlayer>
-#include <phonon/VideoWidget>
-#include <phonon/AudioOutput>
-#include <phonon/MediaObject>
 #include <QPainter>
+#include <QMediaPlaylist>
 
 #include "slideelement.h"
 #include "graphicsitem.h"
@@ -50,11 +46,10 @@ public slots:
 	virtual void destroy();
 
 private slots:
-	void restart();
+	void stateChanged(QMediaPlayer::State state);
 
 protected:
-	Phonon::VideoPlayer *player;
-	QGraphicsProxyWidget *proxy;
+	QMediaPlayer *player;
 	bool playbackFinished;
 };
 

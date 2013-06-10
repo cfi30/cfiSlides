@@ -26,10 +26,6 @@
 
 int main(int argc, char *argv[])
 {
-	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
-	QTextCodec::setCodecForTr(QTextCodec::codecForName("utf-8"));
-	QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
-
 	QApplication app(argc, argv);
 	app.setApplicationName("cfiSlides");
 	app.setApplicationVersion(CFISLIDES_VERSION);

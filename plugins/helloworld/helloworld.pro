@@ -1,8 +1,7 @@
 include(../plugins.pri)
 
-QT += core gui
-TARGET = hello_world
-VERSION = 1.0
+QT += core gui widgets
+TARGET = helloworld
 
 HEADERS += \
 	helloworld.h \

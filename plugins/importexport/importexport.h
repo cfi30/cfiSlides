@@ -39,15 +39,12 @@
 class ImportExport : public Plugin
 {
 	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "ImportExport" FILE "importexport.json")
 	Q_INTERFACES(Plugin)
 
 public:
 	ImportExport();
 	virtual ~ImportExport();
-	virtual QString name() const;
-	virtual QString version() const;
-	virtual QString author() const;
-	virtual QString about() const;
 	virtual void initialize();
 
 public slots:

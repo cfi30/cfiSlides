@@ -19,13 +19,9 @@
 #ifndef SLIDE_H
 #define SLIDE_H
 
-#include <QObject>
-#include <QWidget>
 #include <QApplication>
-#include <QLabel>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
-#include <QColor>
 
 #include "slideshowelement.h"
 #include "slideelement.h"

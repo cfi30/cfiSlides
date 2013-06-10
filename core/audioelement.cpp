@@ -36,12 +36,15 @@ void AudioElement::render(QGraphicsScene *scene, const bool interactive)
 	if(interactive || !getValue("visible").toBool())
 		return;
 
-	mediaObject = new Phonon::MediaObject(this);
-	mediaObject->setCurrentSource(Phonon::MediaSource(getValue("src").toString()));
-	connect(mediaObject, SIGNAL(aboutToFinish()), this, SLOT(restart()));
-	audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, mediaObject);
-	Phonon::createPath(mediaObject, audioOutput);
-	audioOutput->setVolume(getValue("volume", 100).toFloat() / 100);
+	player = new QMediaPlayer;
+	player->setVolume(getValue("volume").toInt());
+	connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
+
+	QMediaPlaylist *playlist = new QMediaPlaylist(player);
+	playlist->addMedia(QUrl::fromLocalFile(getValue("src").toString()));
+	if(getValue("loop").toBool())
+		playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+	player->setPlaylist(playlist);
 }
 
 PropertyList AudioElement::getProperties() const
@@ -86,47 +89,36 @@ PropertyList AudioElement::getProperties() const
 		<< group;
 }
 
-void AudioElement::restart()
+void AudioElement::stateChanged(QMediaPlayer::State state)
 {
-	if(getValue("loop").toBool())
-	{
-		mediaObject->enqueue(Phonon::MediaSource(getValue("src").toString()));
-	}
-	else
+	if(state == QMediaPlayer::StoppedState)
 		playbackFinished = true;
 }
 
 void AudioElement::play()
 {
 	if(!playbackFinished)
-		mediaObject->play();
+		player->play();
 }
 
 void AudioElement::pause()
 {
 	if(!playbackFinished)
-		mediaObject->pause();
+		player->pause();
 }
 
 void AudioElement::stop()
 {
-	mediaObject->stop();
+	player->stop();
 	playbackFinished = false;
 }
 
 void AudioElement::toggleMute()
 {
-	if(!audioOutput->isMuted())
-		audioOutput->setMuted(true);
-	else
-	{
-		audioOutput->setMuted(false);
-		// setMuted(false) does not take the sound back without setVolume
-		audioOutput->setVolume(getValue("volume", 100).toFloat() / 100);
-	}
+	player->setMuted(!player->isMuted());
 }
 
 void AudioElement::destroy()
 {
-	mediaObject->deleteLater();
+	player->deleteLater();
 }

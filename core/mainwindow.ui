@@ -232,7 +232,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="Phonon::VideoPlayer" name="videoPlayer" native="true">
+        <widget class="QVideoWidget" name="videoPlayer" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -242,9 +242,15 @@
         </widget>
        </item>
        <item>
-        <widget class="Phonon::VolumeSlider" name="volumeSlider" native="true">
-         <property name="orientation" stdset="0">
-          <number>0</number>
+        <widget class="QSlider" name="volumeSlider">
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBelow</enum>
          </property>
         </widget>
        </item>
@@ -252,9 +258,6 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <property name="spacing">
-        <number>0</number>
-       </property>
        <item>
         <widget class="QToolButton" name="playButton">
          <property name="text">
@@ -264,6 +267,9 @@
           <iconset theme="media-playback-start">
            <normaloff/>
           </iconset>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+Space</string>
          </property>
         </widget>
        </item>
@@ -283,11 +289,24 @@
         </widget>
        </item>
        <item>
-        <widget class="Phonon::SeekSlider" name="seekSlider" native="true">
-         <property name="iconVisible" stdset="0">
-          <bool>false</bool>
+        <widget class="QLabel" name="positionLabel">
+         <property name="text">
+          <string>00:00</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <widget class="QSlider" name="seekSlider">
+         <property name="pageStep">
+          <number>5000</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="durationLabel"/>
        </item>
       </layout>
      </item>
@@ -749,24 +768,15 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>Phonon::SeekSlider</class>
-   <extends>QWidget</extends>
-   <header>phonon/seekslider.h</header>
-  </customwidget>
-  <customwidget>
-   <class>Phonon::VideoPlayer</class>
-   <extends>QWidget</extends>
-   <header>phonon/videoplayer.h</header>
-  </customwidget>
-  <customwidget>
-   <class>Phonon::VolumeSlider</class>
-   <extends>QWidget</extends>
-   <header>phonon/volumeslider.h</header>
-  </customwidget>
-  <customwidget>
    <class>PropertyEditor</class>
    <extends>QWidget</extends>
    <header>propertyeditor.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QVideoWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">QVideoWidget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
@@ -799,8 +809,8 @@
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>372</x>
-     <y>153</y>
+     <x>398</x>
+     <y>144</y>
     </hint>
    </hints>
   </connection>
@@ -827,8 +837,8 @@
    <slot>setChecked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>372</x>
-     <y>153</y>
+     <x>398</x>
+     <y>144</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -1159,32 +1169,32 @@
   <connection>
    <sender>playButton</sender>
    <signal>clicked()</signal>
-   <receiver>videoPlayer</receiver>
-   <slot>play()</slot>
+   <receiver>MainWindow</receiver>
+   <slot>playPreview()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>284</x>
-     <y>284</y>
+     <y>276</y>
     </hint>
     <hint type="destinationlabel">
-     <x>302</x>
-     <y>237</y>
+     <x>199</x>
+     <y>154</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>pauseButton</sender>
    <signal>clicked()</signal>
-   <receiver>videoPlayer</receiver>
-   <slot>pause()</slot>
+   <receiver>MainWindow</receiver>
+   <slot>pausePreview()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>310</x>
-     <y>284</y>
+     <x>308</x>
+     <y>276</y>
     </hint>
     <hint type="destinationlabel">
-     <x>313</x>
-     <y>226</y>
+     <x>199</x>
+     <y>154</y>
     </hint>
    </hints>
   </connection>
@@ -1492,6 +1502,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>volumeSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setPreviewVolume(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>seekSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setPreviewPosition(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>348</x>
+     <y>264</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>createEmptySlide()</slot>
@@ -1525,5 +1567,9 @@
   <slot>resizeSlideshow()</slot>
   <slot>displaySlideTreeContextMenu(QPoint)</slot>
   <slot>displaySlideListContextMenu(QPoint)</slot>
+  <slot>playPreview()</slot>
+  <slot>pausePreview()</slot>
+  <slot>setPreviewVolume(int)</slot>
+  <slot>setPreviewPosition(int)</slot>
  </slots>
 </ui>

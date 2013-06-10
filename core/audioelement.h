@@ -19,8 +19,8 @@
 #ifndef AudioElement_H
 #define AudioElement_H
 
-#include <phonon/MediaObject>
-#include <phonon/AudioOutput>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
 
 #include "slideelement.h"
 
@@ -42,11 +42,10 @@ public slots:
 	virtual void destroy();
 
 private slots:
-	void restart();
+	void stateChanged(QMediaPlayer::State state);
 
 protected:
-	Phonon::MediaObject *mediaObject;
-	Phonon::AudioOutput *audioOutput;
+	QMediaPlayer *player;
 	bool playbackFinished;
 };
 

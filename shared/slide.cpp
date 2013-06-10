@@ -21,7 +21,7 @@
 Slide::Slide(const QString &name) : SlideshowElement()
 {
 	this->setValue("name", name);
-	this->setValue("backgroundColor", Qt::white);
+	this->setValue("backgroundColor", QColor(Qt::white));
 }
 
 Slide::~Slide()

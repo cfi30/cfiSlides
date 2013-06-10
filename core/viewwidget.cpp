@@ -78,7 +78,7 @@ ViewWidget::~ViewWidget()
 
 void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 {
-	QProgressDialog *progress = new QProgressDialog(this);
+	QProgressDialog *progress = new QProgressDialog(qobject_cast<QWidget *>(parent()));
 	progress->setWindowTitle(this->windowTitle());
 	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 	progress->setCancelButtonText(QString());

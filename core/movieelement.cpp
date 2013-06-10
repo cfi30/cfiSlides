@@ -40,14 +40,6 @@ void MovieElement::render(QGraphicsScene *scene, const bool interactive)
 	const QPoint pos = getValue("position").toPoint();
 	const QSize size = getValue("size").toSize();
 
-	Phonon::VideoWidget::ScaleMode scaleMode = Phonon::VideoWidget::ScaleAndCrop;
-	switch(getValue("scaleMode").toInt())
-	{
-		case 1:
-			scaleMode = Phonon::VideoWidget::FitInView;
-			break;
-	}
-
 	if(interactive)
 	{
 		MoviePlaceholderItem *item = new MoviePlaceholderItem(this);
@@ -81,15 +73,22 @@ void MovieElement::render(QGraphicsScene *scene, const bool interactive)
 	}
 	else
 	{
-		player = new Phonon::VideoPlayer(Phonon::VideoCategory);
-		connect(player->mediaObject(), SIGNAL(aboutToFinish()), this, SLOT(restart()));
-		player->load(getValue("src").toString());
-		player->setVolume(getValue("volume", 100).toFloat() / 100);
-		player->videoWidget()->setScaleMode(scaleMode);
-		player->setFixedSize(size);
+		QGraphicsVideoItem *item = new QGraphicsVideoItem;
+		item->setSize(size);
+		item->setPos(pos);
+		item->setAspectRatioMode(getValue("scaleMode").toInt() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
+		scene->addItem(item);
 
-		QGraphicsProxyWidget *proxy = scene->addWidget(player);
-		proxy->setPos(pos);
+		player = new QMediaPlayer;
+		player->setVideoOutput(item);
+		player->setVolume(getValue("volume").toInt());
+		connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
+
+		QMediaPlaylist *playlist = new QMediaPlaylist(player);
+		playlist->addMedia(QUrl::fromLocalFile(getValue("src").toString()));
+		if(getValue("loop").toBool())
+			playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+		player->setPlaylist(playlist);
 	}
 }
 
@@ -138,13 +137,9 @@ PropertyList MovieElement::getProperties() const
 		<< group;
 }
 
-void MovieElement::restart()
+void MovieElement::stateChanged(QMediaPlayer::State state)
 {
-	if(getValue("loop").toBool())
-	{
-		player->mediaObject()->enqueue(Phonon::MediaSource(getValue("src").toString()));
-	}
-	else
+	if(state == QMediaPlayer::StoppedState)
 		playbackFinished = true;
 }
 
@@ -168,7 +163,7 @@ void MovieElement::stop()
 
 void MovieElement::toggleMute()
 {
-	player->audioOutput()->setMuted(!player->audioOutput()->isMuted());
+	player->setMuted(!player->isMuted());
 }
 
 void MovieElement::destroy()
