@@ -16,21 +16,21 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "movieelement.h"
+#include "videoelement.h"
 
-MovieElement::MovieElement() : SlideElement()
+VideoElement::VideoElement() : SlideElement()
 {
 	playbackFinished = false;
 	setValue("size", QSize(600, 400));
 	setValue("volume", 100);
 }
 
-QString MovieElement::previewUrl() const
+QString VideoElement::previewUrl() const
 {
 	return getValue("src").toString();
 }
 
-void MovieElement::render(QGraphicsScene *scene, const bool interactive)
+void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
 
@@ -92,7 +92,7 @@ void MovieElement::render(QGraphicsScene *scene, const bool interactive)
 	}
 }
 
-PropertyList MovieElement::getProperties() const
+PropertyList VideoElement::getProperties() const
 {
 	FilePropertyManager *fileManager = new FilePropertyManager;
 	connect(fileManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
@@ -124,6 +124,7 @@ PropertyList MovieElement::getProperties() const
 	volume->setToolTip(tr("Volume de la vidéo"));
 	volume->setValue(this->getValue("volume"));
 	sliderManager->setMaximum("volume", 100);
+	sliderManager->setSuffix("volume", tr(" %"));
 	group->addProperty(volume);
 
 	Property *scaleMode = new Property(enumManager, tr("Mise à l'échelle"), "scaleMode");
@@ -137,36 +138,36 @@ PropertyList MovieElement::getProperties() const
 		<< group;
 }
 
-void MovieElement::stateChanged(QMediaPlayer::State state)
+void VideoElement::stateChanged(QMediaPlayer::State state)
 {
 	if(state == QMediaPlayer::StoppedState)
 		playbackFinished = true;
 }
 
-void MovieElement::play()
+void VideoElement::play()
 {
 	if(!playbackFinished)
 		player->play();
 }
 
-void MovieElement::pause()
+void VideoElement::pause()
 {
 	if(!playbackFinished)
 		player->pause();
 }
 
-void MovieElement::stop()
+void VideoElement::stop()
 {
 	player->stop();
 	playbackFinished = false;
 }
 
-void MovieElement::toggleMute()
+void VideoElement::toggleMute()
 {
 	player->setMuted(!player->isMuted());
 }
 
-void MovieElement::destroy()
+void VideoElement::destroy()
 {
 	player->deleteLater();
 }

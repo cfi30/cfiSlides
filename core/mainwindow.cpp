@@ -39,7 +39,7 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 		qRegisterMetaType<ImageElement>(), tr("Image"), QIcon::fromTheme("insert-image")
 	));
 	registerElementType(SlideElementType(
-		qRegisterMetaType<MovieElement>(), tr("Vidéo"), QIcon::fromTheme("insert-video")
+		qRegisterMetaType<VideoElement>(), tr("Vidéo"), QIcon::fromTheme("insert-video")
 	));
 	registerElementType(SlideElementType(
 		qRegisterMetaType<AudioElement>(), tr("Son"), QIcon::fromTheme("insert-audio")

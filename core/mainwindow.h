@@ -49,7 +49,7 @@
 #include "rectelement.h"
 #include "ellipseelement.h"
 #include "textelement.h"
-#include "movieelement.h"
+#include "videoelement.h"
 #include "audioelement.h"
 #include "lineelement.h"
 #include "viewwidget.h"

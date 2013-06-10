@@ -16,8 +16,8 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MOVIEELEMENT_H
-#define MOVIEELEMENT_H
+#ifndef VIDEOELEMENT_H
+#define VIDEOELEMENT_H
 
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
@@ -28,12 +28,12 @@
 #include "slideelement.h"
 #include "graphicsitem.h"
 
-class MovieElement : public SlideElement
+class VideoElement : public SlideElement
 {
 	Q_OBJECT
 
 public:
-	MovieElement();
+	VideoElement();
 	virtual QString previewUrl() const;
 	virtual void render(QGraphicsScene *scene, const bool interactive);
 	virtual PropertyList getProperties() const;
@@ -58,6 +58,6 @@ class MoviePlaceholderItem : public QGraphicsRectItem
 	GRAPHICS_ITEM(MoviePlaceholderItem, QGraphicsRectItem)
 };
 
-Q_DECLARE_METATYPE(MovieElement)
+Q_DECLARE_METATYPE(VideoElement)
 
-#endif // MOVIEELEMENT_H
+#endif // VIDEOELEMENT_H

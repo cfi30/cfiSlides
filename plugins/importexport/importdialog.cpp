@@ -211,7 +211,7 @@ SlideElement *ImportDialog::createElementFor(const QString file)
 			element->setValue("size", QPixmap(file).size());
 			break;
 		case MovieType:
-			element = (SlideElement *)QMetaType::create(QMetaType::type("MovieElement"));
+			element = (SlideElement *)QMetaType::create(QMetaType::type("VideoElement"));
 			element->setValue("name", QFileInfo(file).baseName());
 			element->setValue("src", file);
 			element->setValue("size", QDesktopWidget().screenGeometry().size() / DEFAULT_SIZE_SCALE);  // TODO: use movie size

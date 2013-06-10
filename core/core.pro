@@ -15,7 +15,7 @@ HEADERS += \
 	imageelement.h \
 	rectelement.h \
 	textelement.h \
-	movieelement.h \
+	videoelement.h \
 	ellipseelement.h \
 	viewwidget.h \
 	audioelement.h \
@@ -31,7 +31,7 @@ SOURCES += \
 	imageelement.cpp \
 	rectelement.cpp \
 	textelement.cpp \
-	movieelement.cpp \
+	videoelement.cpp \
 	ellipseelement.cpp \
 	viewwidget.cpp \
 	audioelement.cpp \
