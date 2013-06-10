@@ -147,7 +147,10 @@ void VideoElement::stateChanged(QMediaPlayer::State state)
 void VideoElement::play()
 {
 	if(!playbackFinished)
+	{
+		qApp->processEvents();
 		player->play();
+	}
 }
 
 void VideoElement::pause()

@@ -24,6 +24,7 @@
 #include <QGraphicsRectItem>
 #include <QPainter>
 #include <QMediaPlaylist>
+#include <QApplication>
 
 #include "slideelement.h"
 #include "graphicsitem.h"
