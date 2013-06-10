@@ -1382,21 +1382,19 @@ void MainWindow::previewStateChanged(QMediaPlayer::State state)
 
 QString MainWindow::msToString(const int ms) const
 {
-	const int seconds = ms / 1000;
-	const int hours = seconds / 3600;
-	const int minutes = seconds / 60;
-	const int mins_left = minutes % 3600;
-	const int secs_left = seconds % 3600;
+	const int hours = ms / (1000 * 60 * 60);
+	const int minutes = (ms % (1000*60*60)) / (1000*60);
+	const int secs = ((ms % (1000*60*60)) % (1000*60)) / 1000;
 
 	if(hours > 0)
 		return tr("%0h%1:%2").arg(
 			QString::number(hours).rightJustified(2, '0', true),
-			QString::number(mins_left).rightJustified(2, '0', true),
-			QString::number(secs_left).rightJustified(2, '0', true)
+			QString::number(minutes).rightJustified(2, '0', true),
+			QString::number(secs).rightJustified(2, '0', true)
 		);
 	else
 		return tr("%0:%1").arg(
-			QString::number(mins_left).rightJustified(2, '0', true),
-			QString::number(secs_left).rightJustified(2, '0', true)
+			QString::number(minutes).rightJustified(2, '0', true),
+			QString::number(secs).rightJustified(2, '0', true)
 		);
 }
