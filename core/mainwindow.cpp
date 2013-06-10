@@ -940,13 +940,13 @@ void MainWindow::moveSlideRight()
 
 void MainWindow::launchViewer()
 {
-	if(this->slideshow->getSlides().isEmpty())
+	if(ui->slideList->currentRow() == -1)
 	{
 		QMessageBox::critical(this, tr("Démarrer le diaporama"), tr("Le diaporama ne peut pas être affiché car il ne contient aucune diapositive."));
 		return;
 	}
 
-	ViewWidget *viewer = new ViewWidget();
+	ViewWidget *viewer = new ViewWidget;
 	connect(viewer, SIGNAL(closed(int)), this, SLOT(show()));
 	connect(viewer, SIGNAL(closed(int)), ui->slideTree, SLOT(clearSelection()));
 	connect(viewer, SIGNAL(closed(int)), viewer, SLOT(deleteLater()));
@@ -1003,6 +1003,12 @@ void MainWindow::selectNextSlide()
 
 void MainWindow::print()
 {
+	if(ui->slideList->currentRow() == -1)
+	{
+		QMessageBox::critical(this, ui->actionPrint->text(), tr("Le diaporama ne peut pas être imprimé car il ne contient aucune diapositive."));
+		return;
+	}
+
 	statusBar()->showMessage(tr("Configuration de l'imprimante..."));
 
 	QPrinter printer;
@@ -1012,7 +1018,7 @@ void MainWindow::print()
 	dialog->setWindowTitle(ui->actionPrint->text());
 	dialog->setOption(QAbstractPrintDialog::PrintCurrentPage);
 	if(dialog->exec() != QDialog::Accepted)
-		return;
+		return statusBar()->clearMessage();
 
 	const int slidesCount = ui->displayWidget->count();
 	int fromPage = printer.fromPage() > 0 ? printer.fromPage() - 1 : 0;
