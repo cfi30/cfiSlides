@@ -7,10 +7,10 @@ git clone https://github.com/cfi30/cfiSlides.git
 cd cfiSlides
 qmake-qt5 CONFIG+=silent
 make && cd build/
-chmod +x ./cfiSlides.sh
+chmod +x ./cfislides.sh
 
 # launch cfiSlides
-./cfiSlides.sh
+./cfislides.sh
 ```
 cfiSlides is tested on both Linux and Windows (MinGW).
 
