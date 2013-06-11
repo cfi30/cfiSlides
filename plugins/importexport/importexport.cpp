@@ -44,26 +44,6 @@ ImportExport::~ImportExport()
 	delete exportAction;
 }
 
-QString ImportExport::name() const
-{
-	return tr("Importer / Exporter");
-}
-
-QString ImportExport::version() const
-{
-	return "1.0";
-}
-
-QString ImportExport::author() const
-{
-	return "<a href=\"http://mysite.com\">Christian Fillion</a>";
-}
-
-QString ImportExport::about() const
-{
-	return "Add import/export functionalities to cfiSlides.";
-}
-
 void ImportExport::launchImport()
 {
 	Slideshow *slideshow;
@@ -158,7 +138,7 @@ void ImportExport::launchExport()
 		view->scene()->render(&painter, view->scene()->sceneRect());
 
 		QString fileName = fileTemplate;
-		fileName.replace("%n", slide->getValue("name").toString());
+		fileName.replace("%n", slide->getValue(QStringLiteral("name")).toString());
 		fileName.replace("%i", QString::number(index + 1));
 		fileName.replace("%s", QFileInfo(window->windowFilePath()).baseName());
 		fileName.replace("%f", format);
@@ -172,12 +152,10 @@ void ImportExport::launchExport()
 	}
 
 	progress->close();
-	QSettings().setValue("exportDialog/format", format);
-	QSettings().setValue("exportDialog/quality", quality);
-	QSettings().setValue("exportDialog/template", fileTemplate);
+	QSettings().setValue(QStringLiteral("exportDialog/format"), format);
+	QSettings().setValue(QStringLiteral("exportDialog/quality"), quality);
+	QSettings().setValue(QStringLiteral("exportDialog/template"), fileTemplate);
 	window->statusBar()->showMessage(tr("Exportation terminée."), STATUS_TIMEOUT);
 
 	QDesktopServices::openUrl(QUrl::fromLocalFile(directory));
 }
-
-Q_EXPORT_PLUGIN2(import_export, ImportExport)

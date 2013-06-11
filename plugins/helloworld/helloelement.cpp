@@ -22,7 +22,7 @@ void HelloElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
 
-	if(!getValue("visible").toBool())
+	if(!getValue(QStringLiteral("visible")).toBool())
 		return;
 
 	QBrush brush;
@@ -32,14 +32,14 @@ void HelloElement::render(QGraphicsScene *scene, const bool interactive)
 	Hello2DItem *item = new Hello2DItem(this);
 	item->setPen(QPen(Qt::NoPen));
 	item->setBrush(brush);
-	item->setPos(getValue("position").toPoint());
+	item->setPos(getValue(QStringLiteral("position")).toPoint());
 
 	scene->addItem(item);
 
 	QFont font(QString(), 42, QFont::Bold);
 	QGraphicsTextItem *subitem = new QGraphicsTextItem(item);
 	subitem->setFont(font);
-	subitem->setHtml(QString("<span style=\"color: green\">HELLO <i style=\"color: purple\">%1</i> !!</span>").arg(getValue("hello").toString()));
+	subitem->setHtml(QString("<span style=\"color: green\">HELLO <i style=\"color: purple\">%1</i> !!</span>").arg(getValue(QStringLiteral("hello")).toString()));
 
 	item->setRect(QRect(QPoint(), QFontMetrics(font).boundingRect(subitem->toPlainText()).size() + QSize(50, 20)));
 }
@@ -47,15 +47,15 @@ void HelloElement::render(QGraphicsScene *scene, const bool interactive)
 PropertyList HelloElement::getProperties() const
 {
 	StringPropertyManager *stringManager = new StringPropertyManager;
-	connect(stringManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(stringManager, &PropertyManager::modified, this, &HelloElement::propertyChanged);
 
 	Property *group = new Property(0, "Hello World");
 
 	Property *text = new Property(stringManager, "Hello", "hello");
 	text->setToolTip("Say hello to who?");
-	text->setValue(this->getValue("hello"));
-	stringManager->setPlaceholder("hello", "(nobody)");
-	stringManager->setRequired("hello", true);
+	text->setValue(this->getValue(QStringLiteral("hello")));
+	stringManager->setPlaceholder(QStringLiteral("hello"), "(nobody)");
+	stringManager->setRequired(QStringLiteral("hello"), true);
 	group->addProperty(text);
 
 	return PropertyList()

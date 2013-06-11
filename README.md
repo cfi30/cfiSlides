@@ -5,18 +5,16 @@ Build instructions for Linux:
 ```
 git clone https://github.com/cfi30/cfiSlides.git
 cd cfiSlides
-qmake-qt4 CONFIG+=silent
+qmake-qt5 CONFIG+=silent
 make && cd build/
-chmod +x ./cfiSlides.sh
+chmod +x ./cfislides.sh
 
 # launch cfiSlides
-./cfiSlides.sh
+./cfislides.sh
 ```
-cfiSlides is tested on both Linux and Windows.
+cfiSlides is tested on both Linux and Windows (MinGW).
 
 Requirements
 ------------
 
-- Qt4
-- MinGW (Windows only)
-- phonon devel librairies
+cfiSlides requires Qt5 with the multimedia module.

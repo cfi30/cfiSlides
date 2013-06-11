@@ -46,28 +46,27 @@ void PluginDialog::loadPlugins()
 
 	foreach(QString fileName, allPlugins)
 	{
-		qDebug() << "fetching plugin name for" << fileName;
-		QString pluginName;
 		QPluginLoader loader(dir.absoluteFilePath(fileName));
-		Plugin* plugin = qobject_cast<Plugin *>(loader.instance());
-		if(plugin)
-			pluginName = plugin->name();
-		else
-			qDebug() << fileName << loader.errorString();
-		loader.unload();
+		const QJsonObject metaData = loader.metaData().value("MetaData").toObject();
+		const QString name = metaData.value("name").toString();
+		const QString about = metaData.value("about").toString();
+		const QString version = metaData.value("version").toString();
 
-		if(pluginName.isEmpty())
+		if(name.isEmpty())
 			continue;
+
+		QListWidgetItem *item = new QListWidgetItem(tr("%1 (%3)").arg(name, version));
+		item->setToolTip(about);
 
 		if(enabledOnes.contains(fileName))
 		{
 			enabledPlugins.append(fileName);
-			ui->enabledPluginsList->addItem(pluginName);
+			ui->enabledPluginsList->addItem(item);
 		}
 		else
 		{
 			availablePlugins.append(fileName);
-			ui->availablePluginsList->addItem(pluginName);
+			ui->availablePluginsList->addItem(item);
 		}
 	}
 }

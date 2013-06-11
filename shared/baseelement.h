@@ -34,10 +34,10 @@ public:
 	QVariant getValue(const QString &name, QVariant defaultValue = QVariant()) const;
 	void setValue(const QString &name, QVariant value);
 	int unsetValue(const QString &name);
-	QMap<QString, QVariant> getValues() const;
-	void setValues(QMap<QString, QVariant>);
+	QVariantMap getValues() const;
+	void setValues(QVariantMap);
 
 private:
-	QMap<QString, QVariant> properties;
+	QVariantMap properties;
 };
 #endif // BASEELEMENT_H

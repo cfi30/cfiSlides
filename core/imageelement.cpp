@@ -20,20 +20,20 @@
 
 ImageElement::ImageElement() : SlideElement()
 {
-	setValue("size", QSize(400, 300));
+	setValue(QStringLiteral("size"), QSize(400, 300));
 }
 
 void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
 
-	if(!getValue("visible").toBool())
+	if(!getValue(QStringLiteral("visible")).toBool())
 		return;
 
-	const QSize size = getValue("size").toSize();
-	const QPoint pos = getValue("position").toPoint();
+	const QSize size = getValue(QStringLiteral("size")).toSize();
+	const QPoint pos = getValue(QStringLiteral("position")).toPoint();
 
-	const QPixmap pixmap(getValue("src").toString());
+	const QPixmap pixmap(getValue(QStringLiteral("src")).toString());
 	if(pixmap.isNull())
 	{
 		MissingImagePlaceholderItem *item = new MissingImagePlaceholderItem(this);
@@ -63,7 +63,7 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 
 		GraphicsPixmapItem *item = new GraphicsPixmapItem(this);
 		item->setPixmap(spixmap);
-		item->setPos(getValue("position").toPoint());
+		item->setPos(getValue(QStringLiteral("position")).toPoint());
 
 		scene->addItem(item);
 	}
@@ -72,15 +72,15 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 PropertyList ImageElement::getProperties() const
 {
 	FilePropertyManager *fileManager = new FilePropertyManager;
-	connect(fileManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(fileManager, &PropertyManager::modified, this, &ImageElement::propertyChanged);
 
 	Property *group = new Property(0, tr("Image"));
 
-	Property *src = new Property(fileManager, tr("Source"), "src");
+	Property *src = new Property(fileManager, tr("Source"), QStringLiteral("src"));
 	src->setToolTip(tr("Chemin de l'image"));
-	src->setValue(this->getValue("src"));
-	fileManager->setRequired("src", true);
-	fileManager->setFilter("src", IMAGE_FILTER);
+	src->setValue(this->getValue(QStringLiteral("src")));
+	fileManager->setRequired(QStringLiteral("src"), true);
+	fileManager->setFilter(QStringLiteral("src"), IMAGE_FILTER);
 	group->addProperty(src);
 
 	return PropertyList()
@@ -90,11 +90,11 @@ PropertyList ImageElement::getProperties() const
 
 void ImageElement::propertyChanged(QString name, QVariant value)
 {
-	if(getValue("src").toString().isEmpty())
+	if(getValue(QStringLiteral("src")).toString().isEmpty())
 	{
 		const QSize size = QPixmap(value.toString()).size();
 		if(!size.isNull())
-			setValue("size", size);
+			setValue(QStringLiteral("size"), size);
 	}
 	SlideshowElement::propertyChanged(name, value);
 }

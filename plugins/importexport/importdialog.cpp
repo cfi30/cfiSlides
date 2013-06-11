@@ -149,10 +149,10 @@ bool ImportDialog::updateList(const QString directory)
 
 		SlideElement *element = createElementFor(dir.absoluteFilePath(file));
 		connect(element, SIGNAL(modified()), this, SLOT(elementModified()));
-		element->setValue("name", file);
+		element->setValue(QStringLiteral("name"), file);
 
 		QTreeWidgetItem *slideItem = new QTreeWidgetItem(ui->treeWidget);
-		slideItem->setText(0, slide->getValue("name").toString());
+		slideItem->setText(0, slide->getValue(QStringLiteral("name")).toString());
 		slideItem->setData(0, Qt::UserRole, slideItem->text(0));
 		slideItem->setData(1, Qt::UserRole, QVariant::fromValue<void *>((void *)slide));
 		slideItem->setFlags(slideItem->flags() | Qt::ItemIsEditable);
@@ -160,7 +160,7 @@ bool ImportDialog::updateList(const QString directory)
 		slideItem->setExpanded(true);
 
 		QTreeWidgetItem *fileItem = new QTreeWidgetItem(slideItem);
-		fileItem->setText(0, element->getValue("name").toString());
+		fileItem->setText(0, element->getValue(QStringLiteral("name")).toString());
 		fileItem->setIcon(0, getIconFor(file));
 		//fileItem->setData(0, Qt::UserRole, file);
 		fileItem->setData(1, Qt::UserRole, QVariant::fromValue<void *>((void *)element));
@@ -205,21 +205,21 @@ SlideElement *ImportDialog::createElementFor(const QString file)
 	switch(type)
 	{
 		case ImageType:
-			element = (SlideElement *)QMetaType::construct(QMetaType::type("ImageElement"));
-			element->setValue("name", QFileInfo(file).baseName());
-			element->setValue("src", file);
-			element->setValue("size", QPixmap(file).size());
+			element = (SlideElement *)QMetaType::create(QMetaType::type("ImageElement"));
+			element->setValue(QStringLiteral("name"), QFileInfo(file).baseName());
+			element->setValue(QStringLiteral("src"), file);
+			element->setValue(QStringLiteral("size"), QPixmap(file).size());
 			break;
 		case MovieType:
-			element = (SlideElement *)QMetaType::construct(QMetaType::type("MovieElement"));
-			element->setValue("name", QFileInfo(file).baseName());
-			element->setValue("src", file);
-			element->setValue("size", QDesktopWidget().screenGeometry().size() / DEFAULT_SIZE_SCALE);  // TODO: use movie size
+			element = (SlideElement *)QMetaType::create(QMetaType::type("VideoElement"));
+			element->setValue(QStringLiteral("name"), QFileInfo(file).baseName());
+			element->setValue(QStringLiteral("src"), file);
+			element->setValue(QStringLiteral("size"), QDesktopWidget().screenGeometry().size() / DEFAULT_SIZE_SCALE);  // TODO: use movie size
 			break;
 		case AudioType:
-			element = (SlideElement *)QMetaType::construct(QMetaType::type("AudioElement"));
-			element->setValue("name", QFileInfo(file).baseName());
-			element->setValue("src", file);
+			element = (SlideElement *)QMetaType::create(QMetaType::type("AudioElement"));
+			element->setValue(QStringLiteral("name"), QFileInfo(file).baseName());
+			element->setValue(QStringLiteral("src"), file);
 			break;
 	}
 	return element;
@@ -279,8 +279,8 @@ void ImportDialog::elementModified()
 	if(item->parent() == 0)
 	{
 		SlideshowElement *element = (SlideshowElement *)sender();
-		item->setText(0, element->getValue("name").toString());
-		item->setData(0, Qt::UserRole, element->getValue("name").toString());
+		item->setText(0, element->getValue(QStringLiteral("name")).toString());
+		item->setData(0, Qt::UserRole, element->getValue(QStringLiteral("name")).toString());
 	}
 	ui->treeWidget->blockSignals(false);
 }
@@ -339,7 +339,7 @@ void ImportDialog::on_treeWidget_itemChanged(QTreeWidgetItem *item, int)
 
 		item->setData(0, Qt::UserRole, item->text(0));
 		SlideshowElement *element = (SlideshowElement *)item->data(1, Qt::UserRole).value<void *>();
-		element->setValue("name", item->text(0));
+		element->setValue(QStringLiteral("name"), item->text(0));
 		on_treeWidget_itemSelectionChanged();
 	}
 }
@@ -349,7 +349,7 @@ void ImportDialog::on_propertiesButton_toggled(bool checked)
 	ui->propertiesButton->setText(tr("Propriétés %1").arg(checked ? "<<" : ">>"));
 	ui->propertiesEditor->setVisible(checked);
 
-	QSettings().setValue("importDialog/showProperties", checked);
+	QSettings().setValue(QStringLiteral("importDialog/showProperties"), checked);
 }
 
 void ImportDialog::on_treeWidget_itemSelectionChanged()

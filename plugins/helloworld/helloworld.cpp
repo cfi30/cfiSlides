@@ -45,26 +45,6 @@ HelloWorld::~HelloWorld()
 	delete helloMenu;
 }
 
-QString HelloWorld::name() const
-{
-	return "Hello World";
-}
-
-QString HelloWorld::version() const
-{
-	return "1.0";
-}
-
-QString HelloWorld::author() const
-{
-	return "<a href=\"http://mysite.com\">Christian Fillion</a>";
-}
-
-QString HelloWorld::about() const
-{
-	return "Demo plugin for cfiSlides.";
-}
-
 void HelloWorld::doSomething()
 {
 	if(helloAction->isChecked())
@@ -124,5 +104,3 @@ void HelloWorld::doNothing()
 			break;
 	}
 }
-
-Q_EXPORT_PLUGIN2(hello_world, HelloWorld)

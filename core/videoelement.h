@@ -16,28 +16,25 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MOVIEELEMENT_H
-#define MOVIEELEMENT_H
+#ifndef VIDEOELEMENT_H
+#define VIDEOELEMENT_H
 
+#include <QMediaPlayer>
+#include <QGraphicsVideoItem>
 #include <QGraphicsRectItem>
-#include <QGraphicsPixmapItem>
-#include <QGraphicsTextItem>
-#include <QGraphicsProxyWidget>
-#include <phonon/VideoPlayer>
-#include <phonon/VideoWidget>
-#include <phonon/AudioOutput>
-#include <phonon/MediaObject>
 #include <QPainter>
+#include <QMediaPlaylist>
+#include <QApplication>
 
 #include "slideelement.h"
 #include "graphicsitem.h"
 
-class MovieElement : public SlideElement
+class VideoElement : public SlideElement
 {
 	Q_OBJECT
 
 public:
-	MovieElement();
+	VideoElement();
 	virtual QString previewUrl() const;
 	virtual void render(QGraphicsScene *scene, const bool interactive);
 	virtual PropertyList getProperties() const;
@@ -50,11 +47,10 @@ public slots:
 	virtual void destroy();
 
 private slots:
-	void restart();
+	void stateChanged(QMediaPlayer::State state);
 
 protected:
-	Phonon::VideoPlayer *player;
-	QGraphicsProxyWidget *proxy;
+	QMediaPlayer *player;
 	bool playbackFinished;
 };
 
@@ -63,6 +59,6 @@ class MoviePlaceholderItem : public QGraphicsRectItem
 	GRAPHICS_ITEM(MoviePlaceholderItem, QGraphicsRectItem)
 };
 
-Q_DECLARE_METATYPE(MovieElement)
+Q_DECLARE_METATYPE(VideoElement)
 
-#endif // MOVIEELEMENT_H
+#endif // VIDEOELEMENT_H

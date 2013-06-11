@@ -78,7 +78,7 @@ ViewWidget::~ViewWidget()
 
 void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 {
-	QProgressDialog *progress = new QProgressDialog(this);
+	QProgressDialog *progress = new QProgressDialog(qobject_cast<QWidget *>(parent()));
 	progress->setWindowTitle(this->windowTitle());
 	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 	progress->setCancelButtonText(QString());
@@ -203,7 +203,7 @@ void ViewWidget::goTo()
 	bool ok;
 	QStringList slideNames;
 	foreach(Slide *slide, slideshow->getSlides())
-		slideNames << slide->getValue("name").toString();
+		slideNames << slide->getValue(QStringLiteral("name")).toString();
 
 	QString name = QInputDialog::getItem(this, tr("Sélectionner une diapositive"), tr("Afficher la diapositive :"), slideNames, ui->stackedWidget->currentIndex(), false, &ok);
 	if(!ok || name.isEmpty() || slideNames.indexOf(name) == ui->stackedWidget->currentIndex())

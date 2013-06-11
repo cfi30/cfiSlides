@@ -21,7 +21,7 @@
 SlideElement::SlideElement() : SlideshowElement()
 {
 	this->scene = 0;
-	setValue("visible", true);
+	setValue(QStringLiteral("visible"), true);
 }
 
 SlideElement::SlideElement(const SlideElement &copy) : SlideshowElement()
@@ -49,31 +49,31 @@ void SlideElement::render(QGraphicsScene *scene, const bool interactive)
 PropertyList SlideElement::getProperties() const
 {
 	BoolPropertyManager *boolManager = new BoolPropertyManager;
-	connect(boolManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(boolManager, &PropertyManager::modified, this, &SlideElement::propertyChanged);
 
 	SizePropertyManager *sizeManager = new SizePropertyManager;
-	connect(sizeManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(sizeManager, &PropertyManager::modified, this, &SlideElement::propertyChanged);
 
 	PointPropertyManager *pointManager = new PointPropertyManager;
-	connect(pointManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(pointManager, &PropertyManager::modified, this, &SlideElement::propertyChanged);
 
-	Property *visible = new Property(boolManager, tr("Visible"), "visible");
+	Property *visible = new Property(boolManager, tr("Visible"), QStringLiteral("visible"));
 	visible->setToolTip(tr("Visibilité de l'élément"));
-	visible->setValue(this->getValue("visible"));
+	visible->setValue(this->getValue(QStringLiteral("visible")));
 
 	Property *geometry = new Property(0, tr("Géométrie"));
 
-	Property *position = new Property(pointManager, tr("Position"), "position");
+	Property *position = new Property(pointManager, tr("Position"), QStringLiteral("position"));
 	position->setToolTip(tr("Position de l'élément"));
-	position->setValue(this->getValue("position"));
+	position->setValue(this->getValue(QStringLiteral("position")));
 	geometry->addProperty(position);
 
-	Property *size = new Property(sizeManager, tr("Taille"), "size");
+	Property *size = new Property(sizeManager, tr("Taille"), QStringLiteral("size"));
 	size->setToolTip(tr("Taille de l'élément"));
-	size->setValue(getValue("size"));
-	sizeManager->setMinimum("size", MINIMUM_SIZE);
+	size->setValue(getValue(QStringLiteral("size")));
+	sizeManager->setMinimum(QStringLiteral("size"), MINIMUM_SIZE);
 	if(this->scene != 0)
-		sizeManager->setMaximum("size", scene->sceneRect().size().toSize());
+		sizeManager->setMaximum(QStringLiteral("size"), scene->sceneRect().size().toSize());
 	geometry->addProperty(size);
 
 	return PropertyList()
@@ -84,7 +84,7 @@ PropertyList SlideElement::getProperties() const
 
 void SlideElement::movedTo(QPoint pos)
 {
-	setValue("position", pos);
+	setValue(QStringLiteral("position"), pos);
 	emit moved();
 }
 

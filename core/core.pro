@@ -1,5 +1,7 @@
-QT += core gui phonon
-TARGET = cfiSlides
+QT += core gui widgets \
+	printsupport multimediawidgets
+
+TARGET = cfislides
 TEMPLATE = app
 DESTDIR = ../build/
 LIBDIR = $$DESTDIR
@@ -13,14 +15,13 @@ HEADERS += \
 	imageelement.h \
 	rectelement.h \
 	textelement.h \
-	movieelement.h \
+	videoelement.h \
 	ellipseelement.h \
 	viewwidget.h \
 	audioelement.h \
 	lineelement.h \
 	plugindialog.h \
-	plugin.h \
-	shared.h \
+	../shared/plugin.h \
 	geometrydialog.h \
 
 SOURCES += \
@@ -30,7 +31,7 @@ SOURCES += \
 	imageelement.cpp \
 	rectelement.cpp \
 	textelement.cpp \
-	movieelement.cpp \
+	videoelement.cpp \
 	ellipseelement.cpp \
 	viewwidget.cpp \
 	audioelement.cpp \
@@ -50,10 +51,10 @@ TRANSLATIONS = \
 	qt_fr.ts
 
 RESOURCES += \
-	cfiSlides.qrc
+	core.qrc
 
-EXTRA_BINFILES += $$PWD/cfiSlides.sh
-unix:QMAKE_POST_LINK += $$QMAKE_COPY $$PWD/cfiSlides.sh $$DESTDIR
+EXTRA_BINFILES += $$PWD/cfislides.sh
+unix:QMAKE_POST_LINK += $$QMAKE_COPY $$PWD/cfislides.sh $$DESTDIR
 
 CONFIG += cfislides-uselib
 include(../shared/shared.pri)

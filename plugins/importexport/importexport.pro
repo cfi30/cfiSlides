@@ -1,8 +1,7 @@
 include(../plugins.pri)
 
-QT += core gui
-TARGET = import_export
-VERSION = 1.0
+QT += core gui widgets
+TARGET = importexport
 
 HEADERS += \
 	importexport.h \

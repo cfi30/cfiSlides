@@ -32,10 +32,6 @@ class Plugin : public QObject
 
 public:
 	Plugin() {}
-	virtual QString name() const = 0;
-	virtual QString version() const = 0;
-	virtual QString author() const = 0;
-	virtual QString about() const = 0;
 	virtual SlideElementTypeList getElementTypes() const
 	{
 		return SlideElementTypeList();

@@ -39,7 +39,7 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 		qRegisterMetaType<ImageElement>(), tr("Image"), QIcon::fromTheme("insert-image")
 	));
 	registerElementType(SlideElementType(
-		qRegisterMetaType<MovieElement>(), tr("Vidéo"), QIcon::fromTheme("insert-video")
+		qRegisterMetaType<VideoElement>(), tr("Vidéo"), QIcon::fromTheme("insert-video")
 	));
 	registerElementType(SlideElementType(
 		qRegisterMetaType<AudioElement>(), tr("Son"), QIcon::fromTheme("insert-audio")
@@ -66,12 +66,12 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	ui->mediaDock->setWindowTitle(ui->actionMediaDock->text());
 
 	// this doesn't work when using the designer
-	connect(ui->menuRecentFiles, SIGNAL(aboutToShow()), this, SLOT(displayRecentFiles()));
-	connect(ui->menuRecentFiles, SIGNAL(triggered(QAction*)), this, SLOT(openRecentFile(QAction*)));
+	connect(ui->menuRecentFiles, &QMenu::aboutToShow, this, &MainWindow::displayRecentFiles);
+	connect(ui->menuRecentFiles, &QMenu::triggered, this, &MainWindow::openRecentFile);
 
 	ui->actionCurrentSlide->setSeparator(true);
 
-	connect(ui->menuInsertElement, SIGNAL(aboutToShow()), this, SLOT(displayInsertElemMenu()));
+	connect(ui->menuInsertElement, &QMenu::aboutToShow, this, &MainWindow::displayInsertElemMenu);
 
 	currentSlideActions = new QActionGroup(this);
 	currentSlideActions->addAction(ui->menuInsertElement->menuAction());
@@ -93,8 +93,16 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	selectionActions->addAction(ui->actionBringElementToFront);
 	selectionActions->addAction(ui->actionBringElementToBack);
 
-	ui->seekSlider->setMediaObject(ui->videoPlayer->mediaObject());
-	ui->volumeSlider->setAudioOutput(ui->videoPlayer->audioOutput());
+	previewPlayer = new QMediaPlayer(this);
+	previewPlayer->setVideoOutput(ui->videoPlayer);
+	previewPlayer->setVolume(QSettings().value("previewVolume", 100).toInt());
+	ui->volumeSlider->setValue(previewPlayer->volume());
+	ui->pauseButton->hide();
+
+	connect(previewPlayer, &QMediaPlayer::seekableChanged, this, &MainWindow::previewSeekableChanged);
+	connect(previewPlayer, &QMediaPlayer::durationChanged, this, &MainWindow::previewDurationChanged);
+	connect(previewPlayer, &QMediaPlayer::positionChanged, this, &MainWindow::previewPositionChanged);
+	connect(previewPlayer, &QMediaPlayer::stateChanged, this, &MainWindow::previewStateChanged);
 
 	this->slideshow = 0;
 	this->newSlideshowCount = 0;
@@ -108,7 +116,7 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 
 	moveFinishTimer.setInterval(REFRESH_INTERVAL);
 	moveFinishTimer.setSingleShot(true);
-	connect(&moveFinishTimer, SIGNAL(timeout()), this, SLOT(moveFinishTimerTimeout()));
+	connect(&moveFinishTimer, &QTimer::timeout, this, &MainWindow::moveFinishTimerTimeout);
 
 	if(disablePlugins)
 	{
@@ -200,7 +208,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 			return false;
 	}
 
-	QMap<QString, QVariant> metadata;
+	QVariantMap metadata;
 	in >> metadata;
 
 	this->slideshow = new Slideshow();
@@ -222,7 +230,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	{
 		progress->setValue(si + 1);
 
-		QMap<QString, QVariant> properties;
+		QVariantMap properties;
 		in >> properties;
 
 		Slide *slide = this->slideshow->createSlide(QString::number(si));
@@ -235,10 +243,10 @@ bool MainWindow::openSlideshow(const QString knowPath)
 			char *type;
 			in >> type;
 
-			QMap<QString, QVariant> properties;
+			QVariantMap properties;
 			in >> properties;
 
-			SlideElement *element = (SlideElement *)QMetaType::construct(QMetaType::type(type));
+			SlideElement *element = (SlideElement *)QMetaType::create(QMetaType::type(type));
 			if(element == 0)
 			{
 				if(errorsCount == 0)
@@ -273,7 +281,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	if(recentFiles.count() > RECENT_FILES_MAX)
 		recentFiles.removeLast();
 
-	QSettings().setValue("recentFiles", recentFiles);
+	QSettings().setValue(QStringLiteral("recentFiles"), recentFiles);
 	ui->menuRecentFiles->setEnabled(true);
 
 	progress->close();
@@ -305,7 +313,6 @@ bool MainWindow::saveSlideshow()
 	}
 
 	QDataStream out(&file);
-	out.setVersion(QDataStream::Qt_4_8);
 
 	QList<Slide *> slides = slideshow->getSlides();
 	out << qApp->applicationName();
@@ -387,8 +394,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	if(!closeSlideshow())
 		return event->ignore();
 
-	QSettings().setValue("mainWindow/geometry", this->saveGeometry());
-	QSettings().setValue("mainWindow/state", this->saveState());
+	QSettings().setValue(QStringLiteral("mainWindow/geometry"), this->saveGeometry());
+	QSettings().setValue(QStringLiteral("mainWindow/state"), this->saveState());
 
 	QMainWindow::closeEvent(event);
 }
@@ -411,19 +418,19 @@ void MainWindow::createEmptySlide()
 
 void MainWindow::displaySlide(Slide *slide)
 {
-	statusBar()->showMessage(tr("Affichage de %1...").arg(slide->getValue("name").toString()));
+	statusBar()->showMessage(tr("Affichage de %1...").arg(slide->getValue(QStringLiteral("name")).toString()));
 
 	QGraphicsScene *scene = new QGraphicsScene();
 	scene->setSceneRect(slideshow->getValue("geometry", QDesktopWidget().screenGeometry()).toRect());
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateCurrentSlideTree()));
-	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateSelectionActions()));
-	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateCurrentPropertiesEditor()));
-	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateMediaPreview()));
+	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateCurrentSlideTree);
+	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateSelectionActions);
+	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateCurrentPropertiesEditor);
+	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateMediaPreview);
 
 	GraphicsView *view = new GraphicsView(scene);
 	view->setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(view, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(displayViewContextMenu(const QPoint &)));
+	connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::displayViewContextMenu);
 	ui->displayWidget->addWidget(view);
 
 	QPixmap pixmap(scene->sceneRect().size().toSize());
@@ -441,7 +448,7 @@ void MainWindow::displaySlide(Slide *slide)
 		scene->clear();
 
 	QIcon icon(pixmap.scaledToWidth(ui->slideList->iconSize().width()));
-	QListWidgetItem *newItem = new QListWidgetItem(icon, slide->getValue("name").toString());
+	QListWidgetItem *newItem = new QListWidgetItem(icon, slide->getValue(QStringLiteral("name")).toString());
 	newItem->setFlags(newItem->flags() ^ Qt::ItemIsEditable);
 	ui->slideList->addItem(newItem);
 
@@ -450,9 +457,9 @@ void MainWindow::displaySlide(Slide *slide)
 
 	this->currentSlideActions->setEnabled(true);
 
-	connect(slide, SIGNAL(modified()), this, SLOT(slideModified()));
-	connect(slide, SIGNAL(moved()), this, SLOT(slideElementMoved()));
-	connect(slide, SIGNAL(refresh()), this, SLOT(reRenderSlide()));
+	connect(slide, &SlideshowElement::modified, this, &MainWindow::slideModified);
+	connect(slide, &Slide::moved, this, &MainWindow::slideElementMoved);
+	connect(slide, &Slide::refresh, this, &MainWindow::reRenderSlide);
 
 	statusBar()->clearMessage();
 }
@@ -468,7 +475,7 @@ void MainWindow::updateSlide(const int index)
 	slide->render(view->scene(), true);
 
 	ui->slideList->blockSignals(true);
-	ui->slideList->item(index)->setText(slide->getValue("name").toString());
+	ui->slideList->item(index)->setText(slide->getValue(QStringLiteral("name")).toString());
 	ui->slideList->blockSignals(false);
 
 	updateIcon(index);
@@ -498,7 +505,7 @@ void MainWindow::updateSlideTree(const int index)
 	ui->slideTree->clear();
 
 	QTreeWidgetItem *topLevel = new QTreeWidgetItem(ui->slideTree);
-	topLevel->setText(0, slide->getValue("name").toString());
+	topLevel->setText(0, slide->getValue(QStringLiteral("name")).toString());
 	topLevel->setData(0, Qt::UserRole, index);
 	topLevel->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable);
 	topLevel->setExpanded(true);
@@ -512,7 +519,7 @@ void MainWindow::updateSlideTree(const int index)
 
 		const int elementIndex = elements.indexOf(element);
 		QTreeWidgetItem *treeItem = new QTreeWidgetItem(topLevel);
-		treeItem->setText(0, element->getValue("name").toString());
+		treeItem->setText(0, element->getValue(QStringLiteral("name")).toString());
 		treeItem->setData(0, Qt::UserRole, elementIndex);
 		treeItem->setFlags(treeItem->flags() | Qt::ItemIsEditable);
 
@@ -572,9 +579,10 @@ void MainWindow::updateSelectionActions()
 
 void MainWindow::updateMediaPreview()
 {
-	ui->videoPlayer->stop();
-	ui->videoPlayer->update();
+	previewPlayer->stop();
 	ui->mediaPreview->setEnabled(false);
+	ui->seekSlider->setValue(0);
+	ui->durationLabel->setText(msToString(0));
 
 	if(ui->slideTree->selectedItems().size() < 1 || !ui->mediaDock->isVisible())
 		return;
@@ -586,7 +594,8 @@ void MainWindow::updateMediaPreview()
 
 	if(!previewUrl.isEmpty())
 	{
-		ui->videoPlayer->play(previewUrl);
+		previewPlayer->setMedia(QUrl::fromLocalFile(previewUrl));
+		previewPlayer->play();
 		ui->mediaPreview->setEnabled(true);
 	}
 }
@@ -596,10 +605,10 @@ void MainWindow::renameSlide()
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
 	bool ok;
-	QString newName = QInputDialog::getText(this, ui->actionRenameSlide->text(), tr("Nouveau nom pour cette diapositive :"), QLineEdit::Normal, slide->getValue("name").toString(), &ok);
+	QString newName = QInputDialog::getText(this, ui->actionRenameSlide->text(), tr("Nouveau nom pour cette diapositive :"), QLineEdit::Normal, slide->getValue(QStringLiteral("name")).toString(), &ok);
 	if(!ok || !validateSlideName(newName)) return;
 
-	slide->setValue("name", newName);
+	slide->setValue(QStringLiteral("name"), newName);
 	updateSlide(index);
 	updateSlideTree(index);
 	updateCurrentPropertiesEditor();
@@ -763,12 +772,12 @@ void MainWindow::slideItemChanged(QListWidgetItem *item)
 	if(!validateSlideName(item->text()))
 	{
 		ui->slideList->blockSignals(true);
-		ui->slideList->item(index)->setText(slide->getValue("name").toString());
+		ui->slideList->item(index)->setText(slide->getValue(QStringLiteral("name")).toString());
 		ui->slideList->blockSignals(false);
 		return;
 	}
 
-	slide->setValue("name", item->text());
+	slide->setValue(QStringLiteral("name"), item->text());
 	updateSlide(index);
 	updateSlideTree(index);
 	updateCurrentPropertiesEditor();
@@ -784,7 +793,7 @@ void MainWindow::elementItemChanged(QTreeWidgetItem *item, int)
 		if(!validateSlideName(item->text(0)))
 			return updateSlideTree(index);
 
-		slide->setValue("name", item->text(0));
+		slide->setValue(QStringLiteral("name"), item->text(0));
 		ui->slideList->item(index)->setText(item->text(0));
 		updatePropertiesEditor(slide);
 	}
@@ -794,7 +803,7 @@ void MainWindow::elementItemChanged(QTreeWidgetItem *item, int)
 		SlideElement *element = slide->getElement(item->data(0, Qt::UserRole).toInt());
 		if(!validateElementName(item->text(0)))
 			return updateSlideTree(ui->slideList->currentRow());
-		element->setValue("name", item->text(0));
+		element->setValue(QStringLiteral("name"), item->text(0));
 		updatePropertiesEditor(element);
 	}
 
@@ -855,10 +864,10 @@ void MainWindow::duplicateElements()
 	{
 		const int elementIndex = item->data(0, Qt::UserRole).toInt();
 		SlideElement *sourceElement = slide->getElement(elementIndex);
-		SlideElement *newElement = (SlideElement *)QMetaType::construct(QMetaType::type(sourceElement->type()), sourceElement);
-		newElement->setValue("name", tr("Copie de %1").arg(sourceElement->getValue("name").toString()));
+		SlideElement *newElement = (SlideElement *)QMetaType::create(QMetaType::type(sourceElement->type()), sourceElement);
+		newElement->setValue(QStringLiteral("name"), tr("Copie de %1").arg(sourceElement->getValue(QStringLiteral("name")).toString()));
 		if(sceneItemFromIndex(elementIndex))
-			newElement->setValue("position", sourceElement->getValue("position").toPoint() + QPoint(COPY_SHIFT, COPY_SHIFT));
+			newElement->setValue(QStringLiteral("position"), sourceElement->getValue(QStringLiteral("position")).toPoint() + QPoint(COPY_SHIFT, COPY_SHIFT));
 		slide->addElement(newElement);
 	}
 
@@ -947,9 +956,9 @@ void MainWindow::launchViewer()
 	}
 
 	ViewWidget *viewer = new ViewWidget;
-	connect(viewer, SIGNAL(closed(int)), this, SLOT(show()));
-	connect(viewer, SIGNAL(closed(int)), ui->slideTree, SLOT(clearSelection()));
-	connect(viewer, SIGNAL(closed(int)), viewer, SLOT(deleteLater()));
+	connect(viewer, &ViewWidget::closed, this, &QMainWindow::show);
+	connect(viewer, &ViewWidget::closed, ui->slideTree, &QTreeWidget::clearSelection);
+	connect(viewer, &ViewWidget::closed, viewer, &QObject::deleteLater);
 	viewer->setSlideshow(this->slideshow, ui->slideList->currentRow());
 	viewer->showFullScreen();
 	this->hide();
@@ -961,10 +970,10 @@ void MainWindow::copySlide()
 	int errorsCount = 0;
 	Slide *newSlide = this->slideshow->createSlide("");
 	newSlide->setValues(sourceSlide->getValues());
-	newSlide->setValue("name", tr("Copie de %1").arg(sourceSlide->getValue("name").toString()));
+	newSlide->setValue(QStringLiteral("name"), tr("Copie de %1").arg(sourceSlide->getValue(QStringLiteral("name")).toString()));
 	foreach(SlideElement *sourceElement, sourceSlide->getElements())
 	{
-		SlideElement *newElement = (SlideElement *)QMetaType::construct(QMetaType::type(sourceElement->type()), sourceElement);
+		SlideElement *newElement = (SlideElement *)QMetaType::create(QMetaType::type(sourceElement->type()), sourceElement);
 		if(newElement == 0)
 		{
 			if(errorsCount == 0)
@@ -984,7 +993,7 @@ void MainWindow::copySlide()
 	ui->slideList->setCurrentItem(item);
 
 	setWindowModified(true);
-	statusBar()->showMessage(tr("Duplication de %0 terminée. %1 erreur(s).").arg(sourceSlide->getValue("name").toString()).arg(errorsCount), STATUS_TIMEOUT);
+	statusBar()->showMessage(tr("Duplication de %0 terminée. %1 erreur(s).").arg(sourceSlide->getValue(QStringLiteral("name")).toString()).arg(errorsCount), STATUS_TIMEOUT);
 }
 
 void MainWindow::selectPrevSlide()
@@ -1085,7 +1094,7 @@ QMenu *MainWindow::createSlideContextMenu()
 void MainWindow::displayViewContextMenu(const QPoint &pos)
 {
 	GraphicsView *view = qobject_cast<GraphicsView *>(sender());
-	QGraphicsItem *item = view->scene()->itemAt(view->mapToScene(pos));
+	QGraphicsItem *item = view->scene()->itemAt(view->mapToScene(pos), view->transform());
 
 	if(item)
 	{
@@ -1130,7 +1139,7 @@ void MainWindow::managePlugins()
 
 	PluginDialog *dialog = new PluginDialog(this);
 	if(dialog->exec() == QDialog::Accepted)
-		QSettings().setValue("plugins", dialog->getEnabledPlugins());
+		QSettings().setValue(QStringLiteral("plugins"), dialog->getEnabledPlugins());
 
 	loadPlugins();
 }
@@ -1140,7 +1149,6 @@ void MainWindow::loadPlugins()
 	QDir dir(PLUGINS_PATH);
 	foreach(QString fileName, QSettings().value("plugins").toStringList())
 	{
-		qDebug() << "Loading plugin" << fileName;
 		QPluginLoader *loader = new QPluginLoader(dir.absoluteFilePath(fileName), this);
 		Plugin* plugin = qobject_cast<Plugin *>(loader->instance());
 		if(!plugin)
@@ -1180,9 +1188,14 @@ void MainWindow::aboutPlugins()
 	QString text;
 	foreach(QPluginLoader *loader, plugins)
 	{
-		Plugin *plugin = qobject_cast<Plugin *>(loader->instance());
+		const QJsonObject metaData = loader->metaData().value("MetaData").toObject();
+		const QString name = metaData.value("name").toString();
+		const QString about = metaData.value("about").toString();
+		const QString version = metaData.value("version").toString();
+		const QString author = metaData.value("author").toString();
+
 		text += QString("<p><strong>%1 %2</strong> <small>%3</small><br />Auteur : %4</p><p><i>%5</i></p>")
-				.arg(plugin->name(), plugin->version(), dir.relativeFilePath(loader->fileName()), plugin->author(), plugin->about());
+				.arg(name, version, dir.relativeFilePath(loader->fileName()), author, about);
 	}
 
 	QMessageBox::about(this, ui->actionAboutPlugins->text(), text);
@@ -1213,7 +1226,7 @@ void MainWindow::displayInsertElemMenu()
 
 void MainWindow::resizeSlideshow()
 {
-	GeometryDialog *dialog = new GeometryDialog(slideshow->getValue("geometry").toRect(), this);
+	GeometryDialog *dialog = new GeometryDialog(slideshow->getValue(QStringLiteral("geometry")).toRect(), this);
 	if(dialog->exec() == QDialog::Rejected)
 		return;
 
@@ -1224,7 +1237,7 @@ void MainWindow::resizeSlideshow()
 		slideshow->unsetValue("geometry");
 	}
 	else
-		slideshow->setValue("geometry", newRect);
+		slideshow->setValue(QStringLiteral("geometry"), newRect);
 
 	const int slideCount = ui->displayWidget->count();
 
@@ -1279,7 +1292,7 @@ void MainWindow::insertElement(SlideElement *element)
 {
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
-	element->setValue("name", element->getValue("name").toString().arg(slide->getElements().size() + 1));
+	element->setValue(QStringLiteral("name"), element->getValue(QStringLiteral("name")).toString().arg(slide->getElements().size() + 1));
 	slide->addElement(element);
 
 	updateSlide(index);
@@ -1296,8 +1309,8 @@ void MainWindow::insertElementFromAction()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
 
-	SlideElement *element = (SlideElement *)QMetaType::construct(action->data().toInt());
-	element->setValue("name", tr("%1 %2").arg(action->text()));
+	SlideElement *element = (SlideElement *)QMetaType::create(action->data().toInt());
+	element->setValue(QStringLiteral("name"), tr("%1 %2").arg(action->text()));
 
 	insertElement(element);
 }
@@ -1321,4 +1334,73 @@ void MainWindow::displaySlideListContextMenu(const QPoint &pos)
 
 	menu->exec(ui->slideList->mapToGlobal(pos));
 	delete menu;
+}
+
+void MainWindow::playPreview()
+{
+	previewPlayer->play();
+}
+
+void MainWindow::pausePreview()
+{
+	previewPlayer->pause();
+}
+
+void MainWindow::setPreviewVolume(int newVolume)
+{
+	previewPlayer->setVolume(newVolume);
+	QSettings().setValue(QStringLiteral("previewVolume"), newVolume);
+}
+
+void MainWindow::setPreviewPosition(int newPos)
+{
+	previewPlayer->setPosition(newPos+1);
+}
+
+void MainWindow::previewSeekableChanged(bool seekable)
+{
+	ui->seekSlider->setEnabled(seekable);
+	ui->volumeSlider->setEnabled(seekable);
+}
+
+void MainWindow::previewDurationChanged(qint64 duration)
+{
+	ui->seekSlider->setMaximum(duration);
+	previewPositionChanged(0);
+
+	ui->durationLabel->setText(msToString(duration));
+}
+
+void MainWindow::previewPositionChanged(qint64 position)
+{
+	ui->seekSlider->blockSignals(true);
+	ui->seekSlider->setValue(position);
+	ui->seekSlider->blockSignals(false);
+
+	ui->positionLabel->setText(msToString(position + 1));
+}
+
+void MainWindow::previewStateChanged(QMediaPlayer::State state)
+{
+	ui->pauseButton->setVisible(state == QMediaPlayer::PlayingState);
+	ui->playButton->setVisible(state != QMediaPlayer::PlayingState);
+}
+
+QString MainWindow::msToString(const int ms) const
+{
+	const int hours = ms / (1000 * 60 * 60);
+	const int minutes = (ms % (1000*60*60)) / (1000*60);
+	const int secs = ((ms % (1000*60*60)) % (1000*60)) / 1000;
+
+	if(hours > 0)
+		return tr("%0h%1:%2").arg(
+			QString::number(hours).rightJustified(2, '0', true),
+			QString::number(minutes).rightJustified(2, '0', true),
+			QString::number(secs).rightJustified(2, '0', true)
+		);
+	else
+		return tr("%0:%1").arg(
+			QString::number(minutes).rightJustified(2, '0', true),
+			QString::number(secs).rightJustified(2, '0', true)
+		);
 }

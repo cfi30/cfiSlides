@@ -21,63 +21,66 @@
 AudioElement::AudioElement() : SlideElement()
 {
 	playbackFinished = false;
-	setValue("volume", 100);
+	setValue(QStringLiteral("volume"), 100);
 }
 
 QString AudioElement::previewUrl() const
 {
-	return getValue("src").toString();
+	return getValue(QStringLiteral("src")).toString();
 }
 
 void AudioElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
 
-	if(interactive || !getValue("visible").toBool())
+	if(interactive || !getValue(QStringLiteral("visible")).toBool())
 		return;
 
-	mediaObject = new Phonon::MediaObject(this);
-	mediaObject->setCurrentSource(Phonon::MediaSource(getValue("src").toString()));
-	connect(mediaObject, SIGNAL(aboutToFinish()), this, SLOT(restart()));
-	audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, mediaObject);
-	Phonon::createPath(mediaObject, audioOutput);
-	audioOutput->setVolume(getValue("volume", 100).toFloat() / 100);
+	player = new QMediaPlayer;
+	player->setVolume(getValue(QStringLiteral("volume")).toInt());
+	connect(player, &QMediaPlayer::stateChanged, this, &AudioElement::stateChanged);
+
+	QMediaPlaylist *playlist = new QMediaPlaylist(player);
+	playlist->addMedia(QUrl::fromLocalFile(getValue(QStringLiteral("src")).toString()));
+	if(getValue(QStringLiteral("loop")).toBool())
+		playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+	player->setPlaylist(playlist);
 }
 
 PropertyList AudioElement::getProperties() const
 {
 	BoolPropertyManager *boolManager = new BoolPropertyManager;
-	connect(boolManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(boolManager, &PropertyManager::modified, this, &AudioElement::propertyChanged);
 
 	FilePropertyManager *fileManager = new FilePropertyManager;
-	connect(fileManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(fileManager, &PropertyManager::modified, this, &AudioElement::propertyChanged);
 
 	IntSliderPropertyManager *sliderManager = new IntSliderPropertyManager;
-	connect(sliderManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(sliderManager, &PropertyManager::modified, this, &AudioElement::propertyChanged);
 
-	Property *visible = new Property(boolManager, tr("Activer"), "visible");
+	Property *visible = new Property(boolManager, tr("Activer"), QStringLiteral("visible"));
 	visible->setToolTip(tr("Activer l'élément"));
-	visible->setValue(this->getValue("visible"));
+	visible->setValue(this->getValue(QStringLiteral("visible")));
 
 	Property *group = new Property(0, tr("Son"));
 
-	Property *src = new Property(fileManager, tr("Source"), "src");
+	Property *src = new Property(fileManager, tr("Source"), QStringLiteral("src"));
 	src->setToolTip(tr("Source du fichier audio"));
-	src->setValue(this->getValue("src"));
-	fileManager->setRequired("src", true);
-	fileManager->setFilter("src", AUDIO_FILTER);
+	src->setValue(this->getValue(QStringLiteral("src")));
+	fileManager->setRequired(QStringLiteral("src"), true);
+	fileManager->setFilter(QStringLiteral("src"), AUDIO_FILTER);
 	group->addProperty(src);
 
-	Property *loop = new Property(boolManager, tr("Boucle"), "loop");
+	Property *loop = new Property(boolManager, tr("Boucle"), QStringLiteral("loop"));
 	loop->setToolTip(tr("Lire le son en boucle"));
-	loop->setValue(this->getValue("loop"));
+	loop->setValue(this->getValue(QStringLiteral("loop")));
 	group->addProperty(loop);
 
-	Property *volume = new Property(sliderManager, tr("Volume"), "volume");
+	Property *volume = new Property(sliderManager, tr("Volume"), QStringLiteral("volume"));
 	volume->setToolTip(tr("Volume deu son"));
-	volume->setValue(this->getValue("volume"));
-	sliderManager->setMaximum("volume", 100);
-	sliderManager->setSuffix("volume", tr(" %"));
+	volume->setValue(this->getValue(QStringLiteral("volume")));
+	sliderManager->setMaximum(QStringLiteral("volume"), 100);
+	sliderManager->setSuffix(QStringLiteral("volume"), tr(" %"));
 	group->addProperty(volume);
 
 	return PropertyList()
@@ -86,47 +89,36 @@ PropertyList AudioElement::getProperties() const
 		<< group;
 }
 
-void AudioElement::restart()
+void AudioElement::stateChanged(QMediaPlayer::State state)
 {
-	if(getValue("loop").toBool())
-	{
-		mediaObject->enqueue(Phonon::MediaSource(getValue("src").toString()));
-	}
-	else
+	if(state == QMediaPlayer::StoppedState)
 		playbackFinished = true;
 }
 
 void AudioElement::play()
 {
 	if(!playbackFinished)
-		mediaObject->play();
+		player->play();
 }
 
 void AudioElement::pause()
 {
 	if(!playbackFinished)
-		mediaObject->pause();
+		player->pause();
 }
 
 void AudioElement::stop()
 {
-	mediaObject->stop();
+	player->stop();
 	playbackFinished = false;
 }
 
 void AudioElement::toggleMute()
 {
-	if(!audioOutput->isMuted())
-		audioOutput->setMuted(true);
-	else
-	{
-		audioOutput->setMuted(false);
-		// setMuted(false) does not take the sound back without setVolume
-		audioOutput->setVolume(getValue("volume", 100).toFloat() / 100);
-	}
+	player->setMuted(!player->isMuted());
 }
 
 void AudioElement::destroy()
 {
-	mediaObject->deleteLater();
+	player->deleteLater();
 }
