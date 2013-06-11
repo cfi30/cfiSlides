@@ -48,13 +48,13 @@ void RectElement::render(QGraphicsScene *scene, const bool interactive)
 PropertyList RectElement::getProperties() const
 {
 	EnumPropertyManager *enumManager = new EnumPropertyManager;
-	connect(enumManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(enumManager, &PropertyManager::modified, this, &RectElement::propertyChanged);
 
 	ColorPropertyManager *colorManager = new ColorPropertyManager;
-	connect(colorManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(colorManager, &PropertyManager::modified, this, &RectElement::propertyChanged);
 
 	IntPropertyManager *intManager = new IntPropertyManager;
-	connect(intManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(intManager, &PropertyManager::modified, this, &RectElement::propertyChanged);
 
 	Property *background = new Property(0, tr("Remplissage"));
 

@@ -49,13 +49,13 @@ void SlideElement::render(QGraphicsScene *scene, const bool interactive)
 PropertyList SlideElement::getProperties() const
 {
 	BoolPropertyManager *boolManager = new BoolPropertyManager;
-	connect(boolManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(boolManager, &PropertyManager::modified, this, &SlideElement::propertyChanged);
 
 	SizePropertyManager *sizeManager = new SizePropertyManager;
-	connect(sizeManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(sizeManager, &PropertyManager::modified, this, &SlideElement::propertyChanged);
 
 	PointPropertyManager *pointManager = new PointPropertyManager;
-	connect(pointManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(pointManager, &PropertyManager::modified, this, &SlideElement::propertyChanged);
 
 	Property *visible = new Property(boolManager, tr("Visible"), "visible");
 	visible->setToolTip(tr("Visibilité de l'élément"));

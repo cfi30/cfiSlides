@@ -97,7 +97,7 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 		player = new QMediaPlayer;
 		player->setVideoOutput(item);
 		player->setVolume(getValue("volume").toInt());
-		connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
+		connect(player, &QMediaPlayer::stateChanged, this, &VideoElement::stateChanged);
 
 		QMediaPlaylist *playlist = new QMediaPlaylist(player);
 		playlist->addMedia(QUrl::fromLocalFile(getValue("src").toString()));
@@ -110,16 +110,16 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 PropertyList VideoElement::getProperties() const
 {
 	FilePropertyManager *fileManager = new FilePropertyManager;
-	connect(fileManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(fileManager, &PropertyManager::modified, this, &VideoElement::propertyChanged);
 
 	BoolPropertyManager *boolManager = new BoolPropertyManager;
-	connect(boolManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(boolManager, &PropertyManager::modified, this, &VideoElement::propertyChanged);
 
 	IntSliderPropertyManager *sliderManager = new IntSliderPropertyManager;
-	connect(sliderManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(sliderManager, &PropertyManager::modified, this, &VideoElement::propertyChanged);
 
 	EnumPropertyManager *enumManager = new EnumPropertyManager;
-	connect(enumManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(enumManager, &PropertyManager::modified, this, &VideoElement::propertyChanged);
 
 	Property *group = new Property(0, tr("Vidéo"));
 

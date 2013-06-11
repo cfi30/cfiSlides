@@ -83,10 +83,10 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 PropertyList ImageElement::getProperties() const
 {
 	FilePropertyManager *fileManager = new FilePropertyManager;
-	connect(fileManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(fileManager, &PropertyManager::modified, this, &ImageElement::propertyChanged);
 
 	EnumPropertyManager *enumManager = new EnumPropertyManager;
-	connect(enumManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(enumManager, &PropertyManager::modified, this, &ImageElement::propertyChanged);
 
 	Property *group = new Property(0, tr("Image"));
 

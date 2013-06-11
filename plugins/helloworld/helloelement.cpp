@@ -47,7 +47,7 @@ void HelloElement::render(QGraphicsScene *scene, const bool interactive)
 PropertyList HelloElement::getProperties() const
 {
 	StringPropertyManager *stringManager = new StringPropertyManager;
-	connect(stringManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(stringManager, &PropertyManager::modified, this, &HelloElement::propertyChanged);
 
 	Property *group = new Property(0, "Hello World");
 

@@ -114,13 +114,13 @@ void Slide::moveElement(const int from, const int to)
 PropertyList Slide::getProperties() const
 {
 	ColorPropertyManager *colorManager = new ColorPropertyManager;
-	connect(colorManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(colorManager, &PropertyManager::modified, this, &Slide::propertyChanged);
 
 	FilePropertyManager *fileManager = new FilePropertyManager;
-	connect(fileManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(fileManager, &PropertyManager::modified, this, &Slide::propertyChanged);
 
 	EnumPropertyManager *enumManager = new EnumPropertyManager;
-	connect(enumManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(enumManager, &PropertyManager::modified, this, &Slide::propertyChanged);
 
 	Property *background = new Property(0, tr("Arrière-plan"));
 

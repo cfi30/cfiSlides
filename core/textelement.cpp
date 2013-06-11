@@ -42,29 +42,29 @@ void TextElement::render(QGraphicsScene *scene, const bool interactive)
 	item->setTextWidth(getValue("width").toInt());
 	item->setPos(getValue("position").toPoint());
 
-	connect(item->document(), SIGNAL(contentsChanged()), this, SLOT(textChanged()));
+	connect(item->document(), &QTextDocument::contentsChanged, this, &TextElement::textChanged);
 	scene->addItem(item);
 }
 
 PropertyList TextElement::getProperties() const
 {
 	BoolPropertyManager *boolManager = new BoolPropertyManager;
-	connect(boolManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(boolManager, &PropertyManager::modified, this, &TextElement::propertyChanged);
 
 	PointPropertyManager *pointManager = new PointPropertyManager;
-	connect(pointManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(pointManager, &PropertyManager::modified, this, &TextElement::propertyChanged);
 
 	IntPropertyManager *intManager = new IntPropertyManager;
-	connect(intManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(intManager, &PropertyManager::modified, this, &TextElement::propertyChanged);
 
 	TextPropertyManager *textManager = new TextPropertyManager;
-	connect(textManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(textManager, &PropertyManager::modified, this, &TextElement::propertyChanged);
 
 	ColorPropertyManager *colorManager = new ColorPropertyManager;
-	connect(colorManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(colorManager, &PropertyManager::modified, this, &TextElement::propertyChanged);
 
 	FontPropertyManager *fontManager = new FontPropertyManager;
-	connect(fontManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(fontManager, &PropertyManager::modified, this, &TextElement::propertyChanged);
 
 	Property *visible = new Property(boolManager, tr("Visible"), "visible");
 	visible->setToolTip(tr("Visibilité de l'élément"));

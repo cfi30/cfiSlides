@@ -66,19 +66,19 @@ void LineElement::render(QGraphicsScene *scene, const bool interactive)
 PropertyList LineElement::getProperties() const
 {
 	BoolPropertyManager *boolManager = new BoolPropertyManager;
-	connect(boolManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(boolManager, &PropertyManager::modified, this, &LineElement::propertyChanged);
 
 	PointPropertyManager *pointManager = new PointPropertyManager;
-	connect(pointManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(pointManager, &PropertyManager::modified, this, &LineElement::propertyChanged);
 
 	IntPropertyManager *intManager = new IntPropertyManager;
-	connect(intManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(intManager, &PropertyManager::modified, this, &LineElement::propertyChanged);
 
 	ColorPropertyManager *colorManager = new ColorPropertyManager;
-	connect(colorManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(colorManager, &PropertyManager::modified, this, &LineElement::propertyChanged);
 
 	EnumPropertyManager *enumManager = new EnumPropertyManager;
-	connect(enumManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(enumManager, &PropertyManager::modified, this, &LineElement::propertyChanged);
 
 	Property *visible = new Property(boolManager, tr("Visible"), "visible");
 	visible->setToolTip(tr("Visibilité de l'élément"));

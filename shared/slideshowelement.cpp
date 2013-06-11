@@ -21,7 +21,7 @@
 PropertyList SlideshowElement::getProperties() const
 {
 	StringPropertyManager *stringManager = new StringPropertyManager;
-	connect(stringManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
+	connect(stringManager, &PropertyManager::modified, this, &SlideshowElement::propertyChanged);
 
 	Property *name = new Property(stringManager, tr("Étiquette"), "name");
 	name->setToolTip(tr("Nom de l'élément"));

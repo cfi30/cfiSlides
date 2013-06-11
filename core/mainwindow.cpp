@@ -66,12 +66,12 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	ui->mediaDock->setWindowTitle(ui->actionMediaDock->text());
 
 	// this doesn't work when using the designer
-	connect(ui->menuRecentFiles, SIGNAL(aboutToShow()), this, SLOT(displayRecentFiles()));
-	connect(ui->menuRecentFiles, SIGNAL(triggered(QAction*)), this, SLOT(openRecentFile(QAction*)));
+	connect(ui->menuRecentFiles, &QMenu::aboutToShow, this, &MainWindow::displayRecentFiles);
+	connect(ui->menuRecentFiles, &QMenu::triggered, this, &MainWindow::openRecentFile);
 
 	ui->actionCurrentSlide->setSeparator(true);
 
-	connect(ui->menuInsertElement, SIGNAL(aboutToShow()), this, SLOT(displayInsertElemMenu()));
+	connect(ui->menuInsertElement, &QMenu::aboutToShow, this, &MainWindow::displayInsertElemMenu);
 
 	currentSlideActions = new QActionGroup(this);
 	currentSlideActions->addAction(ui->menuInsertElement->menuAction());
@@ -99,10 +99,10 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	ui->volumeSlider->setValue(previewPlayer->volume());
 	ui->pauseButton->hide();
 
-	connect(previewPlayer, SIGNAL(seekableChanged(bool)), this, SLOT(previewSeekableChanged(bool)));
-	connect(previewPlayer, SIGNAL(durationChanged(qint64)), this, SLOT(previewDurationChanged(qint64)));
-	connect(previewPlayer, SIGNAL(positionChanged(qint64)), this, SLOT(previewPositionChanged(qint64)));
-	connect(previewPlayer, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(previewStateChanged(QMediaPlayer::State)));
+	connect(previewPlayer, &QMediaPlayer::seekableChanged, this, &MainWindow::previewSeekableChanged);
+	connect(previewPlayer, &QMediaPlayer::durationChanged, this, &MainWindow::previewDurationChanged);
+	connect(previewPlayer, &QMediaPlayer::positionChanged, this, &MainWindow::previewPositionChanged);
+	connect(previewPlayer, &QMediaPlayer::stateChanged, this, &MainWindow::previewStateChanged);
 
 	this->slideshow = 0;
 	this->newSlideshowCount = 0;
@@ -116,7 +116,7 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 
 	moveFinishTimer.setInterval(REFRESH_INTERVAL);
 	moveFinishTimer.setSingleShot(true);
-	connect(&moveFinishTimer, SIGNAL(timeout()), this, SLOT(moveFinishTimerTimeout()));
+	connect(&moveFinishTimer, &QTimer::timeout, this, &MainWindow::moveFinishTimerTimeout);
 
 	if(disablePlugins)
 	{
@@ -125,7 +125,7 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 		statusBar()->showMessage(tr("Extensions désactivés par la ligne de commandes."));
 	}
 	else
-		QTimer::singleShot(REFRESH_INTERVAL, this, SLOT(loadPlugins()));
+		QTimer::singleShot(REFRESH_INTERVAL, this, SLOT(loadPlugins));
 }
 
 MainWindow::~MainWindow()
@@ -423,14 +423,14 @@ void MainWindow::displaySlide(Slide *slide)
 	QGraphicsScene *scene = new QGraphicsScene();
 	scene->setSceneRect(slideshow->getValue("geometry", QDesktopWidget().screenGeometry()).toRect());
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateCurrentSlideTree()));
-	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateSelectionActions()));
-	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateCurrentPropertiesEditor()));
-	connect(scene, SIGNAL(selectionChanged()), this, SLOT(updateMediaPreview()));
+	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateCurrentSlideTree);
+	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateSelectionActions);
+	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateCurrentPropertiesEditor);
+	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateMediaPreview);
 
 	GraphicsView *view = new GraphicsView(scene);
 	view->setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(view, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(displayViewContextMenu(const QPoint &)));
+	connect(view, &QWidget::customContextMenuRequested, this, &MainWindow::displayViewContextMenu);
 	ui->displayWidget->addWidget(view);
 
 	QPixmap pixmap(scene->sceneRect().size().toSize());
@@ -457,9 +457,9 @@ void MainWindow::displaySlide(Slide *slide)
 
 	this->currentSlideActions->setEnabled(true);
 
-	connect(slide, SIGNAL(modified()), this, SLOT(slideModified()));
-	connect(slide, SIGNAL(moved()), this, SLOT(slideElementMoved()));
-	connect(slide, SIGNAL(refresh()), this, SLOT(reRenderSlide()));
+	connect(slide, &SlideshowElement::modified, this, &MainWindow::slideModified);
+	connect(slide, &Slide::moved, this, &MainWindow::slideElementMoved);
+	connect(slide, &Slide::refresh, this, &MainWindow::reRenderSlide);
 
 	statusBar()->clearMessage();
 }
@@ -956,9 +956,9 @@ void MainWindow::launchViewer()
 	}
 
 	ViewWidget *viewer = new ViewWidget();
-	connect(viewer, SIGNAL(closed(int)), this, SLOT(show()));
-	connect(viewer, SIGNAL(closed(int)), ui->slideTree, SLOT(clearSelection()));
-	connect(viewer, SIGNAL(closed(int)), viewer, SLOT(deleteLater()));
+	connect(viewer, &ViewWidget::closed, this, &QMainWindow::show);
+	connect(viewer, &ViewWidget::closed, ui->slideTree, &QTreeWidget::clearSelection);
+	connect(viewer, &ViewWidget::closed, viewer, &QObject::deleteLater);
 	viewer->setSlideshow(this->slideshow, ui->slideList->currentRow());
 	viewer->showFullScreen();
 	this->hide();
