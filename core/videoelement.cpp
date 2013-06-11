@@ -83,11 +83,16 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 	}
 	else
 	{
-		QGraphicsVideoItem *item = new QGraphicsVideoItem;
+		QGraphicsRectItem *container = new QGraphicsRectItem;
+		container->setBrush(Qt::black);
+		container->setPen(Qt::NoPen);
+		container->setRect(QRect(QPoint(), size));
+		container->setPos(pos);
+		scene->addItem(container);
+
+		QGraphicsVideoItem *item = new QGraphicsVideoItem(container);
 		item->setSize(size);
-		item->setPos(pos);
 		item->setAspectRatioMode(scaleMode);
-		scene->addItem(item);
 
 		player = new QMediaPlayer;
 		player->setVideoOutput(item);
