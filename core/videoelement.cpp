@@ -39,6 +39,16 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 
 	const QPoint pos = getValue("position").toPoint();
 	const QSize size = getValue("size").toSize();
+	Qt::AspectRatioMode scaleMode = Qt::KeepAspectRatioByExpanding;
+	switch(getValue("scaleMode").toInt())
+	{
+		case 1:
+			scaleMode = Qt::IgnoreAspectRatio;
+			break;
+		case 2:
+			scaleMode = Qt::KeepAspectRatio;
+			break;
+	}
 
 	if(interactive)
 	{
@@ -76,7 +86,7 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 		QGraphicsVideoItem *item = new QGraphicsVideoItem;
 		item->setSize(size);
 		item->setPos(pos);
-		item->setAspectRatioMode(getValue("scaleMode").toInt() ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio);
+		item->setAspectRatioMode(scaleMode);
 		scene->addItem(item);
 
 		player = new QMediaPlayer;
@@ -130,7 +140,7 @@ PropertyList VideoElement::getProperties() const
 	Property *scaleMode = new Property(enumManager, tr("Mise à l'échelle"), "scaleMode");
 	scaleMode->setToolTip(tr("Mode de mise à l'échelle de la vidéo"));
 	scaleMode->setValue(this->getValue("scaleMode"));
-	enumManager->setEnumNames("scaleMode", QStringList() << tr("Remplir") << tr("Conserver"));
+	enumManager->setEnumNames("scaleMode", QStringList() << tr("Remplir & Conserver") << tr("Remplir") << tr("Conserver"));
 	group->addProperty(scaleMode);
 
 	return PropertyList()
