@@ -90,14 +90,14 @@ PropertyList ImageElement::getProperties() const
 
 	Property *group = new Property(0, tr("Image"));
 
-	Property *src = new Property(fileManager, tr("Source"), "src");
+	Property *src = new Property(fileManager, tr("Source"), QStringLiteral("src"));
 	src->setToolTip(tr("Chemin de l'image"));
 	src->setValue(this->getValue(QStringLiteral("src")));
 	fileManager->setRequired(QStringLiteral("src"), true);
 	fileManager->setFilter(QStringLiteral("src"), IMAGE_FILTER);
 	group->addProperty(src);
 
-	Property *scaleMode = new Property(enumManager, tr("Mise à l'échelle"), "scaleMode");
+	Property *scaleMode = new Property(enumManager, tr("Mise à l'échelle"), QStringLiteral("scaleMode"));
 	scaleMode->setToolTip(tr("Mode de mise à l'échelle de l'image"));
 	scaleMode->setValue(this->getValue(QStringLiteral("scaleMode")));
 	enumManager->setEnumNames(QStringLiteral("scaleMode"), QStringList() << tr("Remplir") << tr("Conserver") << tr("Remplir & Conserver"));

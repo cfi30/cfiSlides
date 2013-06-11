@@ -58,25 +58,25 @@ PropertyList AudioElement::getProperties() const
 	IntSliderPropertyManager *sliderManager = new IntSliderPropertyManager;
 	connect(sliderManager, &PropertyManager::modified, this, &AudioElement::propertyChanged);
 
-	Property *visible = new Property(boolManager, tr("Activer"), "visible");
+	Property *visible = new Property(boolManager, tr("Activer"), QStringLiteral("visible"));
 	visible->setToolTip(tr("Activer l'élément"));
 	visible->setValue(this->getValue(QStringLiteral("visible")));
 
 	Property *group = new Property(0, tr("Son"));
 
-	Property *src = new Property(fileManager, tr("Source"), "src");
+	Property *src = new Property(fileManager, tr("Source"), QStringLiteral("src"));
 	src->setToolTip(tr("Source du fichier audio"));
 	src->setValue(this->getValue(QStringLiteral("src")));
 	fileManager->setRequired(QStringLiteral("src"), true);
 	fileManager->setFilter(QStringLiteral("src"), AUDIO_FILTER);
 	group->addProperty(src);
 
-	Property *loop = new Property(boolManager, tr("Boucle"), "loop");
+	Property *loop = new Property(boolManager, tr("Boucle"), QStringLiteral("loop"));
 	loop->setToolTip(tr("Lire le son en boucle"));
 	loop->setValue(this->getValue(QStringLiteral("loop")));
 	group->addProperty(loop);
 
-	Property *volume = new Property(sliderManager, tr("Volume"), "volume");
+	Property *volume = new Property(sliderManager, tr("Volume"), QStringLiteral("volume"));
 	volume->setToolTip(tr("Volume deu son"));
 	volume->setValue(this->getValue(QStringLiteral("volume")));
 	sliderManager->setMaximum(QStringLiteral("volume"), 100);

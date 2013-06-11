@@ -58,7 +58,7 @@ PropertyList RectElement::getProperties() const
 
 	Property *background = new Property(0, tr("Remplissage"));
 
-	Property *bgStyle = new Property(enumManager, tr("Style"), "bgStyle");
+	Property *bgStyle = new Property(enumManager, tr("Style"), QStringLiteral("bgStyle"));
 	bgStyle->setToolTip(tr("Mode de remplissage"));
 	bgStyle->setValue(this->getValue(QStringLiteral("bgStyle")));
 	enumManager->setEnumNames(QStringLiteral("bgStyle"),
@@ -81,14 +81,14 @@ PropertyList RectElement::getProperties() const
 	);
 	background->addProperty(bgStyle);
 
-	Property *color = new Property(colorManager, tr("Couleur"), "color");
+	Property *color = new Property(colorManager, tr("Couleur"), QStringLiteral("color"));
 	color->setToolTip(tr("Couleur de remplissage"));
 	color->setValue(this->getValue(QStringLiteral("color")));
 	background->addProperty(color);
 
 	Property *border = new Property(0, tr("Bordure"));
 
-	Property *borderStyle = new Property(enumManager, tr("Style"), "borderStyle");
+	Property *borderStyle = new Property(enumManager, tr("Style"), QStringLiteral("borderStyle"));
 	borderStyle->setToolTip(tr("Style de la bordure"));
 	enumManager->setEnumNames(QStringLiteral("borderStyle"),
 		QStringList()
@@ -102,7 +102,7 @@ PropertyList RectElement::getProperties() const
 	borderStyle->setValue(this->getValue(QStringLiteral("borderStyle")));
 	border->addProperty(borderStyle);
 
-	Property *borderSize = new Property(intManager, tr("Taille"), "borderSize");
+	Property *borderSize = new Property(intManager, tr("Taille"), QStringLiteral("borderSize"));
 	borderSize->setToolTip(tr("Épaisseur de la bordure"));
 	borderSize->setValue(this->getValue(QStringLiteral("borderSize")));
 	intManager->setMinimum(QStringLiteral("borderSize"), 1);
@@ -110,7 +110,7 @@ PropertyList RectElement::getProperties() const
 	intManager->setSuffix(QStringLiteral("borderSize"), tr(" px"));
 	border->addProperty(borderSize);
 
-	Property *borderColor = new Property(colorManager, tr("Couleur"), "borderColor");
+	Property *borderColor = new Property(colorManager, tr("Couleur"), QStringLiteral("borderColor"));
 	borderColor->setToolTip(tr("Couleur de la bordure"));
 	borderColor->setValue(this->getValue(QStringLiteral("borderColor")));
 	border->addProperty(borderColor);

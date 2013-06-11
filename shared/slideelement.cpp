@@ -57,18 +57,18 @@ PropertyList SlideElement::getProperties() const
 	PointPropertyManager *pointManager = new PointPropertyManager;
 	connect(pointManager, &PropertyManager::modified, this, &SlideElement::propertyChanged);
 
-	Property *visible = new Property(boolManager, tr("Visible"), "visible");
+	Property *visible = new Property(boolManager, tr("Visible"), QStringLiteral("visible"));
 	visible->setToolTip(tr("Visibilité de l'élément"));
 	visible->setValue(this->getValue(QStringLiteral("visible")));
 
 	Property *geometry = new Property(0, tr("Géométrie"));
 
-	Property *position = new Property(pointManager, tr("Position"), "position");
+	Property *position = new Property(pointManager, tr("Position"), QStringLiteral("position"));
 	position->setToolTip(tr("Position de l'élément"));
 	position->setValue(this->getValue(QStringLiteral("position")));
 	geometry->addProperty(position);
 
-	Property *size = new Property(sizeManager, tr("Taille"), "size");
+	Property *size = new Property(sizeManager, tr("Taille"), QStringLiteral("size"));
 	size->setToolTip(tr("Taille de l'élément"));
 	size->setValue(getValue(QStringLiteral("size")));
 	sizeManager->setMinimum(QStringLiteral("size"), MINIMUM_SIZE);

@@ -124,18 +124,18 @@ PropertyList Slide::getProperties() const
 
 	Property *background = new Property(0, tr("Arrière-plan"));
 
-	Property *color = new Property(colorManager, tr("Couleur"), "backgroundColor");
+	Property *color = new Property(colorManager, tr("Couleur"), QStringLiteral("backgroundColor"));
 	color->setValue(this->getValue(QStringLiteral("backgroundColor")));
 	color->setToolTip(tr("Couleur de fond"));
 	background->addProperty(color);
 
-	Property *image = new Property(fileManager, tr("Image"), "backgroundImage");
+	Property *image = new Property(fileManager, tr("Image"), QStringLiteral("backgroundImage"));
 	image->setValue(this->getValue(QStringLiteral("backgroundImage")));
 	image->setToolTip(tr("Image de fond"));
 	fileManager->setFilter(QStringLiteral("backgroundImage"), IMAGE_FILTER);
 	background->addProperty(image);
 
-	Property *stretchMode = new Property(enumManager, tr("Mise à l'échelle"), "backgroundImageStretch");
+	Property *stretchMode = new Property(enumManager, tr("Mise à l'échelle"), QStringLiteral("backgroundImageStretch"));
 	stretchMode->setValue(this->getValue(QStringLiteral("backgroundImageStretch")));
 	stretchMode->setToolTip(tr("Mode de mise à l'échelle de l'image"));
 	enumManager->setEnumNames(QStringLiteral("backgroundImageStretch"), QStringList() << tr("Remplir & Conserver") << tr("Répéter") << tr("Conserver"));

@@ -80,31 +80,31 @@ PropertyList LineElement::getProperties() const
 	EnumPropertyManager *enumManager = new EnumPropertyManager;
 	connect(enumManager, &PropertyManager::modified, this, &LineElement::propertyChanged);
 
-	Property *visible = new Property(boolManager, tr("Visible"), "visible");
+	Property *visible = new Property(boolManager, tr("Visible"), QStringLiteral("visible"));
 	visible->setToolTip(tr("Visibilité de l'élément"));
 	visible->setValue(this->getValue(QStringLiteral("visible")));
 
 	Property *geometry = new Property(0, tr("Géométrie"));
 
-	Property *position = new Property(pointManager, tr("Position"), "position");
+	Property *position = new Property(pointManager, tr("Position"), QStringLiteral("position"));
 	position->setToolTip(tr("Position de l'élément"));
 	position->setValue(this->getValue(QStringLiteral("position")));
 	geometry->addProperty(position);
 
-	Property *start = new Property(intManager, tr("Départ"), "start");
+	Property *start = new Property(intManager, tr("Départ"), QStringLiteral("start"));
 	start->setToolTip(tr("Point de départ vertical de la ligne"));
 	start->setValue(this->getValue(QStringLiteral("start")));
 	intManager->setSuffix(QStringLiteral("start"), tr(" px"));
 	geometry->addProperty(start);
 
-	Property *stop = new Property(pointManager, tr("Arrivée"), "stop");
+	Property *stop = new Property(pointManager, tr("Arrivée"), QStringLiteral("stop"));
 	stop->setToolTip(tr("Point d'arrivée de la ligne"));
 	stop->setValue(this->getValue(QStringLiteral("stop")));
 	geometry->addProperty(stop);
 
 	Property *group = new Property(0, tr("Ligne"));
 
-	Property *size = new Property(intManager, tr("Épaisseur"), "size");
+	Property *size = new Property(intManager, tr("Épaisseur"), QStringLiteral("size"));
 	size->setToolTip(tr("Épaisseur de la bordure"));
 	size->setValue(this->getValue(QStringLiteral("size")));
 	intManager->setMinimum(QStringLiteral("size"), 1);
@@ -112,12 +112,12 @@ PropertyList LineElement::getProperties() const
 	intManager->setSuffix(QStringLiteral("size"), tr(" px"));
 	group->addProperty(size);
 
-	Property *color = new Property(colorManager, tr("Couleur"), "color");
+	Property *color = new Property(colorManager, tr("Couleur"), QStringLiteral("color"));
 	color->setToolTip(tr("Couleur de la ligne"));
 	color->setValue(this->getValue(QStringLiteral("color")));
 	group->addProperty(color);
 
-	Property *style = new Property(enumManager, tr("Style"), "style");
+	Property *style = new Property(enumManager, tr("Style"), QStringLiteral("style"));
 	style->setToolTip(tr("Style de la ligne"));
 	style->setValue(this->getValue(QStringLiteral("style")));
 	enumManager->setEnumNames(QStringLiteral("style"), QStringList() << tr("Solide") << tr("Pointillés") << tr("Points") << tr("Point-tiret") << tr("Point-point-tiret"));

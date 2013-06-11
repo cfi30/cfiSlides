@@ -123,26 +123,26 @@ PropertyList VideoElement::getProperties() const
 
 	Property *group = new Property(0, tr("Vidéo"));
 
-	Property *src = new Property(fileManager, tr("Source"), "src");
+	Property *src = new Property(fileManager, tr("Source"), QStringLiteral("src"));
 	src->setToolTip(tr("Chemin de la vidéo"));
 	src->setValue(this->getValue(QStringLiteral("src")));
 	fileManager->setRequired(QStringLiteral("src"), true);
 	fileManager->setFilter(QStringLiteral("src"), MOVIE_FILTER);
 	group->addProperty(src);
 
-	Property *loop = new Property(boolManager, tr("Boucle"), "loop");
+	Property *loop = new Property(boolManager, tr("Boucle"), QStringLiteral("loop"));
 	loop->setToolTip(tr("Lire la vidéo en boucle"));
 	loop->setValue(this->getValue(QStringLiteral("loop")));
 	group->addProperty(loop);
 
-	Property *volume = new Property(sliderManager, tr("Volume"), "volume");
+	Property *volume = new Property(sliderManager, tr("Volume"), QStringLiteral("volume"));
 	volume->setToolTip(tr("Volume de la vidéo"));
 	volume->setValue(this->getValue(QStringLiteral("volume")));
 	sliderManager->setMaximum(QStringLiteral("volume"), 100);
 	sliderManager->setSuffix(QStringLiteral("volume"), tr(" %"));
 	group->addProperty(volume);
 
-	Property *scaleMode = new Property(enumManager, tr("Mise à l'échelle"), "scaleMode");
+	Property *scaleMode = new Property(enumManager, tr("Mise à l'échelle"), QStringLiteral("scaleMode"));
 	scaleMode->setToolTip(tr("Mode de mise à l'échelle de la vidéo"));
 	scaleMode->setValue(this->getValue(QStringLiteral("scaleMode")));
 	enumManager->setEnumNames(QStringLiteral("scaleMode"), QStringList() << tr("Remplir & Conserver") << tr("Remplir") << tr("Conserver"));

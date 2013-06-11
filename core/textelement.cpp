@@ -66,18 +66,18 @@ PropertyList TextElement::getProperties() const
 	FontPropertyManager *fontManager = new FontPropertyManager;
 	connect(fontManager, &PropertyManager::modified, this, &TextElement::propertyChanged);
 
-	Property *visible = new Property(boolManager, tr("Visible"), "visible");
+	Property *visible = new Property(boolManager, tr("Visible"), QStringLiteral("visible"));
 	visible->setToolTip(tr("Visibilité de l'élément"));
 	visible->setValue(this->getValue(QStringLiteral("visible")));
 
 	Property *geometry = new Property(0, tr("Géométrie"));
 
-	Property *position = new Property(pointManager, tr("Position"), "position");
+	Property *position = new Property(pointManager, tr("Position"), QStringLiteral("position"));
 	position->setToolTip(tr("Position de l'élément"));
 	position->setValue(this->getValue(QStringLiteral("position")));
 	geometry->addProperty(position);
 
-	Property *width = new Property(intManager, tr("Largeur"), "width");
+	Property *width = new Property(intManager, tr("Largeur"), QStringLiteral("width"));
 	width->setToolTip(tr("Taille de l'élément"));
 	width->setValue(this->getValue(QStringLiteral("width")));
 	intManager->setMinimum(QStringLiteral("width"), 50);
@@ -88,18 +88,18 @@ PropertyList TextElement::getProperties() const
 
 	Property *text = new Property(0, tr("Texte"));
 
-	Property *body = new Property(textManager, tr("Contenu"), "text");
+	Property *body = new Property(textManager, tr("Contenu"), QStringLiteral("text"));
 	body->setToolTip(tr("Corps du texte"));
 	body->setValue(this->getValue(QStringLiteral("text")));
 	textManager->setRequired(QStringLiteral("text"), true);
 	text->addProperty(body);
 
-	Property *color = new Property(colorManager, tr("Couleur"), "color");
+	Property *color = new Property(colorManager, tr("Couleur"), QStringLiteral("color"));
 	color->setToolTip(tr("Couleur du texte"));
 	color->setValue(this->getValue(QStringLiteral("color")));
 	text->addProperty(color);
 
-	Property *font = new Property(fontManager, tr("Police"), "font");
+	Property *font = new Property(fontManager, tr("Police"), QStringLiteral("font"));
 	font->setToolTip(tr("Police du texte"));
 	font->setValue(this->getValue(QStringLiteral("font")));
 	text->addProperty(font);
