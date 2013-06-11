@@ -125,7 +125,7 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 		statusBar()->showMessage(tr("Extensions désactivés par la ligne de commandes."));
 	}
 	else
-		QTimer::singleShot(REFRESH_INTERVAL, this, SLOT(loadPlugins));
+		QTimer::singleShot(REFRESH_INTERVAL, this, SLOT(loadPlugins()));
 }
 
 MainWindow::~MainWindow()
