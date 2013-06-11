@@ -94,6 +94,7 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	selectionActions->addAction(ui->actionBringElementToBack);
 
 	previewPlayer = new QMediaPlayer(this);
+	previewPlayer->setNotifyInterval(REFRESH_INTERVAL);
 	previewPlayer->setVideoOutput(ui->videoPlayer);
 	previewPlayer->setVolume(QSettings().value("previewVolume", 100).toInt());
 	ui->volumeSlider->setValue(previewPlayer->volume());
