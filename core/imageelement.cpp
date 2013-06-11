@@ -33,17 +33,6 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 	const QSize size = getValue("size").toSize();
 	const QPoint pos = getValue("position").toPoint();
 
-	Qt::AspectRatioMode scalingMode = Qt::IgnoreAspectRatio;
-	switch(getValue("scaleMode").toInt())
-	{
-		case 1:
-			scalingMode = Qt::KeepAspectRatio;
-			break;
-		case 2:
-			scalingMode = Qt::KeepAspectRatioByExpanding;
-			break;
-	}
-
 	const QPixmap pixmap(getValue("src").toString());
 	if(pixmap.isNull())
 	{
@@ -70,7 +59,7 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 	}
 	else
 	{
-		const QPixmap spixmap = pixmap.scaled(size, scalingMode, Qt::SmoothTransformation);
+		const QPixmap spixmap = pixmap.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
 		GraphicsPixmapItem *item = new GraphicsPixmapItem(this);
 		item->setPixmap(spixmap);
@@ -85,9 +74,6 @@ PropertyList ImageElement::getProperties() const
 	FilePropertyManager *fileManager = new FilePropertyManager;
 	connect(fileManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
 
-	EnumPropertyManager *enumManager = new EnumPropertyManager;
-	connect(enumManager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyChanged(QString, QVariant)));
-
 	Property *group = new Property(0, tr("Image"));
 
 	Property *src = new Property(fileManager, tr("Source"), "src");
@@ -96,12 +82,6 @@ PropertyList ImageElement::getProperties() const
 	fileManager->setRequired("src", true);
 	fileManager->setFilter("src", IMAGE_FILTER);
 	group->addProperty(src);
-
-	Property *scaleMode = new Property(enumManager, tr("Mise à l'échelle"), "scaleMode");
-	scaleMode->setToolTip(tr("Mode de mise à l'échelle de l'image"));
-	scaleMode->setValue(this->getValue("scaleMode"));
-	enumManager->setEnumNames("scaleMode", QStringList() << tr("Remplir") << tr("Conserver") << tr("Remplir & Conserver"));
-	group->addProperty(scaleMode);
 
 	return PropertyList()
 		<< SlideElement::getProperties()
