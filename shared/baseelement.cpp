@@ -33,14 +33,14 @@ int BaseElement::unsetValue(const QString &name)
 	return this->properties.remove(name);
 }
 
-void BaseElement::setValues(QMap<QString, QVariant> properties)
+void BaseElement::setValues(QVariantMap properties)
 {
-	QMap<QString, QVariant>::iterator iterator;
+	QVariantMap::iterator iterator;
 	for(iterator = properties.begin(); iterator != properties.end(); ++iterator)
 		this->properties[iterator.key()] = iterator.value();
 }
 
-QMap<QString, QVariant> BaseElement::getValues() const
+QVariantMap BaseElement::getValues() const
 {
 	return this->properties;
 }

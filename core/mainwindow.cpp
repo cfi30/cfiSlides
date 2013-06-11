@@ -208,7 +208,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 			return false;
 	}
 
-	QMap<QString, QVariant> metadata;
+	QVariantMap metadata;
 	in >> metadata;
 
 	this->slideshow = new Slideshow();
@@ -230,7 +230,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	{
 		progress->setValue(si + 1);
 
-		QMap<QString, QVariant> properties;
+		QVariantMap properties;
 		in >> properties;
 
 		Slide *slide = this->slideshow->createSlide(QString::number(si));
@@ -243,7 +243,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 			char *type;
 			in >> type;
 
-			QMap<QString, QVariant> properties;
+			QVariantMap properties;
 			in >> properties;
 
 			SlideElement *element = (SlideElement *)QMetaType::create(QMetaType::type(type));
