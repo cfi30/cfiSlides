@@ -21,28 +21,28 @@
 AudioElement::AudioElement() : SlideElement()
 {
 	playbackFinished = false;
-	setValue("volume", 100);
+	setValue(QStringLiteral("volume"), 100);
 }
 
 QString AudioElement::previewUrl() const
 {
-	return getValue("src").toString();
+	return getValue(QStringLiteral("src")).toString();
 }
 
 void AudioElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
 
-	if(interactive || !getValue("visible").toBool())
+	if(interactive || !getValue(QStringLiteral("visible")).toBool())
 		return;
 
 	player = new QMediaPlayer;
-	player->setVolume(getValue("volume").toInt());
+	player->setVolume(getValue(QStringLiteral("volume")).toInt());
 	connect(player, &QMediaPlayer::stateChanged, this, &AudioElement::stateChanged);
 
 	QMediaPlaylist *playlist = new QMediaPlaylist(player);
-	playlist->addMedia(QUrl::fromLocalFile(getValue("src").toString()));
-	if(getValue("loop").toBool())
+	playlist->addMedia(QUrl::fromLocalFile(getValue(QStringLiteral("src")).toString()));
+	if(getValue(QStringLiteral("loop")).toBool())
 		playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
 	player->setPlaylist(playlist);
 }
@@ -60,27 +60,27 @@ PropertyList AudioElement::getProperties() const
 
 	Property *visible = new Property(boolManager, tr("Activer"), "visible");
 	visible->setToolTip(tr("Activer l'élément"));
-	visible->setValue(this->getValue("visible"));
+	visible->setValue(this->getValue(QStringLiteral("visible")));
 
 	Property *group = new Property(0, tr("Son"));
 
 	Property *src = new Property(fileManager, tr("Source"), "src");
 	src->setToolTip(tr("Source du fichier audio"));
-	src->setValue(this->getValue("src"));
-	fileManager->setRequired("src", true);
-	fileManager->setFilter("src", AUDIO_FILTER);
+	src->setValue(this->getValue(QStringLiteral("src")));
+	fileManager->setRequired(QStringLiteral("src"), true);
+	fileManager->setFilter(QStringLiteral("src"), AUDIO_FILTER);
 	group->addProperty(src);
 
 	Property *loop = new Property(boolManager, tr("Boucle"), "loop");
 	loop->setToolTip(tr("Lire le son en boucle"));
-	loop->setValue(this->getValue("loop"));
+	loop->setValue(this->getValue(QStringLiteral("loop")));
 	group->addProperty(loop);
 
 	Property *volume = new Property(sliderManager, tr("Volume"), "volume");
 	volume->setToolTip(tr("Volume deu son"));
-	volume->setValue(this->getValue("volume"));
-	sliderManager->setMaximum("volume", 100);
-	sliderManager->setSuffix("volume", tr(" %"));
+	volume->setValue(this->getValue(QStringLiteral("volume")));
+	sliderManager->setMaximum(QStringLiteral("volume"), 100);
+	sliderManager->setSuffix(QStringLiteral("volume"), tr(" %"));
 	group->addProperty(volume);
 
 	return PropertyList()

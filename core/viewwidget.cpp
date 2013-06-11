@@ -203,7 +203,7 @@ void ViewWidget::goTo()
 	bool ok;
 	QStringList slideNames;
 	foreach(Slide *slide, slideshow->getSlides())
-		slideNames << slide->getValue("name").toString();
+		slideNames << slide->getValue(QStringLiteral("name")).toString();
 
 	QString name = QInputDialog::getItem(this, tr("Sélectionner une diapositive"), tr("Afficher la diapositive :"), slideNames, ui->stackedWidget->currentIndex(), false, &ok);
 	if(!ok || name.isEmpty() || slideNames.indexOf(name) == ui->stackedWidget->currentIndex())

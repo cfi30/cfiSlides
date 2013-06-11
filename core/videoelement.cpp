@@ -21,26 +21,26 @@
 VideoElement::VideoElement() : SlideElement()
 {
 	playbackFinished = false;
-	setValue("size", QSize(600, 400));
-	setValue("volume", 100);
+	setValue(QStringLiteral("size"), QSize(600, 400));
+	setValue(QStringLiteral("volume"), 100);
 }
 
 QString VideoElement::previewUrl() const
 {
-	return getValue("src").toString();
+	return getValue(QStringLiteral("src")).toString();
 }
 
 void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
 
-	if(!getValue("visible").toBool())
+	if(!getValue(QStringLiteral("visible")).toBool())
 		return;
 
-	const QPoint pos = getValue("position").toPoint();
-	const QSize size = getValue("size").toSize();
+	const QPoint pos = getValue(QStringLiteral("position")).toPoint();
+	const QSize size = getValue(QStringLiteral("size")).toSize();
 	Qt::AspectRatioMode scaleMode = Qt::KeepAspectRatioByExpanding;
-	switch(getValue("scaleMode").toInt())
+	switch(getValue(QStringLiteral("scaleMode")).toInt())
 	{
 		case 1:
 			scaleMode = Qt::IgnoreAspectRatio;
@@ -64,7 +64,7 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 
 		QGraphicsTextItem *label = new QGraphicsTextItem(item);
 		label->setDefaultTextColor(Qt::black);
-		label->setPlainText(getValue("src").toString());
+		label->setPlainText(getValue(QStringLiteral("src")).toString());
 
 		icon->setVisible(
 			size.width() > icon->pixmap().size().width() &&
@@ -96,12 +96,12 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 
 		player = new QMediaPlayer;
 		player->setVideoOutput(item);
-		player->setVolume(getValue("volume").toInt());
+		player->setVolume(getValue(QStringLiteral("volume")).toInt());
 		connect(player, &QMediaPlayer::stateChanged, this, &VideoElement::stateChanged);
 
 		QMediaPlaylist *playlist = new QMediaPlaylist(player);
-		playlist->addMedia(QUrl::fromLocalFile(getValue("src").toString()));
-		if(getValue("loop").toBool())
+		playlist->addMedia(QUrl::fromLocalFile(getValue(QStringLiteral("src")).toString()));
+		if(getValue(QStringLiteral("loop")).toBool())
 			playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
 		player->setPlaylist(playlist);
 	}
@@ -125,27 +125,27 @@ PropertyList VideoElement::getProperties() const
 
 	Property *src = new Property(fileManager, tr("Source"), "src");
 	src->setToolTip(tr("Chemin de la vidéo"));
-	src->setValue(this->getValue("src"));
-	fileManager->setRequired("src", true);
-	fileManager->setFilter("src", MOVIE_FILTER);
+	src->setValue(this->getValue(QStringLiteral("src")));
+	fileManager->setRequired(QStringLiteral("src"), true);
+	fileManager->setFilter(QStringLiteral("src"), MOVIE_FILTER);
 	group->addProperty(src);
 
 	Property *loop = new Property(boolManager, tr("Boucle"), "loop");
 	loop->setToolTip(tr("Lire la vidéo en boucle"));
-	loop->setValue(this->getValue("loop"));
+	loop->setValue(this->getValue(QStringLiteral("loop")));
 	group->addProperty(loop);
 
 	Property *volume = new Property(sliderManager, tr("Volume"), "volume");
 	volume->setToolTip(tr("Volume de la vidéo"));
-	volume->setValue(this->getValue("volume"));
-	sliderManager->setMaximum("volume", 100);
-	sliderManager->setSuffix("volume", tr(" %"));
+	volume->setValue(this->getValue(QStringLiteral("volume")));
+	sliderManager->setMaximum(QStringLiteral("volume"), 100);
+	sliderManager->setSuffix(QStringLiteral("volume"), tr(" %"));
 	group->addProperty(volume);
 
 	Property *scaleMode = new Property(enumManager, tr("Mise à l'échelle"), "scaleMode");
 	scaleMode->setToolTip(tr("Mode de mise à l'échelle de la vidéo"));
-	scaleMode->setValue(this->getValue("scaleMode"));
-	enumManager->setEnumNames("scaleMode", QStringList() << tr("Remplir & Conserver") << tr("Remplir") << tr("Conserver"));
+	scaleMode->setValue(this->getValue(QStringLiteral("scaleMode")));
+	enumManager->setEnumNames(QStringLiteral("scaleMode"), QStringList() << tr("Remplir & Conserver") << tr("Remplir") << tr("Conserver"));
 	group->addProperty(scaleMode);
 
 	return PropertyList()

@@ -20,8 +20,8 @@
 
 Slide::Slide(const QString &name) : SlideshowElement()
 {
-	this->setValue("name", name);
-	this->setValue("backgroundColor", QColor(Qt::white));
+	this->setValue(QStringLiteral("name"), name);
+	this->setValue(QStringLiteral("backgroundColor"), QColor(Qt::white));
 }
 
 Slide::~Slide()
@@ -33,15 +33,15 @@ Slide::~Slide()
 void Slide::render(QGraphicsScene *scene, const bool interactive)
 {
 	QBrush background;
-	QPixmap backgroundPixmap(this->getValue("backgroundImage").toString());
+	QPixmap backgroundPixmap(this->getValue(QStringLiteral("backgroundImage")).toString());
 	if(backgroundPixmap.isNull())
 	{
-		background.setColor(getValue("backgroundColor").value<QColor>());
+		background.setColor(getValue(QStringLiteral("backgroundColor")).value<QColor>());
 		background.setStyle(Qt::SolidPattern);
 	}
 	else
 	{
-		switch(getValue("backgroundImageStretch").toInt())
+		switch(getValue(QStringLiteral("backgroundImageStretch")).toInt())
 		{
 			case Slide::Repeat:
 				break;
@@ -125,20 +125,20 @@ PropertyList Slide::getProperties() const
 	Property *background = new Property(0, tr("Arrière-plan"));
 
 	Property *color = new Property(colorManager, tr("Couleur"), "backgroundColor");
-	color->setValue(this->getValue("backgroundColor"));
+	color->setValue(this->getValue(QStringLiteral("backgroundColor")));
 	color->setToolTip(tr("Couleur de fond"));
 	background->addProperty(color);
 
 	Property *image = new Property(fileManager, tr("Image"), "backgroundImage");
-	image->setValue(this->getValue("backgroundImage"));
+	image->setValue(this->getValue(QStringLiteral("backgroundImage")));
 	image->setToolTip(tr("Image de fond"));
-	fileManager->setFilter("backgroundImage", IMAGE_FILTER);
+	fileManager->setFilter(QStringLiteral("backgroundImage"), IMAGE_FILTER);
 	background->addProperty(image);
 
 	Property *stretchMode = new Property(enumManager, tr("Mise à l'échelle"), "backgroundImageStretch");
-	stretchMode->setValue(this->getValue("backgroundImageStretch"));
+	stretchMode->setValue(this->getValue(QStringLiteral("backgroundImageStretch")));
 	stretchMode->setToolTip(tr("Mode de mise à l'échelle de l'image"));
-	enumManager->setEnumNames("backgroundImageStretch", QStringList() << tr("Remplir & Conserver") << tr("Répéter") << tr("Conserver"));
+	enumManager->setEnumNames(QStringLiteral("backgroundImageStretch"), QStringList() << tr("Remplir & Conserver") << tr("Répéter") << tr("Conserver"));
 	image->addProperty(stretchMode);
 
 	return PropertyList()
@@ -165,7 +165,7 @@ void Slide::play()
 {
 	foreach(SlideElement *element, elements)
 	{
-		if(element->getValue("visible").toBool())
+		if(element->getValue(QStringLiteral("visible")).toBool())
 			element->play();
 	}
 }
@@ -174,7 +174,7 @@ void Slide::pause()
 {
 	foreach(SlideElement *element, elements)
 	{
-		if(element->getValue("visible").toBool())
+		if(element->getValue(QStringLiteral("visible")).toBool())
 			element->pause();
 	}
 }
@@ -183,7 +183,7 @@ void Slide::stop()
 {
 	foreach(SlideElement *element, elements)
 	{
-		if(element->getValue("visible").toBool())
+		if(element->getValue(QStringLiteral("visible")).toBool())
 			element->stop();
 	}
 }
@@ -192,7 +192,7 @@ void Slide::toggleMute()
 {
 	foreach(SlideElement *element, elements)
 	{
-		if(element->getValue("visible").toBool())
+		if(element->getValue(QStringLiteral("visible")).toBool())
 			element->toggleMute();
 	}
 }
@@ -201,7 +201,7 @@ void Slide::destroy()
 {
 	foreach(SlideElement *element, elements)
 	{
-		if(element->getValue("visible").toBool())
+		if(element->getValue(QStringLiteral("visible")).toBool())
 			element->destroy();
 	}
 }

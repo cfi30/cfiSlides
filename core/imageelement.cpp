@@ -20,21 +20,21 @@
 
 ImageElement::ImageElement() : SlideElement()
 {
-	setValue("size", QSize(400, 300));
+	setValue(QStringLiteral("size"), QSize(400, 300));
 }
 
 void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
 
-	if(!getValue("visible").toBool())
+	if(!getValue(QStringLiteral("visible")).toBool())
 		return;
 
-	const QSize size = getValue("size").toSize();
-	const QPoint pos = getValue("position").toPoint();
+	const QSize size = getValue(QStringLiteral("size")).toSize();
+	const QPoint pos = getValue(QStringLiteral("position")).toPoint();
 
 	Qt::AspectRatioMode scalingMode = Qt::IgnoreAspectRatio;
-	switch(getValue("scaleMode").toInt())
+	switch(getValue(QStringLiteral("scaleMode")).toInt())
 	{
 		case 1:
 			scalingMode = Qt::KeepAspectRatio;
@@ -44,7 +44,7 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 			break;
 	}
 
-	const QPixmap pixmap(getValue("src").toString());
+	const QPixmap pixmap(getValue(QStringLiteral("src")).toString());
 	if(pixmap.isNull())
 	{
 		MissingImagePlaceholderItem *item = new MissingImagePlaceholderItem(this);
@@ -74,7 +74,7 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 
 		GraphicsPixmapItem *item = new GraphicsPixmapItem(this);
 		item->setPixmap(spixmap);
-		item->setPos(getValue("position").toPoint());
+		item->setPos(getValue(QStringLiteral("position")).toPoint());
 
 		scene->addItem(item);
 	}
@@ -92,15 +92,15 @@ PropertyList ImageElement::getProperties() const
 
 	Property *src = new Property(fileManager, tr("Source"), "src");
 	src->setToolTip(tr("Chemin de l'image"));
-	src->setValue(this->getValue("src"));
-	fileManager->setRequired("src", true);
-	fileManager->setFilter("src", IMAGE_FILTER);
+	src->setValue(this->getValue(QStringLiteral("src")));
+	fileManager->setRequired(QStringLiteral("src"), true);
+	fileManager->setFilter(QStringLiteral("src"), IMAGE_FILTER);
 	group->addProperty(src);
 
 	Property *scaleMode = new Property(enumManager, tr("Mise à l'échelle"), "scaleMode");
 	scaleMode->setToolTip(tr("Mode de mise à l'échelle de l'image"));
-	scaleMode->setValue(this->getValue("scaleMode"));
-	enumManager->setEnumNames("scaleMode", QStringList() << tr("Remplir") << tr("Conserver") << tr("Remplir & Conserver"));
+	scaleMode->setValue(this->getValue(QStringLiteral("scaleMode")));
+	enumManager->setEnumNames(QStringLiteral("scaleMode"), QStringList() << tr("Remplir") << tr("Conserver") << tr("Remplir & Conserver"));
 	group->addProperty(scaleMode);
 
 	return PropertyList()
@@ -110,11 +110,11 @@ PropertyList ImageElement::getProperties() const
 
 void ImageElement::propertyChanged(QString name, QVariant value)
 {
-	if(getValue("src").toString().isEmpty())
+	if(getValue(QStringLiteral("src")).toString().isEmpty())
 	{
 		const QSize size = QPixmap(value.toString()).size();
 		if(!size.isNull())
-			setValue("size", size);
+			setValue(QStringLiteral("size"), size);
 	}
 	SlideshowElement::propertyChanged(name, value);
 }

@@ -20,27 +20,27 @@
 
 RectElement::RectElement() : SlideElement()
 {
-	setValue("size", QSize(100, 100));
-	setValue("bgStyle", 1);
-	setValue("borderSize", 1);
+	setValue(QStringLiteral("size"), QSize(100, 100));
+	setValue(QStringLiteral("bgStyle"), 1);
+	setValue(QStringLiteral("borderSize"), 1);
 }
 
 void RectElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
 
-	if(!getValue("visible").toBool())
+	if(!getValue(QStringLiteral("visible")).toBool())
 		return;
 
 	QPen pen(penStyle());
-	pen.setColor(getValue("borderColor").value<QColor>());
+	pen.setColor(getValue(QStringLiteral("borderColor")).value<QColor>());
 	pen.setWidth(getValue("borderSize", 1).toInt());
 
 	GraphicsRectItem *item = new GraphicsRectItem(this);
-	item->setBrush(QBrush(getValue("color").value<QColor>(), brushStyle()));
+	item->setBrush(QBrush(getValue(QStringLiteral("color")).value<QColor>(), brushStyle()));
 	item->setPen(pen);
-	item->setRect(QRect(QPoint(), getValue("size").toSize()));
-	item->setPos(getValue("position").toPoint());
+	item->setRect(QRect(QPoint(), getValue(QStringLiteral("size")).toSize()));
+	item->setPos(getValue(QStringLiteral("position")).toPoint());
 
 	scene->addItem(item);
 }
@@ -60,8 +60,8 @@ PropertyList RectElement::getProperties() const
 
 	Property *bgStyle = new Property(enumManager, tr("Style"), "bgStyle");
 	bgStyle->setToolTip(tr("Mode de remplissage"));
-	bgStyle->setValue(this->getValue("bgStyle"));
-	enumManager->setEnumNames("bgStyle",
+	bgStyle->setValue(this->getValue(QStringLiteral("bgStyle")));
+	enumManager->setEnumNames(QStringLiteral("bgStyle"),
 		QStringList()
 			<< tr("Aucun remplissage")
 			<< tr("Uni")
@@ -83,14 +83,14 @@ PropertyList RectElement::getProperties() const
 
 	Property *color = new Property(colorManager, tr("Couleur"), "color");
 	color->setToolTip(tr("Couleur de remplissage"));
-	color->setValue(this->getValue("color"));
+	color->setValue(this->getValue(QStringLiteral("color")));
 	background->addProperty(color);
 
 	Property *border = new Property(0, tr("Bordure"));
 
 	Property *borderStyle = new Property(enumManager, tr("Style"), "borderStyle");
 	borderStyle->setToolTip(tr("Style de la bordure"));
-	enumManager->setEnumNames("borderStyle",
+	enumManager->setEnumNames(QStringLiteral("borderStyle"),
 		QStringList()
 			<< tr("Aucune bordure")
 			<< tr("Ligne")
@@ -99,20 +99,20 @@ PropertyList RectElement::getProperties() const
 			<< tr("Point-tiret")
 			<< tr("Point-point-tiret")
 	);
-	borderStyle->setValue(this->getValue("borderStyle"));
+	borderStyle->setValue(this->getValue(QStringLiteral("borderStyle")));
 	border->addProperty(borderStyle);
 
 	Property *borderSize = new Property(intManager, tr("Taille"), "borderSize");
 	borderSize->setToolTip(tr("Épaisseur de la bordure"));
-	borderSize->setValue(this->getValue("borderSize"));
-	intManager->setMinimum("borderSize", 1);
-	intManager->setMaximum("borderSize", MAXIMUM_THICKNESS);
-	intManager->setSuffix("borderSize", tr(" px"));
+	borderSize->setValue(this->getValue(QStringLiteral("borderSize")));
+	intManager->setMinimum(QStringLiteral("borderSize"), 1);
+	intManager->setMaximum(QStringLiteral("borderSize"), MAXIMUM_THICKNESS);
+	intManager->setSuffix(QStringLiteral("borderSize"), tr(" px"));
 	border->addProperty(borderSize);
 
 	Property *borderColor = new Property(colorManager, tr("Couleur"), "borderColor");
 	borderColor->setToolTip(tr("Couleur de la bordure"));
-	borderColor->setValue(this->getValue("borderColor"));
+	borderColor->setValue(this->getValue(QStringLiteral("borderColor")));
 	border->addProperty(borderColor);
 
 	return PropertyList()
@@ -124,7 +124,7 @@ PropertyList RectElement::getProperties() const
 Qt::PenStyle RectElement::penStyle() const
 {
 	Qt::PenStyle penStyle;
-	switch(getValue("borderStyle").toInt())
+	switch(getValue(QStringLiteral("borderStyle")).toInt())
 	{
 		case 1:
 			penStyle = Qt::SolidLine;

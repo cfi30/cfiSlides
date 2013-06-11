@@ -23,24 +23,24 @@ TextElement::TextElement() : SlideElement()
 	QFont font;
 	font.setPointSize(20);
 
-	setValue("text", "Lorem ipsum dolor sit amet");
-	setValue("font", font);
-	setValue("width", 400);
+	setValue(QStringLiteral("text"), "Lorem ipsum dolor sit amet");
+	setValue(QStringLiteral("font"), font);
+	setValue(QStringLiteral("width"), 400);
 }
 
 void TextElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
 
-	if(!getValue("visible").toBool())
+	if(!getValue(QStringLiteral("visible")).toBool())
 		return;
 
 	GraphicsTextItem *item = new GraphicsTextItem(this);
-	item->setPlainText(getValue("text").toString());
-	item->setFont(getValue("font").value<QFont>());
-	item->setDefaultTextColor(getValue("color").value<QColor>());
-	item->setTextWidth(getValue("width").toInt());
-	item->setPos(getValue("position").toPoint());
+	item->setPlainText(getValue(QStringLiteral("text")).toString());
+	item->setFont(getValue(QStringLiteral("font")).value<QFont>());
+	item->setDefaultTextColor(getValue(QStringLiteral("color")).value<QColor>());
+	item->setTextWidth(getValue(QStringLiteral("width")).toInt());
+	item->setPos(getValue(QStringLiteral("position")).toPoint());
 
 	connect(item->document(), &QTextDocument::contentsChanged, this, &TextElement::textChanged);
 	scene->addItem(item);
@@ -68,40 +68,40 @@ PropertyList TextElement::getProperties() const
 
 	Property *visible = new Property(boolManager, tr("Visible"), "visible");
 	visible->setToolTip(tr("Visibilité de l'élément"));
-	visible->setValue(this->getValue("visible"));
+	visible->setValue(this->getValue(QStringLiteral("visible")));
 
 	Property *geometry = new Property(0, tr("Géométrie"));
 
 	Property *position = new Property(pointManager, tr("Position"), "position");
 	position->setToolTip(tr("Position de l'élément"));
-	position->setValue(this->getValue("position"));
+	position->setValue(this->getValue(QStringLiteral("position")));
 	geometry->addProperty(position);
 
 	Property *width = new Property(intManager, tr("Largeur"), "width");
 	width->setToolTip(tr("Taille de l'élément"));
-	width->setValue(this->getValue("width"));
-	intManager->setMinimum("width", 50);
+	width->setValue(this->getValue(QStringLiteral("width")));
+	intManager->setMinimum(QStringLiteral("width"), 50);
 	if(this->scene != 0)
-		intManager->setMaximum("width", scene->sceneRect().width());
-	intManager->setSuffix("width", tr(" px"));
+		intManager->setMaximum(QStringLiteral("width"), scene->sceneRect().width());
+	intManager->setSuffix(QStringLiteral("width"), tr(" px"));
 	geometry->addProperty(width);
 
 	Property *text = new Property(0, tr("Texte"));
 
 	Property *body = new Property(textManager, tr("Contenu"), "text");
 	body->setToolTip(tr("Corps du texte"));
-	body->setValue(this->getValue("text"));
-	textManager->setRequired("text", true);
+	body->setValue(this->getValue(QStringLiteral("text")));
+	textManager->setRequired(QStringLiteral("text"), true);
 	text->addProperty(body);
 
 	Property *color = new Property(colorManager, tr("Couleur"), "color");
 	color->setToolTip(tr("Couleur du texte"));
-	color->setValue(this->getValue("color"));
+	color->setValue(this->getValue(QStringLiteral("color")));
 	text->addProperty(color);
 
 	Property *font = new Property(fontManager, tr("Police"), "font");
 	font->setToolTip(tr("Police du texte"));
-	font->setValue(this->getValue("font"));
+	font->setValue(this->getValue(QStringLiteral("font")));
 	text->addProperty(font);
 
 	return PropertyList()
@@ -114,7 +114,7 @@ PropertyList TextElement::getProperties() const
 void TextElement::textChanged()
 {
 	QTextDocument *document = qobject_cast<QTextDocument *>(sender());
-	setValue("text", document->toPlainText());
+	setValue(QStringLiteral("text"), document->toPlainText());
 	emit moved();
 }
 

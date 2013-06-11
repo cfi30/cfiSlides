@@ -22,18 +22,18 @@ void EllipseElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
 
-	if(!getValue("visible").toBool())
+	if(!getValue(QStringLiteral("visible")).toBool())
 		return;
 
 	QPen pen(penStyle());
-	pen.setColor(getValue("borderColor").value<QColor>());
+	pen.setColor(getValue(QStringLiteral("borderColor")).value<QColor>());
 	pen.setWidth(getValue("borderSize", 1).toInt());
 
 	GraphicsEllipseItem *item = new GraphicsEllipseItem(this);
-	item->setBrush(QBrush(getValue("color").value<QColor>(), brushStyle()));
+	item->setBrush(QBrush(getValue(QStringLiteral("color")).value<QColor>(), brushStyle()));
 	item->setPen(pen);
-	item->setRect(QRect(QPoint(), getValue("size").toSize()));
-	item->setPos(getValue("position").toPoint());
+	item->setRect(QRect(QPoint(), getValue(QStringLiteral("size")).toSize()));
+	item->setPos(getValue(QStringLiteral("position")).toPoint());
 
 	scene->addItem(item);
 }

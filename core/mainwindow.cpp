@@ -281,7 +281,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	if(recentFiles.count() > RECENT_FILES_MAX)
 		recentFiles.removeLast();
 
-	QSettings().setValue("recentFiles", recentFiles);
+	QSettings().setValue(QStringLiteral("recentFiles"), recentFiles);
 	ui->menuRecentFiles->setEnabled(true);
 
 	progress->close();
@@ -394,8 +394,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	if(!closeSlideshow())
 		return event->ignore();
 
-	QSettings().setValue("mainWindow/geometry", this->saveGeometry());
-	QSettings().setValue("mainWindow/state", this->saveState());
+	QSettings().setValue(QStringLiteral("mainWindow/geometry"), this->saveGeometry());
+	QSettings().setValue(QStringLiteral("mainWindow/state"), this->saveState());
 
 	QMainWindow::closeEvent(event);
 }
@@ -418,7 +418,7 @@ void MainWindow::createEmptySlide()
 
 void MainWindow::displaySlide(Slide *slide)
 {
-	statusBar()->showMessage(tr("Affichage de %1...").arg(slide->getValue("name").toString()));
+	statusBar()->showMessage(tr("Affichage de %1...").arg(slide->getValue(QStringLiteral("name")).toString()));
 
 	QGraphicsScene *scene = new QGraphicsScene();
 	scene->setSceneRect(slideshow->getValue("geometry", QDesktopWidget().screenGeometry()).toRect());
@@ -448,7 +448,7 @@ void MainWindow::displaySlide(Slide *slide)
 		scene->clear();
 
 	QIcon icon(pixmap.scaledToWidth(ui->slideList->iconSize().width()));
-	QListWidgetItem *newItem = new QListWidgetItem(icon, slide->getValue("name").toString());
+	QListWidgetItem *newItem = new QListWidgetItem(icon, slide->getValue(QStringLiteral("name")).toString());
 	newItem->setFlags(newItem->flags() ^ Qt::ItemIsEditable);
 	ui->slideList->addItem(newItem);
 
@@ -475,7 +475,7 @@ void MainWindow::updateSlide(const int index)
 	slide->render(view->scene(), true);
 
 	ui->slideList->blockSignals(true);
-	ui->slideList->item(index)->setText(slide->getValue("name").toString());
+	ui->slideList->item(index)->setText(slide->getValue(QStringLiteral("name")).toString());
 	ui->slideList->blockSignals(false);
 
 	updateIcon(index);
@@ -505,7 +505,7 @@ void MainWindow::updateSlideTree(const int index)
 	ui->slideTree->clear();
 
 	QTreeWidgetItem *topLevel = new QTreeWidgetItem(ui->slideTree);
-	topLevel->setText(0, slide->getValue("name").toString());
+	topLevel->setText(0, slide->getValue(QStringLiteral("name")).toString());
 	topLevel->setData(0, Qt::UserRole, index);
 	topLevel->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable);
 	topLevel->setExpanded(true);
@@ -519,7 +519,7 @@ void MainWindow::updateSlideTree(const int index)
 
 		const int elementIndex = elements.indexOf(element);
 		QTreeWidgetItem *treeItem = new QTreeWidgetItem(topLevel);
-		treeItem->setText(0, element->getValue("name").toString());
+		treeItem->setText(0, element->getValue(QStringLiteral("name")).toString());
 		treeItem->setData(0, Qt::UserRole, elementIndex);
 		treeItem->setFlags(treeItem->flags() | Qt::ItemIsEditable);
 
@@ -605,10 +605,10 @@ void MainWindow::renameSlide()
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
 	bool ok;
-	QString newName = QInputDialog::getText(this, ui->actionRenameSlide->text(), tr("Nouveau nom pour cette diapositive :"), QLineEdit::Normal, slide->getValue("name").toString(), &ok);
+	QString newName = QInputDialog::getText(this, ui->actionRenameSlide->text(), tr("Nouveau nom pour cette diapositive :"), QLineEdit::Normal, slide->getValue(QStringLiteral("name")).toString(), &ok);
 	if(!ok || !validateSlideName(newName)) return;
 
-	slide->setValue("name", newName);
+	slide->setValue(QStringLiteral("name"), newName);
 	updateSlide(index);
 	updateSlideTree(index);
 	updateCurrentPropertiesEditor();
@@ -772,12 +772,12 @@ void MainWindow::slideItemChanged(QListWidgetItem *item)
 	if(!validateSlideName(item->text()))
 	{
 		ui->slideList->blockSignals(true);
-		ui->slideList->item(index)->setText(slide->getValue("name").toString());
+		ui->slideList->item(index)->setText(slide->getValue(QStringLiteral("name")).toString());
 		ui->slideList->blockSignals(false);
 		return;
 	}
 
-	slide->setValue("name", item->text());
+	slide->setValue(QStringLiteral("name"), item->text());
 	updateSlide(index);
 	updateSlideTree(index);
 	updateCurrentPropertiesEditor();
@@ -793,7 +793,7 @@ void MainWindow::elementItemChanged(QTreeWidgetItem *item, int)
 		if(!validateSlideName(item->text(0)))
 			return updateSlideTree(index);
 
-		slide->setValue("name", item->text(0));
+		slide->setValue(QStringLiteral("name"), item->text(0));
 		ui->slideList->item(index)->setText(item->text(0));
 		updatePropertiesEditor(slide);
 	}
@@ -803,7 +803,7 @@ void MainWindow::elementItemChanged(QTreeWidgetItem *item, int)
 		SlideElement *element = slide->getElement(item->data(0, Qt::UserRole).toInt());
 		if(!validateElementName(item->text(0)))
 			return updateSlideTree(ui->slideList->currentRow());
-		element->setValue("name", item->text(0));
+		element->setValue(QStringLiteral("name"), item->text(0));
 		updatePropertiesEditor(element);
 	}
 
@@ -865,9 +865,9 @@ void MainWindow::duplicateElements()
 		const int elementIndex = item->data(0, Qt::UserRole).toInt();
 		SlideElement *sourceElement = slide->getElement(elementIndex);
 		SlideElement *newElement = (SlideElement *)QMetaType::create(QMetaType::type(sourceElement->type()), sourceElement);
-		newElement->setValue("name", tr("Copie de %1").arg(sourceElement->getValue("name").toString()));
+		newElement->setValue(QStringLiteral("name"), tr("Copie de %1").arg(sourceElement->getValue(QStringLiteral("name")).toString()));
 		if(sceneItemFromIndex(elementIndex))
-			newElement->setValue("position", sourceElement->getValue("position").toPoint() + QPoint(COPY_SHIFT, COPY_SHIFT));
+			newElement->setValue(QStringLiteral("position"), sourceElement->getValue(QStringLiteral("position")).toPoint() + QPoint(COPY_SHIFT, COPY_SHIFT));
 		slide->addElement(newElement);
 	}
 
@@ -970,7 +970,7 @@ void MainWindow::copySlide()
 	int errorsCount = 0;
 	Slide *newSlide = this->slideshow->createSlide("");
 	newSlide->setValues(sourceSlide->getValues());
-	newSlide->setValue("name", tr("Copie de %1").arg(sourceSlide->getValue("name").toString()));
+	newSlide->setValue(QStringLiteral("name"), tr("Copie de %1").arg(sourceSlide->getValue(QStringLiteral("name")).toString()));
 	foreach(SlideElement *sourceElement, sourceSlide->getElements())
 	{
 		SlideElement *newElement = (SlideElement *)QMetaType::create(QMetaType::type(sourceElement->type()), sourceElement);
@@ -993,7 +993,7 @@ void MainWindow::copySlide()
 	ui->slideList->setCurrentItem(item);
 
 	setWindowModified(true);
-	statusBar()->showMessage(tr("Duplication de %0 terminée. %1 erreur(s).").arg(sourceSlide->getValue("name").toString()).arg(errorsCount), STATUS_TIMEOUT);
+	statusBar()->showMessage(tr("Duplication de %0 terminée. %1 erreur(s).").arg(sourceSlide->getValue(QStringLiteral("name")).toString()).arg(errorsCount), STATUS_TIMEOUT);
 }
 
 void MainWindow::selectPrevSlide()
@@ -1133,7 +1133,7 @@ void MainWindow::managePlugins()
 
 	PluginDialog *dialog = new PluginDialog(this);
 	if(dialog->exec() == QDialog::Accepted)
-		QSettings().setValue("plugins", dialog->getEnabledPlugins());
+		QSettings().setValue(QStringLiteral("plugins"), dialog->getEnabledPlugins());
 
 	loadPlugins();
 }
@@ -1220,7 +1220,7 @@ void MainWindow::displayInsertElemMenu()
 
 void MainWindow::resizeSlideshow()
 {
-	GeometryDialog *dialog = new GeometryDialog(slideshow->getValue("geometry").toRect(), this);
+	GeometryDialog *dialog = new GeometryDialog(slideshow->getValue(QStringLiteral("geometry")).toRect(), this);
 	if(dialog->exec() == QDialog::Rejected)
 		return;
 
@@ -1231,7 +1231,7 @@ void MainWindow::resizeSlideshow()
 		slideshow->unsetValue("geometry");
 	}
 	else
-		slideshow->setValue("geometry", newRect);
+		slideshow->setValue(QStringLiteral("geometry"), newRect);
 
 	const int slideCount = ui->displayWidget->count();
 
@@ -1286,7 +1286,7 @@ void MainWindow::insertElement(SlideElement *element)
 {
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
-	element->setValue("name", element->getValue("name").toString().arg(slide->getElements().size() + 1));
+	element->setValue(QStringLiteral("name"), element->getValue(QStringLiteral("name")).toString().arg(slide->getElements().size() + 1));
 	slide->addElement(element);
 
 	updateSlide(index);
@@ -1304,7 +1304,7 @@ void MainWindow::insertElementFromAction()
 	QAction *action = qobject_cast<QAction *>(sender());
 
 	SlideElement *element = (SlideElement *)QMetaType::create(action->data().toInt());
-	element->setValue("name", tr("%1 %2").arg(action->text()));
+	element->setValue(QStringLiteral("name"), tr("%1 %2").arg(action->text()));
 
 	insertElement(element);
 }
@@ -1343,7 +1343,7 @@ void MainWindow::pausePreview()
 void MainWindow::setPreviewVolume(int newVolume)
 {
 	previewPlayer->setVolume(newVolume);
-	QSettings().setValue("previewVolume", newVolume);
+	QSettings().setValue(QStringLiteral("previewVolume"), newVolume);
 }
 
 void MainWindow::setPreviewPosition(int newPos)

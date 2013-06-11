@@ -20,19 +20,19 @@
 
 LineElement::LineElement() : SlideElement()
 {
-	setValue("size", 4);
-	setValue("stop", QPoint(300, 0));
+	setValue(QStringLiteral("size"), 4);
+	setValue(QStringLiteral("stop"), QPoint(300, 0));
 }
 
 void LineElement::render(QGraphicsScene *scene, const bool interactive)
 {
 	SlideElement::render(scene, interactive);
 
-	if(!getValue("visible").toBool())
+	if(!getValue(QStringLiteral("visible")).toBool())
 		return;
 
 	Qt::PenStyle penStyle;
-	switch(getValue("style").toInt())
+	switch(getValue(QStringLiteral("style")).toInt())
 	{
 		case 1:
 			penStyle = Qt::DashLine;
@@ -52,13 +52,13 @@ void LineElement::render(QGraphicsScene *scene, const bool interactive)
 	}
 
 	QPen pen(penStyle);
-	pen.setColor(getValue("color").value<QColor>());
-	pen.setWidth(getValue("size").toInt());
+	pen.setColor(getValue(QStringLiteral("color")).value<QColor>());
+	pen.setWidth(getValue(QStringLiteral("size")).toInt());
 
 	GraphicsLineItem *item = new GraphicsLineItem(this);
 	item->setPen(pen);
-	item->setPos(getValue("position").toPoint());
-	item->setLine(QLine(QPoint(0, getValue("start").toInt()), getValue("stop").toPoint()));
+	item->setPos(getValue(QStringLiteral("position")).toPoint());
+	item->setLine(QLine(QPoint(0, getValue(QStringLiteral("start")).toInt()), getValue(QStringLiteral("stop")).toPoint()));
 
 	scene->addItem(item);
 }
@@ -82,45 +82,45 @@ PropertyList LineElement::getProperties() const
 
 	Property *visible = new Property(boolManager, tr("Visible"), "visible");
 	visible->setToolTip(tr("Visibilité de l'élément"));
-	visible->setValue(this->getValue("visible"));
+	visible->setValue(this->getValue(QStringLiteral("visible")));
 
 	Property *geometry = new Property(0, tr("Géométrie"));
 
 	Property *position = new Property(pointManager, tr("Position"), "position");
 	position->setToolTip(tr("Position de l'élément"));
-	position->setValue(this->getValue("position"));
+	position->setValue(this->getValue(QStringLiteral("position")));
 	geometry->addProperty(position);
 
 	Property *start = new Property(intManager, tr("Départ"), "start");
 	start->setToolTip(tr("Point de départ vertical de la ligne"));
-	start->setValue(this->getValue("start"));
-	intManager->setSuffix("start", tr(" px"));
+	start->setValue(this->getValue(QStringLiteral("start")));
+	intManager->setSuffix(QStringLiteral("start"), tr(" px"));
 	geometry->addProperty(start);
 
 	Property *stop = new Property(pointManager, tr("Arrivée"), "stop");
 	stop->setToolTip(tr("Point d'arrivée de la ligne"));
-	stop->setValue(this->getValue("stop"));
+	stop->setValue(this->getValue(QStringLiteral("stop")));
 	geometry->addProperty(stop);
 
 	Property *group = new Property(0, tr("Ligne"));
 
 	Property *size = new Property(intManager, tr("Épaisseur"), "size");
 	size->setToolTip(tr("Épaisseur de la bordure"));
-	size->setValue(this->getValue("size"));
-	intManager->setMinimum("size", 1);
-	intManager->setMaximum("size", MAXIMUM_THICKNESS);
-	intManager->setSuffix("size", tr(" px"));
+	size->setValue(this->getValue(QStringLiteral("size")));
+	intManager->setMinimum(QStringLiteral("size"), 1);
+	intManager->setMaximum(QStringLiteral("size"), MAXIMUM_THICKNESS);
+	intManager->setSuffix(QStringLiteral("size"), tr(" px"));
 	group->addProperty(size);
 
 	Property *color = new Property(colorManager, tr("Couleur"), "color");
 	color->setToolTip(tr("Couleur de la ligne"));
-	color->setValue(this->getValue("color"));
+	color->setValue(this->getValue(QStringLiteral("color")));
 	group->addProperty(color);
 
 	Property *style = new Property(enumManager, tr("Style"), "style");
 	style->setToolTip(tr("Style de la ligne"));
-	style->setValue(this->getValue("style"));
-	enumManager->setEnumNames("style", QStringList() << tr("Solide") << tr("Pointillés") << tr("Points") << tr("Point-tiret") << tr("Point-point-tiret"));
+	style->setValue(this->getValue(QStringLiteral("style")));
+	enumManager->setEnumNames(QStringLiteral("style"), QStringList() << tr("Solide") << tr("Pointillés") << tr("Points") << tr("Point-tiret") << tr("Point-point-tiret"));
 	group->addProperty(style);
 
 	return PropertyList()
