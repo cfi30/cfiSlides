@@ -166,7 +166,10 @@ void VideoElement::play()
 void VideoElement::pause()
 {
 	if(!playbackFinished)
+	{
+		qApp->processEvents();
 		player->pause();
+	}
 }
 
 void VideoElement::stop()
