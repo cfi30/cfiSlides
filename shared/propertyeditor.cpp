@@ -21,7 +21,7 @@
 PropertyEditor::PropertyEditor(QWidget *parent) : QWidget(parent)
 {
 	delegate = new PropertyEditorDelegate(this);
-	connect(delegate, SIGNAL(itemChanged(int)), this, SLOT(itemChanged(int)));
+	connect(delegate, &PropertyEditorDelegate::itemChanged, this, &PropertyEditor::itemChanged);
 
 	treeWidget = new PropertyEditorView(this);
 	treeWidget->setColumnCount(2);

@@ -63,7 +63,7 @@ QWidget *StringPropertyManager::createEditor(const QString &propName, const QVar
 	if(regexes.contains(propName))
 		editor->setValidator(new QRegExpValidator(regexes[propName], editor));
 
-	connect(editor, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
+	connect(editor, &QLineEdit::textChanged, this, &StringPropertyManager::textChanged);
 
 	return editor;
 }
@@ -111,8 +111,8 @@ QWidget *TextPropertyManager::createEditor(const QString &propName, const QVaria
 	button->setFixedWidth(20);
 	layout->addWidget(button);
 
-	connect(editor, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)));
-	connect(button, SIGNAL(clicked()), this, SLOT(buttonClicked()));
+	connect(editor, &QLineEdit::textChanged, this, &TextPropertyManager::textChanged);
+	connect(button, &QToolButton::clicked, this, &TextPropertyManager::buttonClicked);
 
 	widget->setFocusProxy(editor);
 	return widget;
@@ -161,7 +161,7 @@ QWidget *ColorPropertyManager::createEditor(const QString &propName, const QVari
 	button->setFixedWidth(20);
 	layout->addWidget(button);
 
-	connect(button, SIGNAL(clicked()), this, SLOT(buttonClicked()));
+	connect(button, &QToolButton::clicked, this, &ColorPropertyManager::buttonClicked);
 
 	widget->setFocusProxy(button);
 	return widget;
@@ -220,8 +220,8 @@ QWidget *FilePropertyManager::createEditor(const QString &propName, const QVaria
 	button->setFixedWidth(20);
 	layout->addWidget(button);
 
-	connect(fileEdit, SIGNAL(textChanged(QString)), this, SLOT(filePathChanged(QString)));
-	connect(button, SIGNAL(clicked()), this, SLOT(buttonClicked()));
+	connect(fileEdit, &QLineEdit::textChanged, this, &FilePropertyManager::filePathChanged);
+	connect(button, &QToolButton::clicked, this, &FilePropertyManager::buttonClicked);
 
 	widget->setFocusProxy(fileEdit);
 	return widget;
@@ -296,7 +296,7 @@ QWidget *BoolPropertyManager::createEditor(const QString &propName, const QVaria
 	button->setText(valueToString(propName, value));
 	layout->addWidget(button);
 
-	connect(button, SIGNAL(toggled(bool)), this, SLOT(buttonToogled(bool)));
+	connect(button, &QCheckBox::toggled, this, &BoolPropertyManager::buttonToogled);
 
 	widget->setFocusProxy(button);
 	return widget;
@@ -516,7 +516,7 @@ QWidget *IntSliderPropertyManager::createEditor(const QString &propName, const Q
 
 	editor->setValue(value.toInt());
 
-	connect(editor, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	connect(editor, &QSlider::valueChanged, this, &IntSliderPropertyManager::valueChanged);
 
 	return editor;
 }
@@ -554,7 +554,7 @@ QWidget *FontPropertyManager::createEditor(const QString &propName, const QVaria
 	button->setFixedWidth(20);
 	layout->addWidget(button);
 
-	connect(button, SIGNAL(clicked()), this, SLOT(buttonClicked()));
+	connect(button, &QToolButton::clicked, this, &FontPropertyManager::buttonClicked);
 
 	widget->setFocusProxy(button);
 	return widget;

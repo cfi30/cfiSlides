@@ -54,7 +54,7 @@ public:
 	void setReadOnly(const QString &propName, const bool readOnly);
 
 signals:
-	void modified(QString, QVariant);
+	void modified(const QString &, const QVariant &);
 
 protected:
 	QString currentProperty;

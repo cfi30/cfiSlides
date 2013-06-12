@@ -25,7 +25,7 @@ void PropertyEditorDelegate::registerProperty(Property *prop)
 	PropertyManager *manager = prop->getManager();
 	if(manager)
 	{
-		connect(manager, SIGNAL(modified(QString, QVariant)), this, SLOT(propertyModified(QString, QVariant)));
+		connect(manager, &PropertyManager::modified, this, &PropertyEditorDelegate::propertyModified);
 		nameToProp[prop->getName()] = prop;
 	}
 }
@@ -69,7 +69,7 @@ void PropertyEditorDelegate::setModelData(QWidget *, QAbstractItemModel *, const
 	emit itemChanged(index.data(Qt::UserRole).toInt());
 }
 
-void PropertyEditorDelegate::propertyModified(QString propName, QVariant newValue)
+void PropertyEditorDelegate::propertyModified(const QString &propName, const QVariant &newValue)
 {
 	nameToProp[propName]->setValue(newValue);
 }

@@ -1270,7 +1270,7 @@ void MainWindow::registerElementType(const SlideElementType &type)
 {
 	QAction *action = new QAction(type.getIcon(), type.getLabel(), this);
 	action->setData(type.getTypeId());
-	connect(action, SIGNAL(triggered()), this, SLOT(insertElementFromAction()));
+	connect(action, &QAction::triggered, this, &MainWindow::insertElementFromAction);
 
 	insertActions.append(action);
 }

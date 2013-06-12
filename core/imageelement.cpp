@@ -88,7 +88,7 @@ PropertyList ImageElement::getProperties() const
 		<< group;
 }
 
-void ImageElement::propertyChanged(QString name, QVariant value)
+void ImageElement::propertyChanged(const QString &name, const QVariant &value)
 {
 	if(getValue(QStringLiteral("src")).toString().isEmpty())
 	{

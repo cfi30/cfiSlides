@@ -49,7 +49,7 @@ signals:
 	void itemChanged(int) const;
 
 private slots:
-	void propertyModified(QString, QVariant);
+	void propertyModified(const QString &, const QVariant &);
 
 protected:
 	PropertyList properties;

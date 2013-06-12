@@ -34,7 +34,7 @@ public:
 	virtual PropertyList getProperties() const;
 
 protected:
-	virtual void propertyChanged(QString, QVariant);
+	virtual void propertyChanged(const QString &, const QVariant &);
 };
 
 class GraphicsPixmapItem : public QGraphicsPixmapItem

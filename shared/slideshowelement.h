@@ -38,7 +38,7 @@ signals:
 	void modified();
 
 protected slots:
-	virtual void propertyChanged(QString, QVariant);
+	virtual void propertyChanged(const QString &, const QVariant &);
 };
 
 #endif // SLIDESHOWELEMENT_H

@@ -85,9 +85,9 @@ SlideElement *Slide::getElement(const int index) const
 
 void Slide::addElement(SlideElement *element)
 {
-	connect(element, SIGNAL(modified()), this, SLOT(elementChanged()));
-	connect(element, SIGNAL(moved()), this, SLOT(elementMoved()));
-	connect(element, SIGNAL(refresh()), this, SLOT(refreshRequest()));
+	connect(element, &SlideshowElement::modified, this, &Slide::elementChanged);
+	connect(element, &SlideElement::moved, this, &Slide::elementMoved);
+	connect(element, &SlideElement::refresh, this, &Slide::refreshRequest);
 	element->setIndex(this->elements.count());
 	this->elements.append(element);
 }

@@ -145,10 +145,10 @@ bool ImportDialog::updateList(const QString directory)
 		progress->setValue(index + 1);
 
 		Slide *slide = new Slide(tr("Diapositive %1").arg(++slideCount));
-		connect(slide, SIGNAL(modified()), this, SLOT(elementModified()));
+		connect(slide, &Slide::modified, this, &ImportDialog::elementModified);
 
 		SlideElement *element = createElementFor(dir.absoluteFilePath(file));
-		connect(element, SIGNAL(modified()), this, SLOT(elementModified()));
+		connect(element, &Slide::modified, this, &ImportDialog::elementModified);
 		element->setValue(QStringLiteral("name"), file);
 
 		QTreeWidgetItem *slideItem = new QTreeWidgetItem(ui->treeWidget);

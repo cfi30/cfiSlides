@@ -22,11 +22,11 @@ ImportExport::ImportExport()
 {
 	importAction = new QAction(QIcon::fromTheme("document-import"), tr("Importer"), this);
 	importAction->setShortcut(QKeySequence("Ctrl+I"));
-	connect(importAction, SIGNAL(triggered()), this, SLOT(launchImport()));
+	connect(importAction, &QAction::triggered, this, &ImportExport::launchImport);
 
 	exportAction = new QAction(QIcon::fromTheme("document-export"), tr("Exporter"), this);
 	exportAction->setShortcut(QKeySequence("Ctrl+E"));
-	connect(exportAction, SIGNAL(triggered()), this, SLOT(launchExport()));
+	connect(exportAction, &QAction::triggered, this, &ImportExport::launchExport);
 }
 
 void ImportExport::initialize()

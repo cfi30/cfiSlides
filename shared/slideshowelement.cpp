@@ -32,7 +32,7 @@ PropertyList SlideshowElement::getProperties() const
 	return PropertyList() << name;
 }
 
-void SlideshowElement::propertyChanged(QString name, QVariant value)
+void SlideshowElement::propertyChanged(const QString &name, const QVariant &value)
 {
 	if(this->getValue(name) != value)
 	{
