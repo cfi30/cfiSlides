@@ -1219,8 +1219,11 @@ void MainWindow::aboutQt()
 void MainWindow::displayRecentFiles()
 {
 	ui->menuRecentFiles->clear();
-	foreach(QString file, QSettings().value(QStringLiteral("recentFiles")).toStringList())
-		ui->menuRecentFiles->addAction(file);
+	foreach(const QString file, QSettings().value(QStringLiteral("recentFiles")).toStringList())
+	{
+		if(QFile(file).exists())
+			ui->menuRecentFiles->addAction(file);
+	}
 }
 
 void MainWindow::openRecentFile(QAction *action)
