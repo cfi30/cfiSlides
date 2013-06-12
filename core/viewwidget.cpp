@@ -23,7 +23,7 @@ ViewWidget::ViewWidget(QWidget *parent) : QWidget(parent), ui(new Ui::ViewWidget
 {
 	ui->setupUi(this);
 
-	new QShortcut(QKeySequence("Ctrl+Q"), this, SLOT(close()));
+	new QShortcut(QKeySequence(QStringLiteral("Ctrl+Q")), this, SLOT(close()));
 	new QShortcut(QKeySequence(Qt::Key_Q), this, SLOT(close()));
 	new QShortcut(QKeySequence(Qt::Key_Escape), this, SLOT(close()));
 	new QShortcut(QKeySequence(Qt::Key_F11), this, SLOT(close()));

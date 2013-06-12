@@ -97,7 +97,8 @@ public slots:
 	void deleteSlide();
 	void slideModified();
 	void slideElementMoved();
-	void launchViewer();
+	void launchViewerFromCurrentSlide();
+	void launchViewerFromStart();
 	void copySlide();
 	void selectPrevSlide();
 	void selectNextSlide();
@@ -143,7 +144,7 @@ private:
 	void unregisterElementType(const SlideElementType &type);
 	QMenu *createSlideContextMenu();
 	QString msToString(const int ms) const;
-	QString formatInt(const int in) const;
+	void launchViewer(const int from);
 
 	Ui::MainWindow *ui;
 	Slideshow *slideshow;

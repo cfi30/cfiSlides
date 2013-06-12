@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>399</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -627,10 +627,7 @@
     </iconset>
    </property>
    <property name="text">
-    <string>Démarrer</string>
-   </property>
-   <property name="shortcut">
-    <string>F11</string>
+    <string>Démarrer la présentation</string>
    </property>
   </action>
   <action name="actionDuplicateSlide">
@@ -1145,7 +1142,7 @@
    <sender>actionStart</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>launchViewer()</slot>
+   <slot>launchViewerFromCurrentSlide()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -1584,7 +1581,6 @@
   <slot>renameSlide()</slot>
   <slot>reRenderSlide()</slot>
   <slot>deleteSlide()</slot>
-  <slot>launchViewer()</slot>
   <slot>copySlide()</slot>
   <slot>managePlugins()</slot>
   <slot>print()</slot>
@@ -1610,5 +1606,7 @@
   <slot>pausePreview()</slot>
   <slot>setPreviewVolume(int)</slot>
   <slot>setPreviewPosition(int)</slot>
+  <slot>launchViewerFromCurrentSlide()</slot>
+  <slot>launchViewerFromStart()</slot>
  </slots>
 </ui>

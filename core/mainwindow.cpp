@@ -45,8 +45,8 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 		qRegisterMetaType<AudioElement>(), tr("Son"), QIcon::fromTheme("insert-audio")
 	));
 
-	new QShortcut(QKeySequence("Shift+Tab"), this, SLOT(selectNextSlide()));
-	new QShortcut(QKeySequence("Ctrl+Shift+Tab"), this, SLOT(selectPrevSlide()));
+	new QShortcut(QKeySequence(QStringLiteral("Ctrl+Tab")), this, SLOT(selectNextSlide()));
+	new QShortcut(QKeySequence(QStringLiteral("Ctrl+Shift+Tab")), this, SLOT(selectPrevSlide()));
 
 	this->restoreGeometry(QSettings().value("mainWindow/geometry").toByteArray());
 	this->restoreState(QSettings().value("mainWindow/state").toByteArray());
@@ -68,6 +68,11 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	// this doesn't work when using the designer
 	connect(ui->menuRecentFiles, &QMenu::aboutToShow, this, &MainWindow::displayRecentFiles);
 	connect(ui->menuRecentFiles, &QMenu::triggered, this, &MainWindow::openRecentFile);
+
+	QMenu *startMenu = new QMenu(this);
+	startMenu->addAction(tr("De la diapositive courante"), this, SLOT(launchViewerFromCurrentSlide()), QKeySequence(Qt::Key_F11));
+	startMenu->addAction(tr("Du début du diaporama"), this, SLOT(launchViewerFromStart()), QKeySequence(QStringLiteral("Shift+F11")));
+	ui->actionStart->setMenu(startMenu);
 
 	ui->actionCurrentSlide->setSeparator(true);
 
@@ -948,7 +953,17 @@ void MainWindow::moveSlideRight()
 	statusBar()->showMessage(tr("La diapositive a été déplacée vers la droite."), STATUS_TIMEOUT);
 }
 
-void MainWindow::launchViewer()
+void MainWindow::launchViewerFromCurrentSlide()
+{
+	launchViewer(ui->slideList->currentRow());
+}
+
+void MainWindow::launchViewerFromStart()
+{
+	launchViewer(0);
+}
+
+void MainWindow::launchViewer(const int from)
 {
 	if(ui->slideList->currentRow() == -1)
 	{
@@ -960,7 +975,7 @@ void MainWindow::launchViewer()
 	connect(viewer, &ViewWidget::closed, this, &QMainWindow::show);
 	connect(viewer, &ViewWidget::closed, ui->slideTree, &QTreeWidget::clearSelection);
 	connect(viewer, &ViewWidget::closed, viewer, &QObject::deleteLater);
-	viewer->setSlideshow(this->slideshow, ui->slideList->currentRow());
+	viewer->setSlideshow(this->slideshow, from);
 	viewer->showFullScreen();
 	this->hide();
 }
