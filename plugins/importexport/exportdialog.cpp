@@ -28,14 +28,14 @@ ExportDialog::ExportDialog(QWidget *parent) :  QDialog(parent), ui(new Ui::Expor
 	foreach(QString format, QImageWriter::supportedImageFormats())
 	{
 		ui->formatComboBox->addItem(format);
-		if(format.toLower() == QSettings().value("exportDialog/format", "png").toString())
+		if(format.toLower() == QSettings().value(QStringLiteral("exportDialog/format"), "png").toString())
 			ui->formatComboBox->setCurrentIndex(formatIndex);
 		formatIndex++;
 	}
-	ui->qualitySlider->setValue(QSettings().value("exportDialog/quality", 100).toInt());
-	ui->templateLineEdit->setText(QSettings().value("exportDialog/template", tr("Diapositive %i - %n.%f")).toString());
+	ui->qualitySlider->setValue(QSettings().value(QStringLiteral("exportDialog/quality"), 100).toInt());
+	ui->templateLineEdit->setText(QSettings().value(QStringLiteral("exportDialog/template"), tr("Diapositive %i - %n.%f")).toString());
 	ui->templateLineEdit->setWhatsThis(ui->templateLineEdit->toolTip());
-	ui->templateLineEdit->setValidator(new QRegExpValidator(QRegExp("^[\\w\\s%\\._-]+$"), this));
+	ui->templateLineEdit->setValidator(new QRegExpValidator(QRegExp(QStringLiteral("^[\\w\\s%\\._-]+$")), this));
 	ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 

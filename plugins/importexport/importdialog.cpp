@@ -47,7 +47,7 @@ ImportDialog::ImportDialog(int slideCount, QWidget *parent) : QDialog(parent), u
 	ui->sortComboBox->addItem(tr("Type"), QDir::Type);
 	ui->sortComboBox->blockSignals(false);
 
-	bool showProperties = QSettings().value("importDialog/showProperties").toBool();
+	bool showProperties = QSettings().value(QStringLiteral("importDialog/showProperties")).toBool();
 	ui->propertiesButton->setChecked(showProperties);
 	on_propertiesButton_toggled(showProperties);
 
@@ -88,7 +88,7 @@ QList<Slide *> ImportDialog::slides()
 
 const QStringList ImportDialog::parseFilter(QString filter)
 {
-	return filter.remove(QRegExp("(^[^\\(]+\\(|\\)[^\\)]*$)"))
+	return filter.remove(QRegExp(QStringLiteral("(^[^\\(]+\\(|\\)[^\\)]*$)")))
 				 .split('\x20', QString::SkipEmptyParts);
 }
 

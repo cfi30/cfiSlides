@@ -42,15 +42,15 @@ void PluginDialog::loadPlugins()
 {
 	QDir dir(PLUGINS_PATH);
 	QStringList allPlugins = dir.entryList(QDir::Files, QDir::Time | QDir::Reversed);
-	QStringList enabledOnes = QSettings().value("plugins").toStringList();
+	QStringList enabledOnes = QSettings().value(QStringLiteral("plugins")).toStringList();
 
 	foreach(QString fileName, allPlugins)
 	{
 		QPluginLoader loader(dir.absoluteFilePath(fileName));
-		const QJsonObject metaData = loader.metaData().value("MetaData").toObject();
-		const QString name = metaData.value("name").toString();
-		const QString about = metaData.value("about").toString();
-		const QString version = metaData.value("version").toString();
+		const QJsonObject metaData = loader.metaData().value(QStringLiteral("MetaData")).toObject();
+		const QString name = metaData.value(QStringLiteral("name")).toString();
+		const QString about = metaData.value(QStringLiteral("about")).toString();
+		const QString version = metaData.value(QStringLiteral("version")).toString();
 
 		if(name.isEmpty())
 			continue;

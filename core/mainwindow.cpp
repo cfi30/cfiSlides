@@ -48,10 +48,10 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	new QShortcut(QKeySequence(QStringLiteral("Ctrl+Tab")), this, SLOT(selectNextSlide()));
 	new QShortcut(QKeySequence(QStringLiteral("Ctrl+Shift+Tab")), this, SLOT(selectPrevSlide()));
 
-	this->restoreGeometry(QSettings().value("mainWindow/geometry").toByteArray());
-	this->restoreState(QSettings().value("mainWindow/state").toByteArray());
+	this->restoreGeometry(QSettings().value(QStringLiteral("mainWindow/geometry")).toByteArray());
+	this->restoreState(QSettings().value(QStringLiteral("mainWindow/state")).toByteArray());
 
-	ui->menuRecentFiles->setDisabled(QSettings().value("recentFiles").toStringList().isEmpty());
+	ui->menuRecentFiles->setDisabled(QSettings().value(QStringLiteral("recentFiles")).toStringList().isEmpty());
 
 	ui->actionToolbar->setChecked(ui->toolBar->isVisibleTo(this));
 	ui->actionSlideList->setChecked(ui->slideListDock->isVisibleTo(this));
@@ -101,7 +101,7 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	previewPlayer = new QMediaPlayer(this);
 	previewPlayer->setNotifyInterval(REFRESH_INTERVAL);
 	previewPlayer->setVideoOutput(ui->videoPlayer);
-	previewPlayer->setVolume(QSettings().value("previewVolume", 100).toInt());
+	previewPlayer->setVolume(QSettings().value(QStringLiteral("previewVolume"), 100).toInt());
 	ui->volumeSlider->setValue(previewPlayer->volume());
 	ui->pauseButton->hide();
 
@@ -421,7 +421,7 @@ void MainWindow::displaySlide(Slide *slide)
 	statusBar()->showMessage(tr("Affichage de %1...").arg(slide->getValue(QStringLiteral("name")).toString()));
 
 	QGraphicsScene *scene = new QGraphicsScene();
-	scene->setSceneRect(slideshow->getValue("geometry", QDesktopWidget().screenGeometry()).toRect());
+	scene->setSceneRect(slideshow->getValue(QStringLiteral("geometry"), QDesktopWidget().screenGeometry()).toRect());
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateCurrentSlideTree);
 	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateSelectionActions);
@@ -1031,7 +1031,7 @@ void MainWindow::print()
 	statusBar()->showMessage(tr("Configuration de l'imprimante..."));
 
 	QPrinter printer;
-	printer.setDocName(this->windowTitle().remove(QRegExp("\\[\\*\\].+$")));
+	printer.setDocName(this->windowTitle().remove(QRegExp(QStringLiteral("\\[\\*\\].+$"))));
 
 	QPrintDialog *dialog = new QPrintDialog(&printer, this);
 	dialog->setWindowTitle(ui->actionPrint->text());
@@ -1157,7 +1157,7 @@ void MainWindow::managePlugins()
 void MainWindow::loadPlugins()
 {
 	QDir dir(PLUGINS_PATH);
-	foreach(QString fileName, QSettings().value("plugins").toStringList())
+	foreach(QString fileName, QSettings().value(QStringLiteral("plugins")).toStringList())
 	{
 		QPluginLoader *loader = new QPluginLoader(dir.absoluteFilePath(fileName), this);
 		Plugin* plugin = qobject_cast<Plugin *>(loader->instance());
@@ -1198,11 +1198,11 @@ void MainWindow::aboutPlugins()
 	QString text;
 	foreach(QPluginLoader *loader, plugins)
 	{
-		const QJsonObject metaData = loader->metaData().value("MetaData").toObject();
-		const QString name = metaData.value("name").toString();
-		const QString about = metaData.value("about").toString();
-		const QString version = metaData.value("version").toString();
-		const QString author = metaData.value("author").toString();
+		const QJsonObject metaData = loader->metaData().value(QStringLiteral("MetaData")).toObject();
+		const QString name = metaData.value(QStringLiteral("name")).toString();
+		const QString about = metaData.value(QStringLiteral("about")).toString();
+		const QString version = metaData.value(QStringLiteral("version")).toString();
+		const QString author = metaData.value(QStringLiteral("author")).toString();
 
 		text += QString("<p><strong>%1 %2</strong> <small>%3</small><br />Auteur : %4</p><p><i>%5</i></p>")
 				.arg(name, version, dir.relativeFilePath(loader->fileName()), author, about);
@@ -1219,7 +1219,7 @@ void MainWindow::aboutQt()
 void MainWindow::displayRecentFiles()
 {
 	ui->menuRecentFiles->clear();
-	foreach(QString file, QSettings().value("recentFiles").toStringList())
+	foreach(QString file, QSettings().value(QStringLiteral("recentFiles")).toStringList())
 		ui->menuRecentFiles->addAction(file);
 }
 
@@ -1244,7 +1244,7 @@ void MainWindow::resizeSlideshow()
 	if(newRect.isNull())
 	{
 		newRect = QDesktopWidget().screenGeometry();
-		slideshow->unsetValue("geometry");
+		slideshow->unsetValue(QStringLiteral("geometry"));
 	}
 	else
 		slideshow->setValue(QStringLiteral("geometry"), newRect);

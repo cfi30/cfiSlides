@@ -26,7 +26,7 @@ PropertyList SlideshowElement::getProperties() const
 	Property *name = new Property(stringManager, tr("Étiquette"), QStringLiteral("name"));
 	name->setToolTip(tr("Nom de l'élément"));
 	name->setValue(this->getValue(QStringLiteral("name")));
-	stringManager->setRegExp(QStringLiteral("name"), QRegExp("^([^\\s](.*[^\\s])?)$"));
+	stringManager->setRegExp(QStringLiteral("name"), QRegExp(QStringLiteral("^([^\\s](.*[^\\s])?)$")));
 	stringManager->setRequired(QStringLiteral("name"), true);
 
 	return PropertyList() << name;
