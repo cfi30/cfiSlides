@@ -977,24 +977,11 @@ void MainWindow::launchViewer(const int from)
 void MainWindow::copySlide()
 {
 	const Slide *sourceSlide = this->slideshow->getSlide(ui->slideList->currentRow());
-	int errorsCount = 0;
 	Slide *newSlide = this->slideshow->createSlide("");
 	newSlide->setValues(sourceSlide->getValues());
 	newSlide->setValue(QStringLiteral("name"), tr("Copie de %1").arg(sourceSlide->getValue(QStringLiteral("name")).toString()));
 	foreach(SlideElement *sourceElement, sourceSlide->getElements())
-	{
-		SlideElement *newElement = (SlideElement *)QMetaType::create(QMetaType::type(sourceElement->type()), sourceElement);
-		if(newElement == 0)
-		{
-			if(errorsCount == 0)
-				QMessageBox::warning(this, tr("Dupliquer la diapositive"), tr("Erreur interne lors de la copie. La diapositive affichée sera probablement incomplète. Les erreurs suivantes seront ignorées."));
-
-			errorsCount++;
-			continue;
-		}
-
-		newSlide->addElement(newElement);
-	}
+		newSlide->addElement((SlideElement *)QMetaType::create(QMetaType::type(sourceElement->type()), sourceElement));
 
 	displaySlide(newSlide);
 
@@ -1003,7 +990,7 @@ void MainWindow::copySlide()
 	ui->slideList->setCurrentItem(item);
 
 	setWindowModified(true);
-	statusBar()->showMessage(tr("Duplication de %0 terminée. %1 erreur(s).").arg(sourceSlide->getValue(QStringLiteral("name")).toString()).arg(errorsCount), STATUS_TIMEOUT);
+	statusBar()->showMessage(tr("Duplication de %0 terminée.").arg(sourceSlide->getValue(QStringLiteral("name")).toString()), STATUS_TIMEOUT);
 }
 
 void MainWindow::selectPrevSlide()
