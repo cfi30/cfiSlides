@@ -54,7 +54,7 @@
     <addaction name="actionOpen"/>
     <addaction name="menuRecentFiles"/>
     <addaction name="actionSave"/>
-    <addaction name="actionSave_as"/>
+    <addaction name="actionSaveAs"/>
     <addaction name="actionPrint"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
@@ -502,7 +502,7 @@
     <string>F3</string>
    </property>
   </action>
-  <action name="actionSave_as">
+  <action name="actionSaveAs">
    <property name="icon">
     <iconset theme="document-save-as">
      <normaloff/>
@@ -947,7 +947,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionSave_as</sender>
+   <sender>actionSaveAs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>saveSlideshowAs()</slot>

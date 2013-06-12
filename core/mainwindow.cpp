@@ -277,18 +277,11 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	}
 	file.close();
 
-	QString fileName = QFileInfo(newFile).fileName();
+	appendToRecentFiles(newFile);
+
+	const QString fileName = QFileInfo(newFile).fileName();
 	this->setWindowTitle(fileName);
 	this->setWindowFilePath(newFile);
-
-	QStringList recentFiles = QSettings().value("recentFiles").toStringList();
-	recentFiles.insert(0, newFile);
-	recentFiles.removeDuplicates();
-	if(recentFiles.count() > RECENT_FILES_MAX)
-		recentFiles.removeLast();
-
-	QSettings().setValue(QStringLiteral("recentFiles"), recentFiles);
-	ui->menuRecentFiles->setEnabled(true);
 
 	progress->close();
 	progress->deleteLater();
@@ -344,10 +337,11 @@ bool MainWindow::saveSlideshow()
 
 bool MainWindow::saveSlideshowAs()
 {
-	const QString newFile = QFileDialog::getSaveFileName(this, ui->actionSave_as->text(), QDir::homePath(), FILE_FILTER);
+	const QString newFile = QFileDialog::getSaveFileName(this, ui->actionSaveAs->text(), QDir::homePath(), FILE_FILTER);
 	if(newFile.isEmpty())
 		return false;
 
+	appendToRecentFiles(newFile);
 	this->setWindowTitle(QFileInfo(newFile).fileName());
 	this->setWindowFilePath(newFile);
 	return saveSlideshow();
@@ -1419,4 +1413,16 @@ QString MainWindow::msToString(const int ms) const
 			QString::number(minutes).rightJustified(2, '0', true),
 			QString::number(secs).rightJustified(2, '0', true)
 		);
+}
+
+void MainWindow::appendToRecentFiles(const QString openedFile)
+{
+	QStringList recentFiles = QSettings().value(QStringLiteral("recentFiles")).toStringList();
+	recentFiles.insert(0, openedFile);
+	recentFiles.removeDuplicates();
+	if(recentFiles.count() > RECENT_FILES_MAX)
+		recentFiles.removeLast();
+
+	QSettings().setValue(QStringLiteral("recentFiles"), recentFiles);
+	ui->menuRecentFiles->setEnabled(true);
 }

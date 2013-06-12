@@ -145,6 +145,7 @@ private:
 	QMenu *createSlideContextMenu();
 	QString msToString(const int ms) const;
 	void launchViewer(const int from);
+	void appendToRecentFiles(const QString openedFile);
 
 	Ui::MainWindow *ui;
 	Slideshow *slideshow;
