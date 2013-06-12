@@ -579,10 +579,9 @@ void MainWindow::updateSelectionActions()
 
 void MainWindow::updateMediaPreview()
 {
+	previewPlayer->setPosition(0);
 	previewPlayer->stop();
 	ui->mediaPreview->setEnabled(false);
-	ui->seekSlider->setValue(0);
-	ui->durationLabel->setText(msToString(0));
 
 	if(ui->slideTree->selectedItems().size() < 1 || !ui->mediaDock->isVisible())
 		return;
