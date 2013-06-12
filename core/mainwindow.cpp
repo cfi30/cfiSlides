@@ -1384,6 +1384,7 @@ void MainWindow::previewStateChanged(QMediaPlayer::State state)
 {
 	ui->pauseButton->setVisible(state == QMediaPlayer::PlayingState);
 	ui->playButton->setVisible(state != QMediaPlayer::PlayingState);
+	ui->seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
 }
 
 QString MainWindow::msToString(const int ms) const
