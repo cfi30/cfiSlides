@@ -1,6 +1,6 @@
-QT	   += core gui widgets
+QT  += core gui widgets
 TEMPLATE = lib
-CONFIG += shared plugin cfislides-buildlib
+CONFIG += shared plugin c++11 cfislides-buildlib
 TARGET = cfislides
 DESTDIR = ../build/
 LIBDIR = $$DESTDIR

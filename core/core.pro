@@ -1,8 +1,9 @@
 QT += core gui widgets \
 	printsupport multimediawidgets
 
-TARGET = cfislides
 TEMPLATE = app
+CONFIG += c++11
+TARGET = cfislides
 DESTDIR = ../build/
 LIBDIR = $$DESTDIR
 

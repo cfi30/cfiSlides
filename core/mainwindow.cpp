@@ -468,7 +468,7 @@ void MainWindow::updateSlide(const int index)
 {
 	Slide *slide = this->slideshow->getSlide(index);
 
-	GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
+	const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
 	view->scene()->blockSignals(true);
 	view->scene()->clear();
 	view->scene()->blockSignals(false);
@@ -483,14 +483,14 @@ void MainWindow::updateSlide(const int index)
 
 void MainWindow::updateIcon(const int index)
 {
-	GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
+	const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
 
 	QPixmap pixmap(view->scene()->sceneRect().size().toSize());
 	QPainter painter(&pixmap);
 	painter.setRenderHint(QPainter::Antialiasing);
 	view->scene()->render(&painter, view->scene()->sceneRect());
 
-	QIcon icon(pixmap.scaledToWidth(ui->slideList->iconSize().width()));
+	const QIcon icon(pixmap.scaledToWidth(ui->slideList->iconSize().width()));
 
 	ui->slideList->blockSignals(true);
 	ui->slideList->item(index)->setIcon(icon);
@@ -499,7 +499,7 @@ void MainWindow::updateIcon(const int index)
 
 void MainWindow::updateSlideTree(const int index)
 {
-	Slide *slide = this->slideshow->getSlide(index);
+	const Slide *slide = this->slideshow->getSlide(index);
 
 	ui->slideTree->blockSignals(true);
 	ui->slideTree->clear();
@@ -546,8 +546,8 @@ void MainWindow::updateCurrentPropertiesEditor()
 	if(ui->slideList->currentRow() == -1)
 		return;
 
-	Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
-	QTreeWidgetItem *item = 0;
+	const Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
+	const QTreeWidgetItem *item = 0;
 	if(ui->slideTree->selectedItems().size() > 0)
 		item = ui->slideTree->selectedItems()[0];
 
@@ -565,7 +565,7 @@ void MainWindow::updateSelectionActions()
 	if(index == -1)
 		return;
 
-	Slide *slide = this->slideshow->getSlide(index);
+	const Slide *slide = this->slideshow->getSlide(index);
 
 	const int selectedItemsCount = ui->slideTree->selectedItems().size();
 	const bool enableUpDown = slide->getElements().size() > 1 && selectedItemsCount == 1;
@@ -587,10 +587,10 @@ void MainWindow::updateMediaPreview()
 	if(ui->slideTree->selectedItems().size() < 1 || !ui->mediaDock->isVisible())
 		return;
 
-	Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
-	QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
-	SlideElement *element = slide->getElement(item->data(0, Qt::UserRole).toInt());
-	QString previewUrl = element->previewUrl();
+	const Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
+	const QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
+	const SlideElement *element = slide->getElement(item->data(0, Qt::UserRole).toInt());
+	const QString previewUrl = element->previewUrl();
 
 	if(!previewUrl.isEmpty())
 	{
@@ -605,7 +605,7 @@ void MainWindow::renameSlide()
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
 	bool ok;
-	QString newName = QInputDialog::getText(this, ui->actionRenameSlide->text(), tr("Nouveau nom pour cette diapositive :"), QLineEdit::Normal, slide->getValue(QStringLiteral("name")).toString(), &ok);
+	const QString newName = QInputDialog::getText(this, ui->actionRenameSlide->text(), tr("Nouveau nom pour cette diapositive :"), QLineEdit::Normal, slide->getValue(QStringLiteral("name")).toString(), &ok);
 	if(!ok || !validateSlideName(newName)) return;
 
 	slide->setValue(QStringLiteral("name"), newName);
@@ -638,7 +638,7 @@ bool MainWindow::validateElementName(const QString &name)
 
 QGraphicsItem *MainWindow::sceneItemFromIndex(const int index) const
 {
-	GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->currentWidget());
+	const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->currentWidget());
 	foreach(QGraphicsItem *item, view->scene()->items())
 	{
 		bool valid;
@@ -665,7 +665,7 @@ void MainWindow::deleteSlide()
 	if(choice == QMessageBox::Cancel)
 		return;
 
-	int index = ui->slideList->currentRow();
+	const int index = ui->slideList->currentRow();
 	ui->slideTree->clear();
 	ui->propertiesEditor->clear();
 	this->slideshow->removeSlide(index);
@@ -694,7 +694,7 @@ void MainWindow::deleteSlide()
 void MainWindow::slideModified()
 {
 	const int index = ui->slideList->currentRow();
-	GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->currentWidget());
+	const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->currentWidget());
 	updateSlide(index);
 	view->scene()->blockSignals(true);
 	if(!ui->slideTree->selectedItems().isEmpty())
@@ -816,7 +816,7 @@ void MainWindow::elementSelectionChanged()
 	view->setFocus();
 	view->scene()->blockSignals(true);
 	view->scene()->clearSelection();
-	foreach(QTreeWidgetItem *item, ui->slideTree->selectedItems())
+	foreach(const QTreeWidgetItem *item, ui->slideTree->selectedItems())
 	{
 		const int index = item->data(0, Qt::UserRole).toInt();
 		QGraphicsItem *graphicsItem = sceneItemFromIndex(index);
@@ -836,7 +836,7 @@ void MainWindow::deleteElements()
 	Slide *slide = this->slideshow->getSlide(index);
 
 	QList<int> indexesToRemove;
-	foreach(QTreeWidgetItem *item, ui->slideTree->selectedItems())
+	foreach(const QTreeWidgetItem *item, ui->slideTree->selectedItems())
 		indexesToRemove.append(item->data(0, Qt::UserRole).toInt());
 
 	qSort(indexesToRemove.begin(), indexesToRemove.end());
@@ -860,10 +860,10 @@ void MainWindow::duplicateElements()
 	Slide *slide = this->slideshow->getSlide(index);
 
 	const int duplicatedCount = ui->slideTree->selectedItems().size();
-	foreach(QTreeWidgetItem *item, ui->slideTree->selectedItems())
+	foreach(const QTreeWidgetItem *item, ui->slideTree->selectedItems())
 	{
 		const int elementIndex = item->data(0, Qt::UserRole).toInt();
-		SlideElement *sourceElement = slide->getElement(elementIndex);
+		const SlideElement *sourceElement = slide->getElement(elementIndex);
 		SlideElement *newElement = (SlideElement *)QMetaType::create(QMetaType::type(sourceElement->type()), sourceElement);
 		newElement->setValue(QStringLiteral("name"), tr("Copie de %1").arg(sourceElement->getValue(QStringLiteral("name")).toString()));
 		if(sceneItemFromIndex(elementIndex))
@@ -900,29 +900,29 @@ void MainWindow::moveElement(const int before, const int after)
 
 void MainWindow::raiseElement()
 {
-	QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
+	const QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
 	const int elementIndex = item->data(0, Qt::UserRole).toInt();
 	moveElement(elementIndex, elementIndex + 1);
 }
 
 void MainWindow::lowerElement()
 {
-	QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
+	const QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
 	const int elementIndex = item->data(0, Qt::UserRole).toInt();
 	moveElement(elementIndex, elementIndex - 1);
 }
 
 void MainWindow::bringElementToFront()
 {
-	Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
-	QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
+	const Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
+	const QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
 	const int elementIndex = item->data(0, Qt::UserRole).toInt();
 	moveElement(elementIndex, slide->getElements().size() - 1);
 }
 
 void MainWindow::bringElementToBack()
 {
-	QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
+	const QTreeWidgetItem *item = ui->slideTree->selectedItems()[0];
 	const int elementIndex = item->data(0, Qt::UserRole).toInt();
 	moveElement(elementIndex, 0);
 }
@@ -976,7 +976,7 @@ void MainWindow::launchViewer(const int from)
 
 void MainWindow::copySlide()
 {
-	Slide *sourceSlide = this->slideshow->getSlide(ui->slideList->currentRow());
+	const Slide *sourceSlide = this->slideshow->getSlide(ui->slideList->currentRow());
 	int errorsCount = 0;
 	Slide *newSlide = this->slideshow->createSlide("");
 	newSlide->setValues(sourceSlide->getValues());
@@ -1063,7 +1063,7 @@ void MainWindow::print()
 
 		painter.drawText(QRectF(0, 10, printer.pageRect().width(), 15), Qt::AlignCenter, ui->slideList->item(page)->text());
 
-		GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(page));
+		const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(page));
 		view->scene()->clearSelection();
 		view->scene()->render(&painter, pageRect);
 
@@ -1103,7 +1103,7 @@ QMenu *MainWindow::createSlideContextMenu()
 
 void MainWindow::displayViewContextMenu(const QPoint &pos)
 {
-	GraphicsView *view = qobject_cast<GraphicsView *>(sender());
+	const GraphicsView *view = qobject_cast<GraphicsView *>(sender());
 	QGraphicsItem *item = view->scene()->itemAt(view->mapToScene(pos), view->transform());
 
 	if(item && !view->scene()->selectedItems().contains(item))
@@ -1156,8 +1156,9 @@ void MainWindow::managePlugins()
 
 void MainWindow::loadPlugins()
 {
-	QDir dir(PLUGINS_PATH);
-	foreach(QString fileName, QSettings().value(QStringLiteral("plugins")).toStringList())
+	const QDir dir(PLUGINS_PATH);
+	const QStringList activatedPlugins = QSettings().value(QStringLiteral("plugins")).toStringList();
+	foreach(const QString fileName, activatedPlugins)
 	{
 		QPluginLoader *loader = new QPluginLoader(dir.absoluteFilePath(fileName), this);
 		Plugin* plugin = qobject_cast<Plugin *>(loader->instance());
@@ -1194,9 +1195,9 @@ void MainWindow::unloadPlugins()
 
 void MainWindow::aboutPlugins()
 {
-	QDir dir(PLUGINS_PATH);
+	const QDir dir(PLUGINS_PATH);
 	QString text;
-	foreach(QPluginLoader *loader, plugins)
+	foreach(const QPluginLoader *loader, plugins)
 	{
 		const QJsonObject metaData = loader->metaData().value(QStringLiteral("MetaData")).toObject();
 		const QString name = metaData.value(QStringLiteral("name")).toString();
@@ -1219,7 +1220,8 @@ void MainWindow::aboutQt()
 void MainWindow::displayRecentFiles()
 {
 	ui->menuRecentFiles->clear();
-	foreach(const QString file, QSettings().value(QStringLiteral("recentFiles")).toStringList())
+	const QStringList recentFiles = QSettings().value(QStringLiteral("recentFiles")).toStringList();
+	foreach(const QString file, recentFiles)
 	{
 		if(QFile(file).exists())
 			ui->menuRecentFiles->addAction(file);
@@ -1266,7 +1268,7 @@ void MainWindow::resizeSlideshow()
 	{
 		progress->setValue(index + 1);
 
-		GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
+		const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
 		view->scene()->setSceneRect(newRect);
 		updateSlide(index);
 	}
@@ -1292,7 +1294,7 @@ void MainWindow::unregisterElementType(const SlideElementType &type)
 	const int actionCount = insertActions.size();
 	for(int i = 0; i < actionCount; i++)
 	{
-		QAction *action = insertActions[i];
+		const QAction *action = insertActions[i];
 		if(action->data().toInt() != type.getTypeId())
 			continue;
 
@@ -1320,7 +1322,7 @@ void MainWindow::insertElement(SlideElement *element)
 
 void MainWindow::insertElementFromAction()
 {
-	QAction *action = qobject_cast<QAction *>(sender());
+	const QAction *action = qobject_cast<QAction *>(sender());
 
 	SlideElement *element = (SlideElement *)QMetaType::create(action->data().toInt());
 	element->setValue(QStringLiteral("name"), tr("%1 %2").arg(action->text()));
@@ -1330,12 +1332,10 @@ void MainWindow::insertElementFromAction()
 
 void MainWindow::displaySlideListContextMenu(const QPoint &pos)
 {
-	QListWidgetItem *item = ui->slideList->itemAt(pos);
-
 	QMenu *menu = new QMenu(this);
 	menu->addAction(ui->actionAddSlide);
 
-	if(item)
+	if(ui->slideList->itemAt(pos))
 	{
 		menu->addSeparator();
 		menu->addAction(ui->actionRenameSlide);
