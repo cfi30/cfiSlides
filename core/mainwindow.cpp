@@ -1097,7 +1097,7 @@ void MainWindow::displayViewContextMenu(const QPoint &pos)
 	GraphicsView *view = qobject_cast<GraphicsView *>(sender());
 	QGraphicsItem *item = view->scene()->itemAt(view->mapToScene(pos), view->transform());
 
-	if(item)
+	if(item && !view->scene()->selectedItems().contains(item))
 	{
 		while(item->parentItem())
 			item = item->parentItem();
