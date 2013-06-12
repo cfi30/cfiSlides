@@ -31,8 +31,6 @@ PropertyEditor::PropertyEditor(QWidget *parent) : QWidget(parent)
 	treeWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	treeWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 	treeWidget->setItemDelegate(delegate);
-	treeWidget->header()->setSectionsMovable(false);
-	treeWidget->header()->setSectionResizeMode(QHeaderView::Stretch);
 
 	QHBoxLayout *layout = new QHBoxLayout(this);
 	layout->setMargin(0);
