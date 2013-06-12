@@ -335,6 +335,12 @@ QWidget *SizePropertyManager::createEditor(const QString &propName, const QVaria
 	height = new QSpinBox(widget);
 	layout->addWidget(height);
 
+	lock = new QToolButton(widget);
+	lock->setFixedWidth(20);
+	lock->setIcon(QIcon::fromTheme(QStringLiteral("emblem-locked")));
+	lock->setCheckable(true);
+	layout->addWidget(lock);
+
 	if(minimums.contains(propName))
 	{
 		width->setMinimum(minimums[propName].width());
@@ -354,9 +360,11 @@ QWidget *SizePropertyManager::createEditor(const QString &propName, const QVaria
 
 	width->setValue(size.width());
 	height->setValue(size.height());
+	widthCache = size.width();
+	heightCache = size.height();
 
-	connect(width, SIGNAL(valueChanged(int)), this, SLOT(valuesChanged()));
-	connect(height, SIGNAL(valueChanged(int)), this, SLOT(valuesChanged()));
+	connect(width, SIGNAL(valueChanged(int)), this, SLOT(widthChanged(int)));
+	connect(height, SIGNAL(valueChanged(int)), this, SLOT(heightChanged(int)));
 
 	widget->setFocusProxy(width);
 	return widget;
@@ -370,6 +378,36 @@ void SizePropertyManager::setMinimum(const QString &propName, const QSize &min)
 void SizePropertyManager::setMaximum(const QString &propName, const QSize &max)
 {
 	maximums[propName] = max;
+}
+
+void SizePropertyManager::widthChanged(int value)
+{
+	const int diff = value - widthCache;
+	widthCache = value;
+
+	if(!lock->isChecked())
+		return valuesChanged();
+
+	height->blockSignals(true);
+	height->setValue(height->value() + diff);
+	height->blockSignals(false);
+
+	valuesChanged();
+}
+
+void SizePropertyManager::heightChanged(int value)
+{
+	const int diff = value - heightCache;
+	heightCache = value;
+
+	if(!lock->isChecked())
+		return valuesChanged();
+
+	width->blockSignals(true);
+	width->setValue(width->value() + diff);
+	width->blockSignals(false);
+
+	valuesChanged();
 }
 
 void SizePropertyManager::valuesChanged()
