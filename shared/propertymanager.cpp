@@ -229,7 +229,11 @@ QWidget *FilePropertyManager::createEditor(const QString &propName, const QVaria
 
 bool FilePropertyManager::isValid(const QString &propName, const QVariant &value) const
 {
-	return isRequired[propName] ? QFile(value.toString()).exists() : true;
+	const QString file = value.toString();
+	if(isRequired[propName] || !file.isEmpty())
+		return QFile(file).exists();
+
+	return PropertyManager::isValid(propName, value);
 }
 
 void FilePropertyManager::setFilter(const QString &propName, const QString &filter)
