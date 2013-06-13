@@ -68,6 +68,16 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
+	enum AlignDirection
+	{
+		ALIGN_LEFT,
+		ALIGN_CENTER,
+		ALIGN_RIGHT,
+		ALIGN_TOP,
+		ALIGN_MIDDLE,
+		ALIGN_BOTTOM
+	};
+
 	explicit MainWindow(QString commandLineHelp = QString(), QString openFile = QString(), bool disablePlugins = true, QWidget *parent = 0);
 	~MainWindow();
 
@@ -81,6 +91,7 @@ public:
 	Q_INVOKABLE void updateSlideTree(const int index);
 	Q_INVOKABLE QGraphicsItem *sceneItemFromIndex(const int index) const;
 	Q_INVOKABLE void insertElement(SlideElement *element);
+	Q_INVOKABLE void alignElementsTo(const AlignDirection direction);
 
 public slots:
 	void newSlideshow();
@@ -134,6 +145,8 @@ public slots:
 	void previewDurationChanged(qint64);
 	void previewPositionChanged(qint64);
 	void previewStateChanged(QMediaPlayer::State);
+	void alignElementsToCenter();
+	void alignElementsToMiddle();
 
 private:
 	void updatePropertiesEditor(const SlideshowElement *element);

@@ -97,6 +97,8 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	selectionActions->addAction(ui->actionLowerElement);
 	selectionActions->addAction(ui->actionBringElementToFront);
 	selectionActions->addAction(ui->actionBringElementToBack);
+	selectionActions->addAction(ui->actionAlignToCenter);
+	selectionActions->addAction(ui->actionAlignToMiddle);
 
 	previewPlayer = new QMediaPlayer(this);
 	previewPlayer->setNotifyInterval(REFRESH_INTERVAL);
@@ -167,7 +169,7 @@ void MainWindow::newSlideshow()
 
 	this->setWindowTitle(tr("Nouveau diaporama %1").arg(++newSlideshowCount));
 
-	this->slideshow = new Slideshow();
+	this->slideshow = new Slideshow;
 	createEmptySlide();
 
 	this->setWindowModified(false);
@@ -217,7 +219,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 	QVariantMap metadata;
 	in >> metadata;
 
-	this->slideshow = new Slideshow();
+	this->slideshow = new Slideshow;
 	this->slideshow->setValues(metadata);
 	this->currentSlideActions->setEnabled(false);
 
@@ -420,7 +422,7 @@ void MainWindow::displaySlide(Slide *slide)
 {
 	statusBar()->showMessage(tr("Affichage de %1...").arg(slide->getValue(QStringLiteral("name")).toString()));
 
-	QGraphicsScene *scene = new QGraphicsScene();
+	QGraphicsScene *scene = new QGraphicsScene;
 	scene->setSceneRect(slideshow->getValue(QStringLiteral("geometry"), QDesktopWidget().screenGeometry()).toRect());
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateCurrentSlideTree);
@@ -575,6 +577,18 @@ void MainWindow::updateSelectionActions()
 
 	ui->actionBringElementToFront->setEnabled(ui->actionRaiseElement->isEnabled());
 	ui->actionBringElementToBack->setEnabled(ui->actionLowerElement->isEnabled());
+
+	ui->actionAlignToCenter->setDisabled(true);
+	ui->actionAlignToMiddle->setDisabled(true);
+	foreach(const QTreeWidgetItem *item, ui->slideTree->selectedItems())
+	{
+		if(sceneItemFromIndex(item->data(0, Qt::UserRole).toInt()) != 0)
+		{
+			ui->actionAlignToCenter->setEnabled(true);
+			ui->actionAlignToMiddle->setEnabled(true);
+			break;
+		}
+	}
 }
 
 void MainWindow::updateMediaPreview()
@@ -1415,4 +1429,71 @@ void MainWindow::appendToRecentFiles(const QString openedFile)
 
 	QSettings().setValue(QStringLiteral("recentFiles"), recentFiles);
 	ui->menuRecentFiles->setEnabled(true);
+}
+
+void MainWindow::alignElementsTo(const AlignDirection direction)
+{
+	const int slideIndex = ui->slideList->currentRow();
+	const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(slideIndex));
+	const Slide *slide = slideshow->getSlide(slideIndex);
+	QList<int> selectedIndexes;
+
+	foreach(const QTreeWidgetItem *item, ui->slideTree->selectedItems())
+	{
+		const int elementIndex = item->data(0, Qt::UserRole).toInt();
+		selectedIndexes << elementIndex;
+
+		const QString key = QStringLiteral("position");
+		const QGraphicsItem *graphicsItem = sceneItemFromIndex(elementIndex);
+		if(graphicsItem == 0)
+			continue;
+
+		SlideElement *element = slide->getElement(elementIndex);
+		QPoint pos = element->getValue(key).toPoint();
+		switch(direction)
+		{
+			case ALIGN_LEFT:
+				pos.setX(0);
+				break;
+			case ALIGN_CENTER:
+				pos.setX((view->scene()->sceneRect().width() / 2) - (graphicsItem->boundingRect().width() / 2));
+				break;
+			case ALIGN_RIGHT:
+				pos.setX(view->scene()->sceneRect().width() - graphicsItem->boundingRect().width());
+				break;
+			case ALIGN_TOP:
+				pos.setY(0);
+				break;
+			case ALIGN_MIDDLE:
+				pos.setY((view->scene()->sceneRect().height() / 2) - (graphicsItem->boundingRect().height() / 2));
+				break;
+			case ALIGN_BOTTOM:
+				pos.setY(view->scene()->sceneRect().height() - graphicsItem->boundingRect().height());
+				break;
+		}
+		element->setValue(key, pos);
+	}
+
+	updateSlide(slideIndex);
+
+	foreach(const int index, selectedIndexes)
+	{
+		QGraphicsItem *graphicsItem = sceneItemFromIndex(index);
+		if(graphicsItem != 0) graphicsItem->setSelected(true);
+	}
+
+	updateSlideTree(slideIndex);
+	elementSelectionChanged();
+
+	setWindowModified(true);
+}
+
+void MainWindow::alignElementsToCenter()
+{
+	alignElementsTo(ALIGN_CENTER);
+}
+
+void MainWindow::alignElementsToMiddle()
+{
+	alignElementsTo(ALIGN_MIDDLE);
 }

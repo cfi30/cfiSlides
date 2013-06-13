@@ -74,10 +74,14 @@
      </property>
      <addaction name="actionDeleteElements"/>
      <addaction name="actionDuplicateElements"/>
+     <addaction name="separator"/>
      <addaction name="actionRaiseElement"/>
      <addaction name="actionLowerElement"/>
      <addaction name="actionBringElementToFront"/>
      <addaction name="actionBringElementToBack"/>
+     <addaction name="separator"/>
+     <addaction name="actionAlignToCenter"/>
+     <addaction name="actionAlignToMiddle"/>
     </widget>
     <addaction name="actionStart"/>
     <addaction name="actionResizeSlideshow"/>
@@ -801,6 +805,22 @@
   <action name="actionResizeSlideshow">
    <property name="text">
     <string>Modifier les dimensions</string>
+   </property>
+  </action>
+  <action name="actionAlignToCenter">
+   <property name="icon">
+    <iconset theme="object-align-horizontal-center"/>
+   </property>
+   <property name="text">
+    <string>Centrer verticalement</string>
+   </property>
+  </action>
+  <action name="actionAlignToMiddle">
+   <property name="icon">
+    <iconset theme="object-align-horizontal-center"/>
+   </property>
+   <property name="text">
+    <string>Centrer horizontalement</string>
    </property>
   </action>
  </widget>
@@ -1573,6 +1593,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionAlignToCenter</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>alignElementsToCenter()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAlignToMiddle</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>alignElementsToMiddle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>createEmptySlide()</slot>
@@ -1611,5 +1663,7 @@
   <slot>setPreviewPosition(int)</slot>
   <slot>launchViewerFromCurrentSlide()</slot>
   <slot>launchViewerFromStart()</slot>
+  <slot>alignElementsToCenter()</slot>
+  <slot>alignElementsToMiddle()</slot>
  </slots>
 </ui>
