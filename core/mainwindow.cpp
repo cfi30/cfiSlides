@@ -126,6 +126,10 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	moveFinishTimer.setSingleShot(true);
 	connect(&moveFinishTimer, &QTimer::timeout, this, &MainWindow::moveFinishTimerTimeout);
 
+	redrawSlideTimer.setInterval(REFRESH_INTERVAL);
+	redrawSlideTimer.setSingleShot(true);
+	connect(&redrawSlideTimer, &QTimer::timeout, this, &MainWindow::reRenderSlide);
+
 	if(disablePlugins)
 	{
 		ui->actionPlugins->setEnabled(false);
@@ -468,6 +472,13 @@ void MainWindow::displaySlide(Slide *slide)
 
 void MainWindow::updateSlide(const int index)
 {
+	QList<int> selectedElements;
+	if(index == ui->slideList->currentRow())
+	{
+		foreach(const QTreeWidgetItem *item, ui->slideTree->selectedItems())
+			selectedElements << item->data(0, Qt::UserRole).toInt();
+	}
+
 	Slide *slide = this->slideshow->getSlide(index);
 
 	const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
@@ -481,6 +492,20 @@ void MainWindow::updateSlide(const int index)
 	ui->slideList->blockSignals(false);
 
 	updateIcon(index);
+
+	if(index == ui->slideList->currentRow())
+	{
+		const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
+		view->scene()->blockSignals(true);
+		foreach(const int index, selectedElements)
+		{
+			QGraphicsItem *graphicsItem = sceneItemFromIndex(index);
+			if(graphicsItem != 0) graphicsItem->setSelected(true);
+		}
+		view->scene()->blockSignals(false);
+		updateSlideTree(index);
+	}
+
 }
 
 void MainWindow::updateIcon(const int index)
@@ -623,7 +648,6 @@ void MainWindow::renameSlide()
 
 	slide->setValue(QStringLiteral("name"), newName);
 	updateSlide(index);
-	updateSlideTree(index);
 	updateCurrentPropertiesEditor();
 	setWindowModified(true);
 }
@@ -665,9 +689,8 @@ QGraphicsItem *MainWindow::sceneItemFromIndex(const int index) const
 void MainWindow::reRenderSlide()
 {
 	int index = ui->slideList->currentRow();
-	Slide *slide = qobject_cast<Slide *>(sender());
-	if(slide != 0)
-		index = this->slideshow->indexOf(slide);
+	Slide *senderSlide = qobject_cast<Slide *>(sender());
+	if(senderSlide != 0) index = this->slideshow->indexOf(senderSlide);
 
 	updateSlide(index);
 }
@@ -706,17 +729,7 @@ void MainWindow::deleteSlide()
 
 void MainWindow::slideModified()
 {
-	const int index = ui->slideList->currentRow();
-	const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->currentWidget());
-	updateSlide(index);
-	view->scene()->blockSignals(true);
-	if(!ui->slideTree->selectedItems().isEmpty())
-	{
-		QGraphicsItem *item = sceneItemFromIndex(ui->slideTree->selectedItems()[0]->data(0, Qt::UserRole).toInt());
-		if(item != 0) item->setSelected(true);
-	}
-	updateSlideTree(index);
-	view->scene()->blockSignals(false);
+	redrawSlideTimer.start();
 	setWindowModified(true);
 }
 
@@ -791,7 +804,6 @@ void MainWindow::slideItemChanged(QListWidgetItem *item)
 	}
 
 	slide->setValue(QStringLiteral("name"), item->text());
-	updateSlide(index);
 	updateSlideTree(index);
 	updateCurrentPropertiesEditor();
 	setWindowModified(true);
@@ -859,7 +871,6 @@ void MainWindow::deleteElements()
 		slide->removeElement(iterator.previous());
 
 	updateSlide(index);
-	updateSlideTree(index);
 	updatePropertiesEditor(slide);
 	updateMediaPreview();
 	updateSelectionActions();
@@ -885,7 +896,6 @@ void MainWindow::duplicateElements()
 	}
 
 	updateSlide(index);
-	updateSlideTree(index);
 
 	ui->slideTree->clearSelection();
 	for(int i = 0; i < duplicatedCount; i++)
@@ -902,10 +912,6 @@ void MainWindow::moveElement(const int before, const int after)
 	slide->moveElement(before, after);
 
 	updateSlide(index);
-
-	QGraphicsItem *graphicsItem = sceneItemFromIndex(after);
-	if(graphicsItem != 0) graphicsItem->setSelected(true);
-	updateSlideTree(index);
 	elementSelectionChanged();
 
 	setWindowModified(true);
@@ -1311,7 +1317,6 @@ void MainWindow::insertElement(SlideElement *element)
 	slide->addElement(element);
 
 	updateSlide(index);
-	updateSlideTree(index);
 
 	ui->slideTree->clearSelection();
 	ui->slideTree->topLevelItem(0)->child(0)->setSelected(true);
@@ -1436,12 +1441,10 @@ void MainWindow::alignElementsTo(const AlignDirection direction)
 	const int slideIndex = ui->slideList->currentRow();
 	const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(slideIndex));
 	const Slide *slide = slideshow->getSlide(slideIndex);
-	QList<int> selectedIndexes;
 
 	foreach(const QTreeWidgetItem *item, ui->slideTree->selectedItems())
 	{
 		const int elementIndex = item->data(0, Qt::UserRole).toInt();
-		selectedIndexes << elementIndex;
 
 		const QString key = QStringLiteral("position");
 		const QGraphicsItem *graphicsItem = sceneItemFromIndex(elementIndex);
@@ -1475,14 +1478,6 @@ void MainWindow::alignElementsTo(const AlignDirection direction)
 	}
 
 	updateSlide(slideIndex);
-
-	foreach(const int index, selectedIndexes)
-	{
-		QGraphicsItem *graphicsItem = sceneItemFromIndex(index);
-		if(graphicsItem != 0) graphicsItem->setSelected(true);
-	}
-
-	updateSlideTree(slideIndex);
 	elementSelectionChanged();
 
 	setWindowModified(true);

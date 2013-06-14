@@ -164,6 +164,7 @@ private:
 	Slideshow *slideshow;
 	int newSlideshowCount;
 	QTimer moveFinishTimer;
+	QTimer redrawSlideTimer;
 	QList<QAction *> insertActions;
 	QList<QPluginLoader *> plugins;
 	QString commandLineHelp;
