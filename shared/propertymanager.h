@@ -188,12 +188,12 @@ protected:
 
 private:
 	QSpinBox *width;
-	int widthCache;
 	QSpinBox *height;
-	int heightCache;
-	QToolButton *lock;
+	QToolButton *lockRatio;
+	double ratio;
 
 private slots:
+	void calculateRatio();
 	void widthChanged(int);
 	void heightChanged(int);
 	void valuesChanged();

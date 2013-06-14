@@ -167,9 +167,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>lockRatio</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>GeometryDialog</receiver>
+   <slot>lockRatioToggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>266</x>
+     <y>46</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>143</x>
+     <y>48</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>widthChanged(int)</slot>
   <slot>heightChanged(int)</slot>
+  <slot>lockRatioToggled(bool)</slot>
  </slots>
 </ui>

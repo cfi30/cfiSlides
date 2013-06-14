@@ -36,13 +36,13 @@ public:
 	QRect getRect() const;
 
 private slots:
+	void lockRatioToggled(bool);
 	void widthChanged(int);
 	void heightChanged(int);
 
 private:
 	Ui::GeometryDialog *ui;
-	int widthCache;
-	int heightCache;
+	double ratio;
 };
 
 #endif // GEOMETRYDIALOG_H

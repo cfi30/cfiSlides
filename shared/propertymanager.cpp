@@ -339,11 +339,11 @@ QWidget *SizePropertyManager::createEditor(const QString &propName, const QVaria
 	height = new QSpinBox(widget);
 	layout->addWidget(height);
 
-	lock = new QToolButton(widget);
-	lock->setFixedWidth(20);
-	lock->setIcon(QIcon::fromTheme(QStringLiteral("emblem-locked")));
-	lock->setCheckable(true);
-	layout->addWidget(lock);
+	lockRatio = new QToolButton(widget);
+	lockRatio->setFixedWidth(20);
+	lockRatio->setIcon(QIcon::fromTheme(QStringLiteral("emblem-locked")));
+	lockRatio->setCheckable(true);
+	layout->addWidget(lockRatio);
 
 	if(minimums.contains(propName))
 	{
@@ -364,11 +364,10 @@ QWidget *SizePropertyManager::createEditor(const QString &propName, const QVaria
 
 	width->setValue(size.width());
 	height->setValue(size.height());
-	widthCache = size.width();
-	heightCache = size.height();
 
 	connect(width, SIGNAL(valueChanged(int)), this, SLOT(widthChanged(int)));
 	connect(height, SIGNAL(valueChanged(int)), this, SLOT(heightChanged(int)));
+	connect(lockRatio, &QPushButton::toggled, this, &SizePropertyManager::calculateRatio);
 
 	widget->setFocusProxy(width);
 	return widget;
@@ -384,32 +383,41 @@ void SizePropertyManager::setMaximum(const QString &propName, const QSize &max)
 	maximums[propName] = max;
 }
 
+void SizePropertyManager::calculateRatio()
+{
+	ratio = (double)width->value() / height->value();
+}
+
 void SizePropertyManager::widthChanged(int value)
 {
-	const int diff = value - widthCache;
-	widthCache = value;
+	if(lockRatio->isChecked())
+	{
+		const int newHeight = (double)value / ratio;
 
-	if(!lock->isChecked())
-		return valuesChanged();
+		height->blockSignals(true);
+		height->setValue(newHeight);
+		height->blockSignals(false);
 
-	height->blockSignals(true);
-	height->setValue(height->value() + diff);
-	height->blockSignals(false);
+		if(newHeight > height->maximum())
+			calculateRatio();
+	}
 
 	valuesChanged();
 }
 
 void SizePropertyManager::heightChanged(int value)
 {
-	const int diff = value - heightCache;
-	heightCache = value;
+	if(lockRatio->isChecked())
+	{
+		const int newWidth = (double)value * ratio;
 
-	if(!lock->isChecked())
-		return valuesChanged();
+		width->blockSignals(true);
+		width->setValue(newWidth);
+		width->blockSignals(false);
 
-	width->blockSignals(true);
-	width->setValue(width->value() + diff);
-	width->blockSignals(false);
+		if(newWidth > width->maximum())
+			calculateRatio();
+	}
 
 	valuesChanged();
 }

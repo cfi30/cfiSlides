@@ -30,16 +30,12 @@ GeometryDialog::GeometryDialog(QRect rect, QWidget *parent) : QDialog(parent), u
 	else
 		ui->custom->setChecked(true);
 
-	this->widthCache = rect.width();
-	this->heightCache = rect.height();
-
 	ui->width->blockSignals(true);
-	ui->height->blockSignals(true);
-
 	ui->width->setValue(rect.width());
-	ui->height->setValue(rect.height());
-
 	ui->width->blockSignals(false);
+
+	ui->height->blockSignals(true);
+	ui->height->setValue(rect.height());
 	ui->height->blockSignals(false);
 }
 
@@ -56,30 +52,30 @@ QRect GeometryDialog::getRect() const
 	return rect;
 }
 
+void GeometryDialog::lockRatioToggled(bool checked)
+{
+	ui->width->setFocus();
+	if(checked) ratio = (double)ui->width->value() / ui->height->value();
+}
+
 void GeometryDialog::widthChanged(int value)
 {
-	const int diff = value - this->widthCache;
-	this->widthCache = value;
 	ui->custom->setChecked(true);
-
 	if(!ui->lockRatio->isChecked())
 		return;
 
 	ui->height->blockSignals(true);
-	ui->height->setValue(ui->height->value() + diff);
+	ui->height->setValue((double)value / ratio);
 	ui->height->blockSignals(false);
 }
 
 void GeometryDialog::heightChanged(int value)
 {
-	const int diff = value - this->heightCache;
-	this->heightCache = value;
 	ui->custom->setChecked(true);
-
 	if(!ui->lockRatio->isChecked())
 		return;
 
 	ui->width->blockSignals(true);
-	ui->width->setValue(ui->width->value() + diff);
+	ui->width->setValue((double)value * ratio);
 	ui->width->blockSignals(false);
 }
