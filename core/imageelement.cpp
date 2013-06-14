@@ -94,7 +94,7 @@ void ImageElement::propertyChanged(const QString &name, const QVariant &value)
 	{
 		const QSize size = QPixmap(value.toString()).size();
 		if(!size.isNull())
-			setValue(QStringLiteral("size"), size);
+			setValue(QStringLiteral("size"), size.boundedTo(scene->sceneRect().size().toSize()));
 	}
 	SlideshowElement::propertyChanged(name, value);
 }
