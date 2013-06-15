@@ -575,7 +575,7 @@
     <string>Renommer la diapositive</string>
    </property>
    <property name="shortcut">
-    <string>Shift+E</string>
+    <string>Shift+R</string>
    </property>
   </action>
   <action name="actionDeleteSlide">

@@ -990,7 +990,7 @@ void MainWindow::launchViewer(const int from)
 
 	ViewWidget *viewer = new ViewWidget;
 	connect(viewer, &ViewWidget::closed, this, &QMainWindow::show);
-	connect(viewer, &ViewWidget::closed, ui->slideTree, &QTreeWidget::clearSelection);
+	connect(viewer, &ViewWidget::closed, this, &MainWindow::elementSelectionChanged);
 	connect(viewer, &ViewWidget::closed, viewer, &QObject::deleteLater);
 	viewer->setSlideshow(this->slideshow, from);
 	viewer->showFullScreen();
