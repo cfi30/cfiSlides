@@ -87,7 +87,8 @@ void Slide::addElement(SlideElement *element)
 {
 	connect(element, &SlideshowElement::modified, this, &Slide::elementChanged);
 	connect(element, &SlideElement::moved, this, &Slide::elementMoved);
-	connect(element, &SlideElement::refresh, this, &Slide::refreshRequest);
+	connect(element, &SlideElement::refresh, this, &Slide::refreshRequested);
+	connect(element, &SlideElement::updateProperties, this, &Slide::updatePropertiesRequested);
 	element->setIndex(this->elements.count());
 	this->elements.append(element);
 }
@@ -156,9 +157,14 @@ void Slide::elementMoved()
 	emit moved();
 }
 
-void Slide::refreshRequest()
+void Slide::refreshRequested()
 {
 	emit refresh();
+}
+
+void Slide::updatePropertiesRequested()
+{
+	emit updateProperties();
 }
 
 void Slide::play()

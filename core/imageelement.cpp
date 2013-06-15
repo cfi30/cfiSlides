@@ -100,6 +100,7 @@ void ImageElement::propertyChanged(const QString &name, const QVariant &value)
 				size.scale(sceneSize, Qt::KeepAspectRatio);
 
 			setValue(QStringLiteral("size"), size.boundedTo(scene->sceneRect().size().toSize()));
+			emit updateProperties();
 		}
 	}
 

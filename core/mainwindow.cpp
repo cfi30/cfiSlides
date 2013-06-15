@@ -461,6 +461,7 @@ void MainWindow::displaySlide(Slide *slide)
 	connect(slide, &SlideshowElement::modified, this, &MainWindow::slideModified);
 	connect(slide, &Slide::moved, this, &MainWindow::slideElementMoved);
 	connect(slide, &Slide::refresh, this, &MainWindow::refreshSlide);
+	connect(slide, &Slide::updateProperties, this, &MainWindow::updateCurrentPropertiesEditor);
 
 	statusBar()->clearMessage();
 }

@@ -48,6 +48,7 @@ public:
 signals:
 	void moved();
 	void refresh();
+	void updateProperties();
 
 public slots:
 	void play();
@@ -59,7 +60,8 @@ public slots:
 protected slots:
 	void elementChanged();
 	void elementMoved();
-	void refreshRequest();
+	void refreshRequested();
+	void updatePropertiesRequested();
 
 protected:
 	enum ImageStretch

@@ -42,6 +42,7 @@ public:
 signals:
 	void moved();
 	void refresh();
+	void updateProperties();
 	void finished();
 
 public slots:
