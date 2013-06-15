@@ -126,10 +126,6 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	moveFinishTimer.setSingleShot(true);
 	connect(&moveFinishTimer, &QTimer::timeout, this, &MainWindow::moveFinishTimerTimeout);
 
-	redrawSlideTimer.setInterval(REFRESH_INTERVAL);
-	redrawSlideTimer.setSingleShot(true);
-	connect(&redrawSlideTimer, &QTimer::timeout, this, &MainWindow::reRenderSlide);
-
 	if(disablePlugins)
 	{
 		ui->actionPlugins->setEnabled(false);
@@ -143,7 +139,6 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 MainWindow::~MainWindow()
 {
 	unloadPlugins();
-
 	delete ui;
 }
 
@@ -465,12 +460,12 @@ void MainWindow::displaySlide(Slide *slide)
 
 	connect(slide, &SlideshowElement::modified, this, &MainWindow::slideModified);
 	connect(slide, &Slide::moved, this, &MainWindow::slideElementMoved);
-	connect(slide, &Slide::refresh, this, &MainWindow::reRenderSlide);
+	connect(slide, &Slide::refresh, this, &MainWindow::refreshSlide);
 
 	statusBar()->clearMessage();
 }
 
-void MainWindow::updateSlide(const int index)
+void MainWindow::renderSlide(const int index)
 {
 	QList<int> selectedElements;
 	if(index == ui->slideList->currentRow())
@@ -491,7 +486,7 @@ void MainWindow::updateSlide(const int index)
 	ui->slideList->item(index)->setText(slide->getValue(QStringLiteral("name")).toString());
 	ui->slideList->blockSignals(false);
 
-	updateIcon(index);
+	updateSlideIcon(index);
 
 	if(index == ui->slideList->currentRow())
 	{
@@ -508,7 +503,7 @@ void MainWindow::updateSlide(const int index)
 
 }
 
-void MainWindow::updateIcon(const int index)
+void MainWindow::updateSlideIcon(const int index)
 {
 	const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
 
@@ -647,7 +642,7 @@ void MainWindow::renameSlide()
 	if(!ok || !validateSlideName(newName)) return;
 
 	slide->setValue(QStringLiteral("name"), newName);
-	updateSlide(index);
+	renderSlide(index);
 	updateCurrentPropertiesEditor();
 	setWindowModified(true);
 }
@@ -686,13 +681,13 @@ QGraphicsItem *MainWindow::sceneItemFromIndex(const int index) const
 	return 0;
 }
 
-void MainWindow::reRenderSlide()
+void MainWindow::refreshSlide()
 {
 	int index = ui->slideList->currentRow();
 	Slide *senderSlide = qobject_cast<Slide *>(sender());
 	if(senderSlide != 0) index = this->slideshow->indexOf(senderSlide);
 
-	updateSlide(index);
+	renderSlide(index);
 }
 
 void MainWindow::deleteSlide()
@@ -729,7 +724,7 @@ void MainWindow::deleteSlide()
 
 void MainWindow::slideModified()
 {
-	redrawSlideTimer.start();
+	refreshSlide();
 	setWindowModified(true);
 }
 
@@ -848,10 +843,10 @@ void MainWindow::elementSelectionChanged()
 		if(graphicsItem != 0)
 			graphicsItem->setSelected(true);
 	}
-	updateCurrentPropertiesEditor();
-	updateMediaPreview();
 	view->scene()->blockSignals(false);
 
+	updateCurrentPropertiesEditor();
+	updateMediaPreview();
 	updateSelectionActions();
 }
 
@@ -870,7 +865,7 @@ void MainWindow::deleteElements()
 	while(iterator.hasPrevious())
 		slide->removeElement(iterator.previous());
 
-	updateSlide(index);
+	renderSlide(index);
 	updatePropertiesEditor(slide);
 	updateMediaPreview();
 	updateSelectionActions();
@@ -895,12 +890,11 @@ void MainWindow::duplicateElements()
 		slide->addElement(newElement);
 	}
 
-	updateSlide(index);
+	renderSlide(index);
 
 	ui->slideTree->clearSelection();
 	for(int i = 0; i < duplicatedCount; i++)
 		ui->slideTree->topLevelItem(0)->child(i)->setSelected(true);
-	elementSelectionChanged();
 
 	setWindowModified(true);
 }
@@ -911,8 +905,17 @@ void MainWindow::moveElement(const int before, const int after)
 	Slide *slide = this->slideshow->getSlide(index);
 	slide->moveElement(before, after);
 
-	updateSlide(index);
-	elementSelectionChanged();
+	renderSlide(index);
+
+	const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->currentWidget());
+	view->scene()->clearSelection();
+
+	QGraphicsItem *graphicsItem = sceneItemFromIndex(after);
+	if(graphicsItem != 0) graphicsItem->setSelected(true);
+	view->scene()->blockSignals(false);
+
+	updateSlideTree(index);
+	updateSelectionActions();
 
 	setWindowModified(true);
 }
@@ -951,7 +954,7 @@ void MainWindow::moveSlideLeft()
 	const int index = ui->slideList->currentRow();
 	this->slideshow->moveSlide(index, index - 1);
 	ui->slideList->setCurrentRow(index - 1);
-	updateSlide(index); updateSlide(index - 1);
+	renderSlide(index); renderSlide(index - 1);
 	setWindowModified(true);
 	statusBar()->showMessage(tr("La diapositive a été déplacée vers la gauche."), STATUS_TIMEOUT);
 }
@@ -961,7 +964,7 @@ void MainWindow::moveSlideRight()
 	const int index = ui->slideList->currentRow();
 	this->slideshow->moveSlide(index, index + 1);
 	ui->slideList->setCurrentRow(index + 1);
-	updateSlide(index); updateSlide(index + 1);
+	renderSlide(index); renderSlide(index + 1);
 	setWindowModified(true);
 	statusBar()->showMessage(tr("La diapositive a été déplacée vers la droite."), STATUS_TIMEOUT);
 }
@@ -1084,7 +1087,7 @@ void MainWindow::print()
 
 void MainWindow::moveFinishTimerTimeout()
 {
-	updateIcon(ui->slideList->currentRow());
+	updateSlideIcon(ui->slideList->currentRow());
 	updateCurrentPropertiesEditor();
 }
 
@@ -1276,7 +1279,7 @@ void MainWindow::resizeSlideshow()
 
 		const GraphicsView *view = qobject_cast<GraphicsView *>(ui->displayWidget->widget(index));
 		view->scene()->setSceneRect(newRect);
-		updateSlide(index);
+		renderSlide(index);
 	}
 
 	setWindowModified(true);
@@ -1316,11 +1319,14 @@ void MainWindow::insertElement(SlideElement *element)
 	element->setValue(QStringLiteral("name"), element->getValue(QStringLiteral("name")).toString().arg(slide->getElements().size() + 1));
 	slide->addElement(element);
 
-	updateSlide(index);
+	renderSlide(index);
 
 	ui->slideTree->clearSelection();
 	ui->slideTree->topLevelItem(0)->child(0)->setSelected(true);
-	elementSelectionChanged();
+
+	updateCurrentPropertiesEditor();
+	updateMediaPreview();
+	updateSelectionActions();
 
 	setWindowModified(true);
 }
@@ -1477,8 +1483,8 @@ void MainWindow::alignElementsTo(const AlignDirection direction)
 		element->setValue(key, pos);
 	}
 
-	updateSlide(slideIndex);
-	elementSelectionChanged();
+	renderSlide(slideIndex);
+	updateCurrentPropertiesEditor();
 
 	setWindowModified(true);
 }

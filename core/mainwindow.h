@@ -86,8 +86,8 @@ public:
 	Q_INVOKABLE Slideshow *getSlideshow() const;
 	Q_INVOKABLE bool closeSlideshow();
 	Q_INVOKABLE void displaySlide(Slide *slide);
-	Q_INVOKABLE void updateSlide(const int index);
-	Q_INVOKABLE void updateIcon(const int index);
+	Q_INVOKABLE void renderSlide(const int index);
+	Q_INVOKABLE void updateSlideIcon(const int index);
 	Q_INVOKABLE void updateSlideTree(const int index);
 	Q_INVOKABLE QGraphicsItem *sceneItemFromIndex(const int index) const;
 	Q_INVOKABLE void insertElement(SlideElement *element);
@@ -104,7 +104,7 @@ public slots:
 	void updateSelectionActions();
 	void updateMediaPreview();
 	void renameSlide();
-	void reRenderSlide();
+	void refreshSlide();
 	void deleteSlide();
 	void slideModified();
 	void slideElementMoved();
@@ -164,7 +164,6 @@ private:
 	Slideshow *slideshow;
 	int newSlideshowCount;
 	QTimer moveFinishTimer;
-	QTimer redrawSlideTimer;
 	QList<QAction *> insertActions;
 	QList<QPluginLoader *> plugins;
 	QString commandLineHelp;
