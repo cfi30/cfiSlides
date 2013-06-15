@@ -92,9 +92,16 @@ void ImageElement::propertyChanged(const QString &name, const QVariant &value)
 {
 	if(getValue(QStringLiteral("src")).toString().isEmpty())
 	{
-		const QSize size = QPixmap(value.toString()).size();
+		QSize size = QPixmap(value.toString()).size();
 		if(!size.isNull())
+		{
+			const QSize sceneSize = scene->sceneRect().size().toSize();
+			if(size.width() > sceneSize.width() || size.height() > sceneSize.height())
+				size.scale(sceneSize, Qt::KeepAspectRatio);
+
 			setValue(QStringLiteral("size"), size.boundedTo(scene->sceneRect().size().toSize()));
+		}
 	}
+
 	SlideshowElement::propertyChanged(name, value);
 }
