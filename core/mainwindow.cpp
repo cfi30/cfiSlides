@@ -989,12 +989,21 @@ void MainWindow::launchViewer(const int from)
 	}
 
 	ViewWidget *viewer = new ViewWidget;
-	connect(viewer, &ViewWidget::closed, this, &QMainWindow::show);
-	connect(viewer, &ViewWidget::closed, this, &MainWindow::elementSelectionChanged);
-	connect(viewer, &ViewWidget::closed, viewer, &QObject::deleteLater);
+	connect(viewer, &ViewWidget::closed, this, &MainWindow::viewerClosed);
 	viewer->setSlideshow(this->slideshow, from);
 	viewer->showFullScreen();
 	this->hide();
+
+	viewerTimer.start();
+}
+
+void MainWindow::viewerClosed()
+{
+	this->show();
+	elementSelectionChanged();
+	sender()->deleteLater();
+
+	statusBar()->showMessage(tr("Temps de lecture : %1").arg(msToString(viewerTimer.elapsed())));
 }
 
 void MainWindow::copySlide()

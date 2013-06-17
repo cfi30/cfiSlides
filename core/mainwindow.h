@@ -40,6 +40,7 @@
 #include <QActionGroup>
 #include <QMediaPlayer>
 #include <QJsonObject>
+#include <QElapsedTimer>
 
 #include "graphicsview.h"
 #include "slideshow.h"
@@ -171,12 +172,14 @@ private:
 	QActionGroup *selectionActions;
 	SlideElementTypeList pluginTypes;
 	QMediaPlayer *previewPlayer;
+	QElapsedTimer viewerTimer;
 
 private slots:
 	void displayViewContextMenu(const QPoint &);
 	void displaySlideTreeContextMenu(const QPoint &);
 	void displaySlideListContextMenu(const QPoint &pos);
 	void insertElementFromAction();
+	void viewerClosed();
 
 protected:
 	virtual void closeEvent(QCloseEvent *);
