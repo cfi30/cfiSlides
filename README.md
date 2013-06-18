@@ -3,8 +3,8 @@ cfiSlides 0.4
 
 Build instructions for Linux:
 ```
-git clone https://github.com/cfi30/cfiSlides.git
-cd cfiSlides
+git clone https://bitbucket.org/cfi30/cfislides.git
+cd cfislides
 qmake-qt5 CONFIG+=silent
 make && cd build/
 chmod +x ./cfislides.sh
