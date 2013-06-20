@@ -92,10 +92,7 @@ void ImportExport::launchExport()
 
 	const int slideCount = slideshow->getSlides().size();
 	if(slideCount < 1)
-	{
-		QMessageBox::critical(window, exportAction->text(), tr("Impossible d'exporter un diaporama vide."));
-		return;
-	}
+		return (void)QMessageBox::critical(window, exportAction->text(), tr("Impossible d'exporter un diaporama vide."));
 
 	ExportDialog *dialog = new ExportDialog(window);
 	dialog->setSlideCount(slideCount);
@@ -128,20 +125,26 @@ void ImportExport::launchExport()
 	{
 		progress->setValue(index + 1);
 
-		Slide *slide = slideshow->getSlide(index);
-		QGraphicsView *view = qobject_cast<QGraphicsView *>(window->findChild<QStackedWidget *>("displayWidget")->widget(index));
+		QGraphicsScene *scene = new QGraphicsScene;
+		scene->setSceneRect(slideshow->getValue(QStringLiteral("geometry")).toRect());
+		scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 
-		QPixmap pixmap(view->scene()->sceneRect().size().toSize());
+		QPixmap pixmap(scene->sceneRect().size().toSize());
 		QPainter painter(&pixmap);
 		painter.setRenderHint(QPainter::Antialiasing);
-		view->scene()->clearSelection();
-		view->scene()->render(&painter, view->scene()->sceneRect());
+
+		Slide *slide = slideshow->getSlide(index);
+		slide->render(scene, false);
+		scene->render(&painter, scene->sceneRect());
+
+		delete scene;
 
 		QString fileName = fileTemplate;
 		fileName.replace("%n", slide->getValue(QStringLiteral("name")).toString());
 		fileName.replace("%i", QString::number(index + 1));
 		fileName.replace("%s", QFileInfo(window->windowFilePath()).baseName());
 		fileName.replace("%f", format);
+
 		if(!pixmap.save(directory + "/" + fileName, format.toLocal8Bit().data(), quality))
 		{
 			QMessageBox::critical(window, dialog->windowTitle(), tr("Une erreur s'est produite lors de l'enregistrement de %1.").arg(fileName), QMessageBox::Abort);
@@ -152,10 +155,12 @@ void ImportExport::launchExport()
 	}
 
 	progress->close();
+	progress->deleteLater();
+
 	QSettings().setValue(QStringLiteral("exportDialog/format"), format);
 	QSettings().setValue(QStringLiteral("exportDialog/quality"), quality);
 	QSettings().setValue(QStringLiteral("exportDialog/template"), fileTemplate);
-	window->statusBar()->showMessage(tr("Exportation terminée."), STATUS_TIMEOUT);
 
 	QDesktopServices::openUrl(QUrl::fromLocalFile(directory));
+	window->statusBar()->showMessage(tr("Exportation terminée."), STATUS_TIMEOUT);
 }
