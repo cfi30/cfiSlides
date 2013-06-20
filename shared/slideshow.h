@@ -21,6 +21,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QDesktopWidget>
 
 #include "baseelement.h"
 #include "slide.h"
@@ -31,7 +32,7 @@ class CFISLIDES_DLLSPEC Slideshow : public BaseElement
 	Q_OBJECT
 
 public:
-	Slideshow() : BaseElement() {}
+	Slideshow();
 	~Slideshow();
 
 	QList<Slide *> getSlides() const;

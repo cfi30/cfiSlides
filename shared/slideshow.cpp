@@ -18,6 +18,11 @@
 
 #include "slideshow.h"
 
+Slideshow::Slideshow() : BaseElement()
+{
+	setValue(QStringLiteral("geometry"), QDesktopWidget().screenGeometry());
+}
+
 Slideshow::~Slideshow()
 {
 	while(!this->slides.isEmpty())

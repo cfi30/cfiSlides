@@ -26,7 +26,6 @@
 #include <QFile>
 #include <QSettings>
 #include <QPainter>
-#include <QDesktopWidget>
 #include <QGraphicsScene>
 #include <QPixmap>
 #include <QListWidgetItem>

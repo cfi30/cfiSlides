@@ -20,7 +20,6 @@
 #define VIEWWIDGET_H
 
 #include <QWidget>
-#include <QDesktopWidget>
 #include <QGraphicsView>
 #include <QProgressDialog>
 #include <QInputDialog>

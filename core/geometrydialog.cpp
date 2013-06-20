@@ -21,12 +21,12 @@
 
 GeometryDialog::GeometryDialog(QRect rect, QWidget *parent) : QDialog(parent), ui(new Ui::GeometryDialog)
 {
+	const QRect screenGeometry = QDesktopWidget().screenGeometry();
+
 	ui->setupUi(this);
-	if(rect.isNull())
-	{
+
+	if(rect == screenGeometry)
 		ui->automatic->setChecked(true);
-		rect = QDesktopWidget().screenGeometry();
-	}
 	else
 		ui->custom->setChecked(true);
 

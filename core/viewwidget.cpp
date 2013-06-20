@@ -95,7 +95,7 @@ void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 	{
 		progress->setValue(index + 1);
 
-		const QRect sceneRect = slideshow->getValue("geometry", QDesktopWidget().screenGeometry()).toRect();
+		const QRect sceneRect = slideshow->getValue("geometry").toRect();
 
 		QGraphicsScene *scene = new QGraphicsScene(this);
 		scene->setSceneRect(sceneRect);

@@ -422,7 +422,7 @@ void MainWindow::displaySlide(Slide *slide)
 	statusBar()->showMessage(tr("Affichage de %1...").arg(slide->getValue(QStringLiteral("name")).toString()));
 
 	QGraphicsScene *scene = new QGraphicsScene;
-	scene->setSceneRect(slideshow->getValue(QStringLiteral("geometry"), QDesktopWidget().screenGeometry()).toRect());
+	scene->setSceneRect(slideshow->getValue(QStringLiteral("geometry")).toRect());
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateCurrentSlideTree);
 	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateSelectionActions);
@@ -1266,12 +1266,8 @@ void MainWindow::resizeSlideshow()
 
 	QRect newRect = dialog->getRect();
 	if(newRect.isNull())
-	{
 		newRect = QDesktopWidget().screenGeometry();
-		slideshow->unsetValue(QStringLiteral("geometry"));
-	}
-	else
-		slideshow->setValue(QStringLiteral("geometry"), newRect);
+	slideshow->setValue(QStringLiteral("geometry"), newRect);
 
 	const int slideCount = ui->displayWidget->count();
 
@@ -1293,10 +1289,10 @@ void MainWindow::resizeSlideshow()
 	}
 
 	setWindowModified(true);
-	dialog->deleteLater();
 
 	progress->close();
 	progress->deleteLater();
+	dialog->deleteLater();
 }
 
 void MainWindow::registerElementType(const SlideElementType &type)
