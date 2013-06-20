@@ -41,7 +41,7 @@ void HelloElement::render(QGraphicsScene *scene, const bool interactive)
 	subitem->setFont(font);
 	subitem->setHtml(
 		QString("<span style=\"color: green\">HELLO <i style=\"color: purple\">%1</i> !!</span>")
-		.arg(getValue(QStringLiteral("hello")).toString())
+		.arg(getValue(QStringLiteral("hello")).toString().toHtmlEscaped())
 	);
 
 	item->setRect(QRect(QPoint(), QFontMetrics(font).boundingRect(subitem->toPlainText()).size() + QSize(50, 20)));
