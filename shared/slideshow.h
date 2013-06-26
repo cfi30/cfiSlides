@@ -38,7 +38,8 @@ public:
 	QList<Slide *> getSlides() const;
 	void setSlides(QList<Slide *>);
 	Slide *getSlide(const int index) const;
-	Slide *createSlide(const QString &name);
+	Slide *createSlide();
+	void addSlide(Slide *slide);
 	void moveSlide(const int from, const int to);
 	int indexOf(Slide *) const;
 	void removeSlide(const int index);

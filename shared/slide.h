@@ -28,13 +28,14 @@
 #include "configuration.h"
 #include "shared.h"
 
+class Slideshow;
+
 class CFISLIDES_DLLSPEC Slide : public SlideshowElement
 {
 	Q_OBJECT
 
 public:
-	Slide() : SlideshowElement() {}
-	explicit Slide(const QString &name);
+	explicit Slide(Slideshow *slideshow);
 	~Slide();
 
 	void render(QGraphicsScene *scene, const bool interactive);
@@ -44,6 +45,8 @@ public:
 	void removeElement(const int index);
 	void moveElement(const int from, const int to);
 	virtual PropertyList getProperties() const;
+	Slideshow *slideshow() const;
+	void setSlideshow(Slideshow *slideshow);
 
 signals:
 	void moved();
@@ -63,7 +66,7 @@ protected slots:
 	void refreshRequested();
 	void updatePropertiesRequested();
 
-protected:
+private:
 	enum ImageStretch
 	{
 		Fill,
@@ -72,6 +75,7 @@ protected:
 		IgnoreRatio
 	};
 	QList<SlideElement *> elements;
+	Slideshow *parentSlideshow;
 };
 
 #endif // SLIDE_H

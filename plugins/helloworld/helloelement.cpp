@@ -18,23 +18,19 @@
 
 #include "helloelement.h"
 
-void HelloElement::render(QGraphicsScene *scene, const bool interactive)
+QGraphicsItem *HelloElement::render(const bool interactive)
 {
-	SlideElement::render(scene, interactive);
-
 	if(!getValue(QStringLiteral("visible")).toBool())
-		return;
+		return 0;
 
 	QBrush brush;
 	brush.setStyle(Qt::DiagCrossPattern);
 	brush.setColor(Qt::black);
 
-	Hello2DItem *item = new Hello2DItem(this);
+	Hello2DItem *item = new Hello2DItem(interactive, this);
 	item->setPen(QPen(Qt::NoPen));
 	item->setBrush(brush);
 	item->setPos(getValue(QStringLiteral("position")).toPoint());
-
-	scene->addItem(item);
 
 	QFont font(QString(), 42, QFont::Bold);
 	QGraphicsTextItem *subitem = new QGraphicsTextItem(item);
@@ -43,8 +39,9 @@ void HelloElement::render(QGraphicsScene *scene, const bool interactive)
 		QString("<span style=\"color: green\">HELLO <i style=\"color: purple\">%1</i> !!</span>")
 		.arg(getValue(QStringLiteral("hello")).toString().toHtmlEscaped())
 	);
-
 	item->setRect(QRect(QPoint(), QFontMetrics(font).boundingRect(subitem->toPlainText()).size() + QSize(50, 20)));
+
+	return item;
 }
 
 PropertyList HelloElement::getProperties() const

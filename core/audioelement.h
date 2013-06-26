@@ -31,7 +31,7 @@ class AudioElement : public SlideElement
 public:
 	AudioElement();
 	virtual QString previewUrl() const;
-	virtual void render(QGraphicsScene *scene, const bool interactive);
+	virtual QGraphicsItem *render(const bool interactive);
 	virtual PropertyList getProperties() const;
 
 public slots:

@@ -23,33 +23,39 @@
 
 #define GRAPHICS_ITEM(className, parentClass) \
 public:\
-explicit className(SlideElement *parent) : parentClass()\
-{\
-	this->slideElement = parent;\
-	this->setData(Qt::UserRole, parent->getIndex());\
-}\
+	explicit className(const bool interactive, SlideElement *parent) : parentClass()\
+	{\
+		this->slideElement = parent;\
+		this->setData(Qt::UserRole, parent->getIndex());\
+\
+		if(interactive)\
+			this->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);\
+	}\
+\
+private:\
+	SlideElement *slideElement;\
+\
 protected:\
-SlideElement *slideElement;\
-virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value)\
-{\
-	if(change != ItemPositionChange || !scene())\
-		return QGraphicsItem::itemChange(change, value);\
+	virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value)\
+	{\
+		if(change != ItemPositionChange || !scene())\
+			return QGraphicsItem::itemChange(change, value);\
 \
-	QPointF newPos = value.toPointF();\
-	QRectF rect = scene()->sceneRect();\
-	if(newPos.x() < 0)\
-		newPos.setX(0);\
-	if(newPos.y() < 0)\
-		newPos.setY(0);\
+		QPointF newPos = value.toPointF();\
+		QRectF rect = scene()->sceneRect();\
+		if(newPos.x() < 0)\
+			newPos.setX(0);\
+		if(newPos.y() < 0)\
+			newPos.setY(0);\
 \
-	if(newPos.x() + boundingRect().right() > rect.right())\
-		newPos.setX(rect.right() - boundingRect().right());\
-	if(newPos.y() + boundingRect().bottom() > rect.bottom())\
-		newPos.setY(rect.bottom() - boundingRect().bottom());\
+		if(newPos.x() + boundingRect().right() > rect.right())\
+			newPos.setX(rect.right() - boundingRect().right());\
+		if(newPos.y() + boundingRect().bottom() > rect.bottom())\
+			newPos.setY(rect.bottom() - boundingRect().bottom());\
 \
-	if(this->slideElement != 0)\
-		this->slideElement->movedTo(newPos.toPoint());\
-	return newPos;\
-}
+		if(this->slideElement != 0)\
+			this->slideElement->movedTo(newPos.toPoint());\
+		return newPos;\
+	}
 
 #endif // GRAPHICSITEM_H

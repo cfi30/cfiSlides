@@ -18,28 +18,27 @@
 
 #include "slide.h"
 
-Slide::Slide(const QString &name) : SlideshowElement()
+Slide::Slide(Slideshow *slideshow) : SlideshowElement()
 {
-	this->setValue(QStringLiteral("name"), name);
-	this->setValue(QStringLiteral("backgroundColor"), QColor(Qt::white));
+	parentSlideshow = slideshow;
+	setValue(QStringLiteral("name"), tr("Sans Nom"));
+	setValue(QStringLiteral("backgroundColor"), QColor(Qt::white));
 }
 
 Slide::~Slide()
 {
-	while(!this->elements.isEmpty())
-		delete this->elements.takeFirst();
+	while(!elements.isEmpty())
+		delete elements.takeFirst();
 }
 
 void Slide::render(QGraphicsScene *scene, const bool interactive)
 {
 	QBrush background;
+	background.setColor(getValue(QStringLiteral("backgroundColor")).value<QColor>());
+	background.setStyle(Qt::SolidPattern);
+
 	QPixmap backgroundPixmap(this->getValue(QStringLiteral("backgroundImage")).toString());
-	if(backgroundPixmap.isNull())
-	{
-		background.setColor(getValue(QStringLiteral("backgroundColor")).value<QColor>());
-		background.setStyle(Qt::SolidPattern);
-	}
-	else
+	if(!backgroundPixmap.isNull())
 	{
 		switch(getValue(QStringLiteral("backgroundImageStretch")).toInt())
 		{
@@ -61,15 +60,11 @@ void Slide::render(QGraphicsScene *scene, const bool interactive)
 	scene->addRect(scene->sceneRect(), QPen(Qt::NoPen), background);
 
 	foreach(SlideElement *element, this->elements)
-		element->render(scene, interactive);
-
-	if(interactive)
 	{
-		foreach(QGraphicsItem *item, scene->items())
-		{
-			if(item->data(Qt::UserRole).isValid())
-				item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemSendsGeometryChanges);
-		}
+		QGraphicsItem *item = element->render(interactive);
+		if(!item) continue;
+
+		scene->addItem(item);
 	}
 }
 
@@ -85,11 +80,14 @@ SlideElement *Slide::getElement(const int index) const
 
 void Slide::addElement(SlideElement *element)
 {
+	element->setIndex(this->elements.count());
+	element->setSlide(this);
+
 	connect(element, &SlideshowElement::modified, this, &Slide::elementChanged);
 	connect(element, &SlideElement::moved, this, &Slide::elementMoved);
 	connect(element, &SlideElement::refresh, this, &Slide::refreshRequested);
 	connect(element, &SlideElement::updateProperties, this, &Slide::updatePropertiesRequested);
-	element->setIndex(this->elements.count());
+
 	this->elements.append(element);
 }
 
@@ -145,6 +143,16 @@ PropertyList Slide::getProperties() const
 	return PropertyList()
 		<< SlideshowElement::getProperties()
 		<< background;
+}
+
+Slideshow *Slide::slideshow() const
+{
+	return parentSlideshow;
+}
+
+void Slide::setSlideshow(Slideshow *slideshow)
+{
+	parentSlideshow = slideshow;
 }
 
 void Slide::elementChanged()

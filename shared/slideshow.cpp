@@ -25,39 +25,44 @@ Slideshow::Slideshow() : BaseElement()
 
 Slideshow::~Slideshow()
 {
-	while(!this->slides.isEmpty())
-		delete this->slides.takeFirst();
+	while(!slides.isEmpty())
+		delete slides.takeFirst();
 }
 
 QList<Slide *> Slideshow::getSlides() const
 {
-	return this->slides;
+	return slides;
 }
 
 Slide *Slideshow::getSlide(const int index) const
 {
-	return this->slides[index];
+	return slides[index];
 }
 
-Slide *Slideshow::createSlide(const QString &name)
+Slide *Slideshow::createSlide()
 {
-	Slide *slide = new Slide(name);
-	this->slides.append(slide);
+	Slide *slide = new Slide(this);
+	slides.append(slide);
 	return slide;
+}
+
+void Slideshow::addSlide(Slide *slide)
+{
+	slides.append(slide);
 }
 
 void Slideshow::moveSlide(const int from, const int to)
 {
-	this->slides.move(from, to);
+	slides.move(from, to);
 }
 
 int Slideshow::indexOf(Slide *s) const
 {
-	return this->slides.indexOf(s);
+	return slides.indexOf(s);
 }
 
 void Slideshow::removeSlide(const int index)
 {
-	this->slides[index]->deleteLater();
-	this->slides.removeAt(index);
+	slides[index]->deleteLater();
+	slides.removeAt(index);
 }

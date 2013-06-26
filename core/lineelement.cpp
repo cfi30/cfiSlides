@@ -24,12 +24,10 @@ LineElement::LineElement() : SlideElement()
 	setValue(QStringLiteral("stop"), QPoint(300, 0));
 }
 
-void LineElement::render(QGraphicsScene *scene, const bool interactive)
+QGraphicsItem *LineElement::render(const bool interactive)
 {
-	SlideElement::render(scene, interactive);
-
 	if(!getValue(QStringLiteral("visible")).toBool())
-		return;
+		return 0;
 
 	Qt::PenStyle penStyle;
 	switch(getValue(QStringLiteral("style")).toInt())
@@ -55,12 +53,12 @@ void LineElement::render(QGraphicsScene *scene, const bool interactive)
 	pen.setColor(getValue(QStringLiteral("color")).value<QColor>());
 	pen.setWidth(getValue(QStringLiteral("size")).toInt());
 
-	GraphicsLineItem *item = new GraphicsLineItem(this);
+	GraphicsLineItem *item = new GraphicsLineItem(interactive, this);
 	item->setPen(pen);
 	item->setPos(getValue(QStringLiteral("position")).toPoint());
 	item->setLine(QLine(QPoint(0, getValue(QStringLiteral("start")).toInt()), getValue(QStringLiteral("stop")).toPoint()));
 
-	scene->addItem(item);
+	return item;
 }
 
 PropertyList LineElement::getProperties() const

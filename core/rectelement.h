@@ -30,7 +30,7 @@ class RectElement : public SlideElement
 
 public:
 	RectElement();
-	virtual void render(QGraphicsScene *scene, const bool interactive);
+	virtual QGraphicsItem *render(const bool interactive);
 	virtual PropertyList getProperties() const;
 
 protected:

@@ -68,14 +68,14 @@ void ImportExport::launchImport()
 
 	for(int index = 0; index < slideCount; index++)
 	{
-		Slide *tempSlide = slides[index];
 		progress->setValue(index);
 
-		Slide *slide = slideshow->createSlide("temp-name");
+		Slide *tempSlide = slides[index];
+		Slide *slide = slideshow->createSlide();
 		slide->setValues(tempSlide->getValues());
 
 		foreach(SlideElement *element, tempSlide->getElements())
-			slide->addElement(element);
+			slide->addElement((SlideElement *)QMetaType::create(QMetaType::type(element->type()), element));
 
 		QMetaObject::invokeMethod(window, "displaySlide", Qt::DirectConnection, Q_ARG(Slide *, slide));
 		QMetaObject::invokeMethod(window, "setWindowModified", Qt::DirectConnection, Q_ARG(bool, true));

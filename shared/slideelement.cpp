@@ -17,16 +17,18 @@
  */
 
 #include "slideelement.h"
+#include "slide.h"
+#include "slideshow.h"
 
 SlideElement::SlideElement() : SlideshowElement()
 {
-	this->scene = 0;
+	parentSlide = 0;
 	setValue(QStringLiteral("visible"), true);
 }
 
 SlideElement::SlideElement(const SlideElement &copy) : SlideshowElement()
 {
-	SlideElement();
+	parentSlide = 0;
 	setValues(copy.getValues());
 }
 
@@ -38,12 +40,6 @@ const char *SlideElement::type() const
 QString SlideElement::previewUrl() const
 {
 	return QString();
-}
-
-void SlideElement::render(QGraphicsScene *scene, const bool interactive)
-{
-	if(interactive)
-		this->scene = scene;
 }
 
 PropertyList SlideElement::getProperties() const
@@ -72,8 +68,7 @@ PropertyList SlideElement::getProperties() const
 	size->setToolTip(tr("Taille de l'élément"));
 	size->setValue(getValue(QStringLiteral("size")));
 	sizeManager->setMinimum(QStringLiteral("size"), MINIMUM_SIZE);
-	if(this->scene != 0)
-		sizeManager->setMaximum(QStringLiteral("size"), scene->sceneRect().size().toSize());
+	sizeManager->setMaximum(QStringLiteral("size"), slideshow()->getValue(QStringLiteral("geometry")).toRect().size());
 	geometry->addProperty(size);
 
 	return PropertyList()
@@ -96,4 +91,22 @@ int SlideElement::getIndex() const
 void SlideElement::setIndex(const int newIndex)
 {
 	this->elementIndex = newIndex;
+}
+
+Slide *SlideElement::slide() const
+{
+	return parentSlide;
+}
+
+void SlideElement::setSlide(Slide *slide)
+{
+	if(parentSlide)
+		qFatal("this element is already attached to a slide");
+
+	parentSlide = slide;
+}
+
+Slideshow *SlideElement::slideshow() const
+{
+	return parentSlide->slideshow();
 }

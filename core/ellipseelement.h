@@ -30,7 +30,7 @@ class EllipseElement : public RectElement
 
 public:
 	EllipseElement() : RectElement() {}
-	virtual void render(QGraphicsScene *scene, const bool interactive);
+	virtual QGraphicsItem *render(const bool interactive);
 };
 
 class GraphicsEllipseItem : public QGraphicsEllipseItem

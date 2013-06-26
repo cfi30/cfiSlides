@@ -17,18 +17,17 @@
  */
 
 #include "imageelement.h"
+#include "slideshow.h"
 
 ImageElement::ImageElement() : SlideElement()
 {
 	setValue(QStringLiteral("size"), QSize(400, 300));
 }
 
-void ImageElement::render(QGraphicsScene *scene, const bool interactive)
+QGraphicsItem *ImageElement::render(const bool interactive)
 {
-	SlideElement::render(scene, interactive);
-
 	if(!getValue(QStringLiteral("visible")).toBool())
-		return;
+		return 0;
 
 	const QSize size = getValue(QStringLiteral("size")).toSize();
 	const QPoint pos = getValue(QStringLiteral("position")).toPoint();
@@ -36,7 +35,7 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 	const QPixmap pixmap(getValue(QStringLiteral("src")).toString());
 	if(pixmap.isNull())
 	{
-		MissingImagePlaceholderItem *item = new MissingImagePlaceholderItem(this);
+		MissingImagePlaceholderItem *item = new MissingImagePlaceholderItem(interactive, this);
 		item->setPos(pos);
 		item->setRect(QRect(QPoint(), size));
 		item->setBrush(Qt::darkGray);
@@ -49,23 +48,22 @@ void ImageElement::render(QGraphicsScene *scene, const bool interactive)
 			size.width() > icon->pixmap().size().width() &&
 			size.height() > icon->pixmap().size().height()
 		);
-
 		icon->setPos(
 			(size.width() - icon->pixmap().width()) / 2,
 			(size.height() - icon->pixmap().height()) / 2
 		);
 
-		scene->addItem(item);
+		return item;
 	}
 	else
 	{
 		const QPixmap spixmap = pixmap.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-		GraphicsPixmapItem *item = new GraphicsPixmapItem(this);
+		GraphicsPixmapItem *item = new GraphicsPixmapItem(interactive, this);
 		item->setPixmap(spixmap);
 		item->setPos(getValue(QStringLiteral("position")).toPoint());
 
-		scene->addItem(item);
+		return item;
 	}
 }
 
@@ -95,11 +93,11 @@ void ImageElement::propertyChanged(const QString &name, const QVariant &value)
 		QSize size = QPixmap(value.toString()).size();
 		if(!size.isNull())
 		{
-			const QSize sceneSize = scene->sceneRect().size().toSize();
+			const QSize sceneSize = slideshow()->getValue(QStringLiteral("geometry")).toRect().size();
 			if(size.width() > sceneSize.width() || size.height() > sceneSize.height())
 				size.scale(sceneSize, Qt::KeepAspectRatio);
 
-			setValue(QStringLiteral("size"), size.boundedTo(scene->sceneRect().size().toSize()));
+			setValue(QStringLiteral("size"), size);
 			emit updateProperties();
 		}
 	}

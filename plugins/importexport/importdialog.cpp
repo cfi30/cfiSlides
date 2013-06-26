@@ -56,7 +56,7 @@ ImportDialog::ImportDialog(int slideCount, QWidget *parent) : QDialog(parent), u
 
 ImportDialog::~ImportDialog()
 {
-	garbageCollector(this->result() != QDialog::Accepted);
+	garbageCollector();
 	delete ui;
 }
 
@@ -144,7 +144,8 @@ bool ImportDialog::updateList(const QString directory)
 		QString file = files[index];
 		progress->setValue(index + 1);
 
-		Slide *slide = new Slide(tr("Diapositive %1").arg(++slideCount));
+		Slide *slide = new Slide(0);
+		slide->setValue(QStringLiteral("name"), tr("Diapositive %1").arg(++slideCount));
 		connect(slide, &Slide::modified, this, &ImportDialog::elementModified);
 
 		SlideElement *element = createElementFor(dir.absoluteFilePath(file));
@@ -162,7 +163,6 @@ bool ImportDialog::updateList(const QString directory)
 		QTreeWidgetItem *fileItem = new QTreeWidgetItem(slideItem);
 		fileItem->setText(0, element->getValue(QStringLiteral("name")).toString());
 		fileItem->setIcon(0, getIconFor(file));
-		//fileItem->setData(0, Qt::UserRole, file);
 		fileItem->setData(1, Qt::UserRole, QVariant::fromValue<void *>((void *)element));
 		fileItem->setFlags(fileItem->flags() | Qt::ItemIsUserCheckable);
 		fileItem->setFlags(fileItem->flags() ^ Qt::ItemIsDropEnabled);
@@ -240,26 +240,13 @@ QIcon ImportDialog::getIconFor(const QString file)
 	return QIcon();
 }
 
-void ImportDialog::garbageCollector(bool destroyEnabledElements)
+void ImportDialog::garbageCollector() const
 {
 	const int slidesCount = ui->treeWidget->topLevelItemCount();
 	for(int index = 0; index < slidesCount; index++)
 	{
 		QTreeWidgetItem *slideItem = ui->treeWidget->topLevelItem(index);
-		const int elementsCount = slideItem->childCount();
-		int enabledElements = 0;
-		for(int index = 0; index < elementsCount; index++)
-		{
-			QTreeWidgetItem *elementItem = slideItem->child(index);
-			if(elementItem->checkState(0) == Qt::Checked)
-				enabledElements++;
-
-			if(destroyEnabledElements || elementItem->checkState(0) == Qt::Unchecked)
-				delete (SlideElement *)elementItem->data(1, Qt::UserRole).value<void *>();
-		}
-
-		if(destroyEnabledElements || enabledElements == 0)
-			delete (Slide *)slideItem->data(1, Qt::UserRole).value<void *>();
+		delete (Slide *)slideItem->data(1, Qt::UserRole).value<void *>();
 	}
 }
 

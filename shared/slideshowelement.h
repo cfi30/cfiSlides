@@ -31,7 +31,6 @@ class CFISLIDES_DLLSPEC SlideshowElement : public BaseElement
 
 public:
 	SlideshowElement() : BaseElement() {}
-	virtual void render(QGraphicsScene *scene, const bool interactive) = 0;
 	virtual PropertyList getProperties() const;
 
 signals:

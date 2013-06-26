@@ -30,7 +30,7 @@ class LineElement : public SlideElement
 
 public:
 	LineElement();
-	virtual void render(QGraphicsScene *scene, const bool interactive);
+	virtual QGraphicsItem *render(const bool interactive);
 	virtual PropertyList getProperties() const;
 };
 

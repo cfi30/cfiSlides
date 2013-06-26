@@ -30,7 +30,7 @@ class HelloElement : public SlideElement
 	Q_OBJECT
 public:
 	HelloElement() : SlideElement() {}
-	virtual void render(QGraphicsScene *scene, const bool interactive);
+	virtual QGraphicsItem *render(const bool interactive);
 	virtual PropertyList getProperties() const;
 };
 

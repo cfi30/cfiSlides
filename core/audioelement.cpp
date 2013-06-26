@@ -29,12 +29,10 @@ QString AudioElement::previewUrl() const
 	return getValue(QStringLiteral("src")).toString();
 }
 
-void AudioElement::render(QGraphicsScene *scene, const bool interactive)
+QGraphicsItem *AudioElement::render(const bool interactive)
 {
-	SlideElement::render(scene, interactive);
-
 	if(interactive || !getValue(QStringLiteral("visible")).toBool())
-		return;
+		return 0;
 
 	player = new QMediaPlayer;
 	player->setVolume(getValue(QStringLiteral("volume")).toInt());
@@ -45,6 +43,7 @@ void AudioElement::render(QGraphicsScene *scene, const bool interactive)
 	if(getValue(QStringLiteral("loop")).toBool())
 		playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
 	player->setPlaylist(playlist);
+	return 0;
 }
 
 PropertyList AudioElement::getProperties() const

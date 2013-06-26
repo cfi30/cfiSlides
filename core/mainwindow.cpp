@@ -240,7 +240,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 		QVariantMap properties;
 		in >> properties;
 
-		Slide *slide = this->slideshow->createSlide(QString::number(si));
+		Slide *slide = slideshow->createSlide();
 		slide->setValues(properties);
 
 		int elementsCount = 0;
@@ -403,7 +403,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::createEmptySlide()
 {
-	Slide *slide = this->slideshow->createSlide(tr("Diapositive %1").arg(this->slideshow->getSlides().size() + 1));
+	Slide *slide = slideshow->createSlide();
+	slide->setValue(QStringLiteral("name"), tr("Diapositive %1").arg(this->slideshow->getSlides().size() + 1));
 	displaySlide(slide);
 
 	if(ui->slideList->count() > 1)
@@ -1009,7 +1010,7 @@ void MainWindow::viewerClosed()
 void MainWindow::copySlide()
 {
 	const Slide *sourceSlide = this->slideshow->getSlide(ui->slideList->currentRow());
-	Slide *newSlide = this->slideshow->createSlide("");
+	Slide *newSlide = this->slideshow->createSlide();
 	newSlide->setValues(sourceSlide->getValues());
 	newSlide->setValue(QStringLiteral("name"), tr("Copie de %1").arg(sourceSlide->getValue(QStringLiteral("name")).toString()));
 	foreach(SlideElement *sourceElement, sourceSlide->getElements())

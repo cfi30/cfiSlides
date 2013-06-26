@@ -25,6 +25,9 @@
 #include "configuration.h"
 #include "shared.h"
 
+class Slide;
+class Slideshow;
+
 class CFISLIDES_DLLSPEC SlideElement : public SlideshowElement
 {
 	Q_OBJECT
@@ -34,10 +37,13 @@ public:
 	SlideElement(const SlideElement &copy);
 	virtual QString previewUrl() const;
 	const char *type() const;
-	virtual void render(QGraphicsScene *scene, const bool interactive);
+	virtual QGraphicsItem *render(const bool interactive) = 0;
 	virtual PropertyList getProperties() const;
 	int getIndex() const;
 	void setIndex(const int newIndex);
+	Slide *slide() const;
+	void setSlide(Slide *slide);
+	Slideshow *slideshow() const;
 	
 signals:
 	void moved();
@@ -55,9 +61,7 @@ public slots:
 
 private:
 	int elementIndex;
-
-protected:
-	QGraphicsScene *scene;
+	Slide *parentSlide;
 };
 
 #endif // SLIDEELEMENT_H

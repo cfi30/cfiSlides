@@ -67,7 +67,7 @@ private:
 	ElementType typeOf(const QString file);
 	SlideElement *createElementFor(const QString file);
 	QIcon getIconFor(const QString file);
-	void garbageCollector(bool destroyEnabledElements = true);
+	void garbageCollector() const;
 
 private slots:
 	void enableOkButton();

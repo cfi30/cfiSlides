@@ -17,6 +17,7 @@
  */
 
 #include "textelement.h"
+#include "slideshow.h"
 
 TextElement::TextElement() : SlideElement()
 {
@@ -28,14 +29,12 @@ TextElement::TextElement() : SlideElement()
 	setValue(QStringLiteral("width"), 400);
 }
 
-void TextElement::render(QGraphicsScene *scene, const bool interactive)
+QGraphicsItem *TextElement::render(const bool interactive)
 {
-	SlideElement::render(scene, interactive);
-
 	if(!getValue(QStringLiteral("visible")).toBool())
-		return;
+		return 0;
 
-	GraphicsTextItem *item = new GraphicsTextItem(this);
+	GraphicsTextItem *item = new GraphicsTextItem(interactive, this);
 	item->setPlainText(getValue(QStringLiteral("text")).toString());
 	item->setFont(getValue(QStringLiteral("font")).value<QFont>());
 	item->setDefaultTextColor(getValue(QStringLiteral("color")).value<QColor>());
@@ -43,7 +42,7 @@ void TextElement::render(QGraphicsScene *scene, const bool interactive)
 	item->setPos(getValue(QStringLiteral("position")).toPoint());
 
 	connect(item->document(), &QTextDocument::contentsChanged, this, &TextElement::textChanged);
-	scene->addItem(item);
+	return item;
 }
 
 PropertyList TextElement::getProperties() const
@@ -81,8 +80,7 @@ PropertyList TextElement::getProperties() const
 	width->setToolTip(tr("Taille de l'élément"));
 	width->setValue(this->getValue(QStringLiteral("width")));
 	intManager->setMinimum(QStringLiteral("width"), 50);
-	if(this->scene != 0)
-		intManager->setMaximum(QStringLiteral("width"), scene->sceneRect().width());
+	intManager->setMaximum(QStringLiteral("width"), slideshow()->getValue(QStringLiteral("geometry")).toRect().width());
 	intManager->setSuffix(QStringLiteral("width"), tr(" px"));
 	geometry->addProperty(width);
 

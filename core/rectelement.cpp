@@ -25,24 +25,22 @@ RectElement::RectElement() : SlideElement()
 	setValue(QStringLiteral("borderSize"), 1);
 }
 
-void RectElement::render(QGraphicsScene *scene, const bool interactive)
+QGraphicsItem *RectElement::render(const bool interactive)
 {
-	SlideElement::render(scene, interactive);
-
 	if(!getValue(QStringLiteral("visible")).toBool())
-		return;
+		return 0;
 
 	QPen pen(penStyle());
 	pen.setColor(getValue(QStringLiteral("borderColor")).value<QColor>());
-	pen.setWidth(getValue("borderSize", 1).toInt());
+	pen.setWidth(getValue(QStringLiteral("borderSize")).toInt());
 
-	GraphicsRectItem *item = new GraphicsRectItem(this);
+	GraphicsRectItem *item = new GraphicsRectItem(interactive, this);
 	item->setBrush(QBrush(getValue(QStringLiteral("color")).value<QColor>(), brushStyle()));
 	item->setPen(pen);
 	item->setRect(QRect(QPoint(), getValue(QStringLiteral("size")).toSize()));
 	item->setPos(getValue(QStringLiteral("position")).toPoint());
 
-	scene->addItem(item);
+	return item;
 }
 
 PropertyList RectElement::getProperties() const

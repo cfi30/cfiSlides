@@ -30,12 +30,10 @@ QString VideoElement::previewUrl() const
 	return getValue(QStringLiteral("src")).toString();
 }
 
-void VideoElement::render(QGraphicsScene *scene, const bool interactive)
+QGraphicsItem *VideoElement::render(const bool interactive)
 {
-	SlideElement::render(scene, interactive);
-
 	if(!getValue(QStringLiteral("visible")).toBool())
-		return;
+		return 0;
 
 	const QPoint pos = getValue(QStringLiteral("position")).toPoint();
 	const QSize size = getValue(QStringLiteral("size")).toSize();
@@ -52,7 +50,7 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 
 	if(interactive)
 	{
-		MoviePlaceholderItem *item = new MoviePlaceholderItem(this);
+		MoviePlaceholderItem *item = new MoviePlaceholderItem(true, this);
 		item->setRect(QRect(QPoint(), size));
 		item->setPos(pos);
 
@@ -70,7 +68,6 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 			size.width() > icon->pixmap().size().width() &&
 			size.height() > icon->pixmap().size().height()
 		);
-
 		icon->setPos(
 			(size.width() - icon->pixmap().width()) / 2,
 			(size.height() - icon->pixmap().height()) / 2
@@ -79,7 +76,7 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 		label->setTextWidth(size.width());
 		label->setVisible(icon->isVisible());
 
-		scene->addItem(item);
+		return item;
 	}
 	else
 	{
@@ -88,7 +85,6 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 		container->setPen(Qt::NoPen);
 		container->setRect(QRect(QPoint(), size));
 		container->setPos(pos);
-		scene->addItem(container);
 
 		QGraphicsVideoItem *item = new QGraphicsVideoItem(container);
 		item->setSize(size);
@@ -104,6 +100,8 @@ void VideoElement::render(QGraphicsScene *scene, const bool interactive)
 		if(getValue(QStringLiteral("loop")).toBool())
 			playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
 		player->setPlaylist(playlist);
+
+		return container;
 	}
 }
 
