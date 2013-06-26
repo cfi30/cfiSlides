@@ -38,7 +38,7 @@ public:
 	explicit Slide(Slideshow *slideshow);
 	~Slide();
 
-	void render(QGraphicsScene *scene, const bool interactive);
+	void render(QGraphicsScene *scene, const bool interactive) const;
 	QList<SlideElement *> getElements() const;
 	SlideElement *getElement(const int index) const;
 	void addElement(SlideElement *);

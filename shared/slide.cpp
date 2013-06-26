@@ -31,7 +31,7 @@ Slide::~Slide()
 		delete elements.takeFirst();
 }
 
-void Slide::render(QGraphicsScene *scene, const bool interactive)
+void Slide::render(QGraphicsScene *scene, const bool interactive) const
 {
 	QBrush background;
 	background.setColor(getValue(QStringLiteral("backgroundColor")).value<QColor>());

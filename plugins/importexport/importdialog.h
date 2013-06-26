@@ -66,7 +66,7 @@ private:
 
 	bool updateList(const QString directory);
 	const QStringList parseFilter(QString filter) const;
-	ElementType typeOf(const QString file) const;
+	ElementType typeOf(const QString &file) const;
 	SlideElement *createElementFor(const QString &file) const;
 	SlideElement *createElement(const char *type) const;
 	QIcon getIconFor(const QString &file) const;
