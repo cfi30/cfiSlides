@@ -18,11 +18,16 @@
 
 #include "importdialog.h"
 #include "ui_importdialog.h"
+#include "slide.h"
+#include "slideshow.h"
+#include "configuration.h"
 
-ImportDialog::ImportDialog(int slideCount, QWidget *parent) : QDialog(parent), ui(new Ui::ImportDialog)
+ImportDialog::ImportDialog(const int slideCount, const Slideshow *slideshow, QWidget *parent) : QDialog(parent), ui(new Ui::ImportDialog)
 {
 	ui->setupUi(this);
+
 	this->slideCount = slideCount;
+	this->slideshow = const_cast<Slideshow *>(slideshow);
 	this->previousFilter = this->previousSort = this->modified = 0;
 
 	ui->splitter->setStretchFactor(0, 100);
@@ -83,10 +88,11 @@ QList<Slide *> ImportDialog::slides()
 		if(!slide->getElements().empty())
 			slides.append(slide);
 	}
+
 	return slides;
 }
 
-const QStringList ImportDialog::parseFilter(QString filter)
+const QStringList ImportDialog::parseFilter(QString filter) const
 {
 	return filter.remove(QRegExp(QStringLiteral("(^[^\\(]+\\(|\\)[^\\)]*$)")))
 				 .split('\x20', QString::SkipEmptyParts);
@@ -185,7 +191,7 @@ bool ImportDialog::updateList(const QString directory)
 	return true;
 }
 
-ImportDialog::ElementType ImportDialog::typeOf(const QString file)
+ImportDialog::ElementType ImportDialog::typeOf(const QString &file) const
 {
 	const QString extension = QString("*.%1").arg(QFileInfo(file).suffix().toLower());
 	if(parseFilter(IMAGE_FILTER).contains(extension))
@@ -198,26 +204,26 @@ ImportDialog::ElementType ImportDialog::typeOf(const QString file)
 	return NullType;
 }
 
-SlideElement *ImportDialog::createElementFor(const QString file)
+SlideElement *ImportDialog::createElementFor(const QString &file) const
 {
 	const int type = typeOf(file);
 	SlideElement *element = 0;
 	switch(type)
 	{
 		case ImageType:
-			element = (SlideElement *)QMetaType::create(QMetaType::type("ImageElement"));
+			element = createElement("ImageElement");
 			element->setValue(QStringLiteral("name"), QFileInfo(file).baseName());
 			element->setValue(QStringLiteral("src"), file);
-			element->setValue(QStringLiteral("size"), QPixmap(file).size());
+			element->setValue(QStringLiteral("size"), getImageSizeFor(file));
 			break;
 		case MovieType:
-			element = (SlideElement *)QMetaType::create(QMetaType::type("VideoElement"));
+			element = createElement("VideoElement");
 			element->setValue(QStringLiteral("name"), QFileInfo(file).baseName());
 			element->setValue(QStringLiteral("src"), file);
 			element->setValue(QStringLiteral("size"), QDesktopWidget().screenGeometry().size() / DEFAULT_SIZE_SCALE);  // TODO: use movie size
 			break;
 		case AudioType:
-			element = (SlideElement *)QMetaType::create(QMetaType::type("AudioElement"));
+			element = createElement("AudioElement");
 			element->setValue(QStringLiteral("name"), QFileInfo(file).baseName());
 			element->setValue(QStringLiteral("src"), file);
 			break;
@@ -225,7 +231,12 @@ SlideElement *ImportDialog::createElementFor(const QString file)
 	return element;
 }
 
-QIcon ImportDialog::getIconFor(const QString file)
+SlideElement *ImportDialog::createElement(const char *type) const
+{
+	return (SlideElement *)QMetaType::create(QMetaType::type(type));
+}
+
+QIcon ImportDialog::getIconFor(const QString &file) const
 {
 	const int type = typeOf(file);
 	switch(type)
@@ -238,6 +249,16 @@ QIcon ImportDialog::getIconFor(const QString file)
 			return QIcon::fromTheme("audio-x-generic");
 	}
 	return QIcon();
+}
+
+QSize ImportDialog::getImageSizeFor(const QString &file) const
+{
+	QSize size = QPixmap(file).size();
+	const QSize sceneSize = slideshow->getValue(QStringLiteral("geometry")).toRect().size();
+	if(size.width() > sceneSize.width() || size.height() > sceneSize.height())
+		size.scale(sceneSize, Qt::KeepAspectRatio);
+
+	return size;
 }
 
 void ImportDialog::garbageCollector() const

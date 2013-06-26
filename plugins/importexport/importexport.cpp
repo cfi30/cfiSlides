@@ -49,7 +49,7 @@ void ImportExport::launchImport()
 	Slideshow *slideshow;
 	QMetaObject::invokeMethod(window, "getSlideshow", Qt::DirectConnection, Q_RETURN_ARG(Slideshow *, slideshow));
 
-	ImportDialog *dialog = new ImportDialog(slideshow->getSlides().count(), window);
+	ImportDialog *dialog = new ImportDialog(slideshow->getSlides().count(), slideshow, window);
 	connect(dialog, SIGNAL(finished(int)), dialog, SLOT(deleteLater()));
 
 	if(dialog->exec() == QDialog::Rejected)

@@ -30,19 +30,20 @@
 #include <QProgressDialog>
 #include <QDesktopWidget>
 
-#include "slide.h"
-#include "configuration.h"
-
 namespace Ui {
 	class ImportDialog;
 }
+
+class Slide;
+class SlideElement;
+class Slideshow;
 
 class ImportDialog : public QDialog
 {
 	Q_OBJECT
 	
 public:
-	explicit ImportDialog(int slideCount, QWidget *parent = 0);
+	explicit ImportDialog(const int slideCount, const Slideshow *slideshow, QWidget *parent = 0);
 	~ImportDialog();
 	QList<Slide *> slides();
 	
@@ -61,12 +62,15 @@ private:
 	int previousFilter;
 	int previousSort;
 	bool modified;
+	Slideshow *slideshow;
 
 	bool updateList(const QString directory);
-	const QStringList parseFilter(QString filter);
-	ElementType typeOf(const QString file);
-	SlideElement *createElementFor(const QString file);
-	QIcon getIconFor(const QString file);
+	const QStringList parseFilter(QString filter) const;
+	ElementType typeOf(const QString file) const;
+	SlideElement *createElementFor(const QString &file) const;
+	SlideElement *createElement(const char *type) const;
+	QIcon getIconFor(const QString &file) const;
+	QSize getImageSizeFor(const QString &file) const;
 	void garbageCollector() const;
 
 private slots:
