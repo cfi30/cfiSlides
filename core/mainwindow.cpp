@@ -403,7 +403,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::createEmptySlide()
 {
 	Slide *slide = slideshow->createSlide();
-	slide->setValue(QStringLiteral("name"), tr("Diapositive %1").arg(this->slideshow->getSlides().size() + 1));
+	slide->setValue(QStringLiteral("name"), tr("Diapositive %1").arg(slideshow->getSlides().size()));
 	displaySlide(slide);
 
 	if(ui->slideList->count() > 1)
