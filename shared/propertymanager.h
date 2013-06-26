@@ -19,25 +19,20 @@
 #ifndef PROPERTYMANAGER_H
 #define PROPERTYMANAGER_H
 
-#include "limits.h"
+#include <QObject>
+#include <QColor>
+#include <QFont>
+#include <QPoint>
+#include <QSize>
+#include <QMap>
 
-#include <QVariant>
-#include <QIcon>
-#include <QLineEdit>
-#include <QRegExpValidator>
-#include <QLayout>
-#include <QLabel>
-#include <QToolButton>
-#include <QColorDialog>
-#include <QFileDialog>
-#include <QComboBox>
-#include <QCheckBox>
-#include <QSpinBox>
-#include <QPainter>
-#include <QFontDialog>
-
-#include "textinputdialog.h"
 #include "shared.h"
+
+class QLineEdit;
+class QLabel;
+class QCheckBox;
+class QSpinBox;
+class QToolButton;
 
 class CFISLIDES_DLLSPEC PropertyManager : public QObject
 {

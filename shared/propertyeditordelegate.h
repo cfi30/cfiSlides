@@ -20,9 +20,6 @@
 #define PROPERTYDELEGATE_H
 
 #include <QItemDelegate>
-#include <QPainter>
-#include <QApplication>
-#include <QFocusEvent>
 
 #include "property.h"
 #include "shared.h"

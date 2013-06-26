@@ -16,7 +16,12 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QApplication>
+#include <QFocusEvent>
+#include <QPainter>
+
 #include "propertyeditordelegate.h"
+#include "propertymanager.h"
 
 void PropertyEditorDelegate::registerProperty(Property *prop)
 {

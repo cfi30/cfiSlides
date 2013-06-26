@@ -19,22 +19,8 @@
 #ifndef IMPORTEXPORT_H
 #define IMPORTEXPORT_H
 
-#include <QMessageBox>
-#include <QMenuBar>
-#include <QMenu>
-#include <QStackedWidget>
-#include <QStatusBar>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QProgressDialog>
-#include <QListWidget>
-#include <QGraphicsView>
-
+#include <QObject>
 #include "plugin.h"
-#include "slideshow.h"
-
-#include "exportdialog.h"
-#include "importdialog.h"
 
 class ImportExport : public Plugin
 {

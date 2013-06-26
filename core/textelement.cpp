@@ -18,6 +18,7 @@
 
 #include "textelement.h"
 #include "slideshow.h"
+#include "propertymanager.h"
 
 TextElement::TextElement() : SlideElement()
 {

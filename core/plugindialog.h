@@ -20,16 +20,6 @@
 #define PLUGINDIALOG_H
 
 #include <QDialog>
-#include <QTimer>
-#include <QDir>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QSettings>
-#include <QPluginLoader>
-#include <QJsonObject>
-
-#include "plugin.h"
-#include "configuration.h"
 
 namespace Ui {
 	class PluginDialog;

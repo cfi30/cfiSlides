@@ -16,7 +16,15 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QLayout>
+#include <QHeaderView>
+#include <QApplication>
+#include <QKeyEvent>
+#include <QPainter>
+
 #include "propertyeditor.h"
+#include "propertyeditordelegate.h"
+#include "propertymanager.h"
 
 PropertyEditor::PropertyEditor(QWidget *parent) : QWidget(parent)
 {

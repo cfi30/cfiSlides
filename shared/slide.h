@@ -19,16 +19,12 @@
 #ifndef SLIDE_H
 #define SLIDE_H
 
-#include <QApplication>
-#include <QGraphicsScene>
-#include <QGraphicsItem>
-
 #include "slideshowelement.h"
-#include "slideelement.h"
-#include "configuration.h"
 #include "shared.h"
 
+class QGraphicsScene;
 class Slideshow;
+class SlideElement;
 
 class CFISLIDES_DLLSPEC Slide : public SlideshowElement
 {

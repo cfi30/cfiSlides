@@ -16,9 +16,13 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QRect>
+
 #include "slideelement.h"
 #include "slide.h"
 #include "slideshow.h"
+#include "propertymanager.h"
+#include "configuration.h"
 
 SlideElement::SlideElement() : SlideshowElement()
 {

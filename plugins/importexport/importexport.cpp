@@ -16,7 +16,25 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QMessageBox>
+#include <QMenuBar>
+#include <QMenu>
+#include <QStackedWidget>
+#include <QStatusBar>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QProgressDialog>
+#include <QListWidget>
+#include <QGraphicsView>
+
+#include "slideshow.h"
+#include "slide.h"
+#include "slideelement.h"
+#include "configuration.h"
+
 #include "importexport.h"
+#include "exportdialog.h"
+#include "importdialog.h"
 
 ImportExport::ImportExport()
 {

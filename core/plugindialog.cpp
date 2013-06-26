@@ -16,8 +16,18 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QTimer>
+#include <QDir>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QSettings>
+#include <QPluginLoader>
+#include <QJsonObject>
+
 #include "plugindialog.h"
 #include "ui_plugindialog.h"
+#include "plugin.h"
+#include "configuration.h"
 
 PluginDialog::PluginDialog(QWidget *parent) : QDialog(parent), ui(new Ui::PluginDialog)
 {

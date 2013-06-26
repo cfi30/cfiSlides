@@ -19,8 +19,6 @@
 #ifndef SLIDESHOWELEMENT_H
 #define SLIDESHOWELEMENT_H
 
-#include <QGraphicsScene>
-
 #include "baseelement.h"
 #include "property.h"
 #include "shared.h"

@@ -17,6 +17,7 @@
  */
 
 #include "slideshowelement.h"
+#include "propertymanager.h"
 
 PropertyList SlideshowElement::getProperties() const
 {

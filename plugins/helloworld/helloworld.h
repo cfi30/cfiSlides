@@ -19,13 +19,7 @@
 #ifndef HELLOWORLD_H
 #define HELLOWORLD_H
 
-#include <QMessageBox>
-#include <QMenuBar>
-#include <QMenu>
-#include <QToolBar>
-#include <QApplication>
-#include <QDesktopServices>
-#include <QUrl>
+#include <QObject>
 
 #include "plugin.h"
 #include "helloelement.h"

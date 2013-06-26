@@ -17,6 +17,8 @@
  */
 
 #include "lineelement.h"
+#include "propertymanager.h"
+#include "configuration.h"
 
 LineElement::LineElement() : SlideElement()
 {

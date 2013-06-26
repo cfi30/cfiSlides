@@ -16,8 +16,16 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QGraphicsView>
+#include <QProgressDialog>
+#include <QInputDialog>
+#include <QShortcut>
+
 #include "viewwidget.h"
 #include "ui_viewwidget.h"
+#include "slideshow.h"
+#include "slide.h"
+#include "configuration.h"
 
 ViewWidget::ViewWidget(QWidget *parent) : QWidget(parent), ui(new Ui::ViewWidget)
 {

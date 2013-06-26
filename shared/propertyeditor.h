@@ -20,12 +20,11 @@
 #define PROPERTYEDITOR_H
 
 #include <QTreeWidget>
-#include <QLayout>
-#include <QHeaderView>
 
 #include "property.h"
-#include "propertyeditordelegate.h"
 #include "shared.h"
+
+class PropertyEditorDelegate;
 
 class CFISLIDES_DLLSPEC PropertyEditorView : public QTreeWidget
 {

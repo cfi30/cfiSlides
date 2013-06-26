@@ -17,6 +17,8 @@
  */
 
 #include "rectelement.h"
+#include "propertymanager.h"
+#include "configuration.h"
 
 RectElement::RectElement() : SlideElement()
 {

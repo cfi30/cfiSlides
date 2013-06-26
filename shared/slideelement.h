@@ -20,11 +20,12 @@
 #define SLIDEELEMENT_H
 
 #include <QObject>
+#include <QPoint>
 
 #include "slideshowelement.h"
-#include "configuration.h"
 #include "shared.h"
 
+class QGraphicsItem;
 class Slide;
 class Slideshow;
 

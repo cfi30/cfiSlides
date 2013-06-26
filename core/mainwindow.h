@@ -20,48 +20,27 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QCloseEvent>
-#include <QFile>
-#include <QSettings>
-#include <QPainter>
-#include <QGraphicsScene>
-#include <QPixmap>
-#include <QListWidgetItem>
-#include <QTreeWidgetItem>
-#include <QInputDialog>
-#include <QShortcut>
-#include <QPrinter>
-#include <QPrintDialog>
 #include <QTimer>
-#include <QPluginLoader>
-#include <QActionGroup>
-#include <QMediaPlayer>
-#include <QJsonObject>
 #include <QElapsedTimer>
+#include <QMediaPlayer>
 
-#include "graphicsview.h"
-#include "slideshow.h"
-#include "slide.h"
-#include "slideelement.h"
-#include "imageelement.h"
-#include "rectelement.h"
-#include "ellipseelement.h"
-#include "textelement.h"
-#include "videoelement.h"
-#include "audioelement.h"
-#include "lineelement.h"
-#include "viewwidget.h"
-#include "plugindialog.h"
-#include "plugin.h"
-#include "geometrydialog.h"
-#include "configuration.h"
+#include "slideelementtype.h"
+
+class QGraphicsItem;
+class QTreeWidgetItem;
+class QListWidgetItem;
+class QPluginLoader;
+class QActionGroup;
 
 namespace Ui
 {
 	class MainWindow;
 }
+
+class Slideshow;
+class SlideshowElement;
+class Slide;
+class SlideElement;
 
 class MainWindow : public QMainWindow
 {

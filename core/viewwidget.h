@@ -20,12 +20,8 @@
 #define VIEWWIDGET_H
 
 #include <QWidget>
-#include <QGraphicsView>
-#include <QProgressDialog>
-#include <QInputDialog>
-#include <QShortcut>
 
-#include "slideshow.h"
+class Slideshow;
 
 namespace Ui
 {

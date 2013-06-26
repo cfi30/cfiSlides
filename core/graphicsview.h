@@ -20,11 +20,11 @@
 #define GRAPHICSVIEW_H
 
 #include <QGraphicsView>
-#include <QMouseEvent>
-#include <QGraphicsItem>
 
-#include "math.h"
-#include "configuration.h"
+class QGraphicsScene;
+class QMouseEvent;
+class QWheelEvent;
+class QKeyEvent;
 
 class GraphicsView : public QGraphicsView
 {

@@ -16,8 +16,12 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QIcon>
+
 #include "imageelement.h"
 #include "slideshow.h"
+#include "propertymanager.h"
+#include "configuration.h"
 
 ImageElement::ImageElement() : SlideElement()
 {

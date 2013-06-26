@@ -19,7 +19,7 @@
 #ifndef GRAPHICSITEM_H
 #define GRAPHICSITEM_H
 
-#include "slideelement.h"
+#include <QGraphicsScene>
 
 #define GRAPHICS_ITEM(className, parentClass) \
 public:\

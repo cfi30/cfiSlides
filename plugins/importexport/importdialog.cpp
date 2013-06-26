@@ -20,6 +20,7 @@
 #include "ui_importdialog.h"
 #include "slide.h"
 #include "slideshow.h"
+#include "slideelement.h"
 #include "configuration.h"
 
 ImportDialog::ImportDialog(const int slideCount, const Slideshow *slideshow, QWidget *parent) : QDialog(parent), ui(new Ui::ImportDialog)

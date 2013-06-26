@@ -16,6 +16,12 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QPushButton>
+#include <QFileDialog>
+#include <QImageWriter>
+#include <QSettings>
+#include <QMessageBox>
+
 #include "exportdialog.h"
 #include "ui_exportdialog.h"
 

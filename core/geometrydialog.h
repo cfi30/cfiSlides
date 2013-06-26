@@ -20,7 +20,6 @@
 #define GEOMETRYDIALOG_H
 
 #include <QDialog>
-#include <QDesktopWidget>
 
 namespace Ui {
 	class GeometryDialog;

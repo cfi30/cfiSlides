@@ -16,6 +16,8 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QPushButton>
+
 #include "textinputdialog.h"
 #include "ui_textinputdialog.h"
 

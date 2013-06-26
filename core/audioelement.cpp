@@ -16,7 +16,11 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QMediaPlaylist>
+
 #include "audioelement.h"
+#include "propertymanager.h"
+#include "configuration.h"
 
 AudioElement::AudioElement() : SlideElement()
 {

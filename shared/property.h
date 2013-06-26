@@ -22,12 +22,10 @@
 #include <QObject>
 #include <QList>
 #include <QVariant>
-#include <QWidget>
-#include <QLayout>
-#include <QLineEdit>
 
-#include "propertymanager.h"
 #include "shared.h"
+
+class PropertyManager;
 
 class CFISLIDES_DLLSPEC Property
 {

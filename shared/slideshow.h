@@ -21,11 +21,11 @@
 
 #include <QObject>
 #include <QList>
-#include <QDesktopWidget>
 
 #include "baseelement.h"
-#include "slide.h"
 #include "shared.h"
+
+class Slide;
 
 class CFISLIDES_DLLSPEC Slideshow : public BaseElement
 {

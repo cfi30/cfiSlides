@@ -20,8 +20,6 @@
 #define AudioElement_H
 
 #include <QMediaPlayer>
-#include <QMediaPlaylist>
-
 #include "slideelement.h"
 
 class AudioElement : public SlideElement

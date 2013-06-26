@@ -16,7 +16,10 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QFontMetrics>
+
 #include "helloelement.h"
+#include "propertymanager.h"
 
 QGraphicsItem *HelloElement::render(const bool interactive)
 {

@@ -16,7 +16,25 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QVariant>
+#include <QIcon>
+#include <QLineEdit>
+#include <QRegExpValidator>
+#include <QLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QToolButton>
+#include <QColorDialog>
+#include <QFileDialog>
+#include <QComboBox>
+#include <QCheckBox>
+#include <QSpinBox>
+#include <QPainter>
+#include <QFontDialog>
+
 #include "propertymanager.h"
+#include "textinputdialog.h"
+#include "limits.h"
 
 QString PropertyManager::valueToString(const QString &, const QVariant &value) const
 {

@@ -16,7 +16,12 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QMouseEvent>
+#include <QGraphicsItem>
+
 #include "graphicsview.h"
+#include "math.h"
+#include "configuration.h"
 
 GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent) : QGraphicsView(scene, parent)
 {

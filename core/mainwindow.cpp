@@ -16,8 +16,44 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QCloseEvent>
+#include <QFile>
+#include <QSettings>
+#include <QGraphicsScene>
+#include <QPixmap>
+#include <QListWidgetItem>
+#include <QTreeWidgetItem>
+#include <QInputDialog>
+#include <QShortcut>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QPluginLoader>
+#include <QActionGroup>
+#include <QMediaPlayer>
+#include <QJsonObject>
+#include <QProgressDialog>
+#include <QDesktopWidget>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "graphicsview.h"
+#include "slideshow.h"
+#include "slide.h"
+#include "slideelement.h"
+#include "imageelement.h"
+#include "rectelement.h"
+#include "ellipseelement.h"
+#include "textelement.h"
+#include "videoelement.h"
+#include "audioelement.h"
+#include "lineelement.h"
+#include "viewwidget.h"
+#include "plugindialog.h"
+#include "plugin.h"
+#include "geometrydialog.h"
+#include "configuration.h"
 
 MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePlugins, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {

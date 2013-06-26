@@ -16,7 +16,11 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QIcon>
+
 #include "videoelement.h"
+#include "propertymanager.h"
+#include "configuration.h"
 
 VideoElement::VideoElement() : SlideElement()
 {

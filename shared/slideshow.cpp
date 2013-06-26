@@ -16,7 +16,10 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QDesktopWidget>
+
 #include "slideshow.h"
+#include "slide.h"
 
 Slideshow::Slideshow() : BaseElement()
 {

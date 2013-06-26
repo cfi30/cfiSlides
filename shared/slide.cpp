@@ -16,7 +16,12 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QGraphicsScene>
+
 #include "slide.h"
+#include "slideelement.h"
+#include "configuration.h"
+#include "propertymanager.h"
 
 Slide::Slide(Slideshow *slideshow) : SlideshowElement()
 {

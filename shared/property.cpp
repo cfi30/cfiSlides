@@ -17,6 +17,7 @@
  */
 
 #include "property.h"
+#include "propertymanager.h"
 
 Property::Property(PropertyManager *manager, const QString &label, const QString &name)
 {

@@ -20,7 +20,6 @@
 #define HELLOELEMENT_H
 
 #include <QGraphicsRectItem>
-#include <QFontMetrics>
 
 #include "slideelement.h"
 #include "graphicsitem.h"

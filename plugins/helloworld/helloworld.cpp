@@ -16,6 +16,14 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QMessageBox>
+#include <QMenuBar>
+#include <QMenu>
+#include <QToolBar>
+#include <QApplication>
+#include <QDesktopServices>
+#include <QUrl>
+
 #include "helloworld.h"
 
 HelloWorld::HelloWorld()

@@ -20,8 +20,6 @@
 #define TEXTINPUTDIALOG_H
 
 #include <QDialog>
-#include <QPushButton>
-
 #include "shared.h"
 
 namespace Ui

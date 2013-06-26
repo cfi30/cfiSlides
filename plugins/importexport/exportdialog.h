@@ -20,12 +20,6 @@
 #define EXPORTDIALOG_H
 
 #include <QDialog>
-#include <QPushButton>
-#include <QFileDialog>
-#include <QImageWriter>
-#include <QSettings>
-#include <QMessageBox>
-#include <QCloseEvent>
 
 namespace Ui
 {
