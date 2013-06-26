@@ -30,7 +30,7 @@ HelloWorld::HelloWorld()
 
 void HelloWorld::initialize()
 {
-	window->menuBar()->insertMenu(window->findChild<QMenu *>("menuConfiguration")->menuAction(), helloMenu);
+	window->menuBar()->insertMenu(window->findChild<QMenu *>("menuSettings")->menuAction(), helloMenu);
 	window->findChild<QToolBar *>("toolBar")->addAction(helloAction);
 }
 

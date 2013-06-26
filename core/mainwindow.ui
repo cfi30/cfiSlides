@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>399</width>
-    <height>309</height>
+    <width>702</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="unifiedTitleAndToolBarOnMac">
@@ -37,7 +37,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>399</width>
+     <width>702</width>
      <height>19</height>
     </rect>
    </property>
@@ -63,44 +63,14 @@
     <property name="title">
      <string>&amp;Diaporama</string>
     </property>
-    <widget class="QMenu" name="menuInsertElement">
-     <property name="title">
-      <string>Ajouter un élément</string>
-     </property>
-    </widget>
-    <widget class="QMenu" name="menuSelectedElements">
-     <property name="title">
-      <string>Sélection</string>
-     </property>
-     <addaction name="actionDeleteElements"/>
-     <addaction name="actionDuplicateElements"/>
-     <addaction name="separator"/>
-     <addaction name="actionRaiseElement"/>
-     <addaction name="actionLowerElement"/>
-     <addaction name="actionBringElementToFront"/>
-     <addaction name="actionBringElementToBack"/>
-     <addaction name="separator"/>
-     <addaction name="actionAlignToCenter"/>
-     <addaction name="actionAlignToMiddle"/>
-    </widget>
-    <addaction name="actionStart"/>
+    <addaction name="menuLaunch"/>
     <addaction name="actionResizeSlideshow"/>
     <addaction name="separator"/>
     <addaction name="actionAddSlide"/>
-    <addaction name="actionCurrentSlide"/>
-    <addaction name="menuInsertElement"/>
-    <addaction name="menuSelectedElements"/>
-    <addaction name="actionSelectAll"/>
-    <addaction name="actionRepaint"/>
-    <addaction name="actionRenameSlide"/>
-    <addaction name="actionDuplicateSlide"/>
-    <addaction name="actionMoveSlideLeft"/>
-    <addaction name="actionMoveSlideRight"/>
-    <addaction name="actionDeleteSlide"/>
    </widget>
-   <widget class="QMenu" name="menuConfiguration">
+   <widget class="QMenu" name="menuSettings">
     <property name="title">
-     <string>&amp;Configuration</string>
+     <string>&amp;Options</string>
     </property>
     <addaction name="actionToolbar"/>
     <addaction name="actionSlideList"/>
@@ -118,9 +88,43 @@
     <addaction name="actionAboutQt"/>
     <addaction name="actionAboutPlugins"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>&amp;Édition</string>
+    </property>
+    <addaction name="actionDuplicateElements"/>
+    <addaction name="actionDeleteElements"/>
+    <addaction name="actionSelectAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionRaiseElement"/>
+    <addaction name="actionLowerElement"/>
+    <addaction name="actionBringElementToFront"/>
+    <addaction name="actionBringElementToBack"/>
+    <addaction name="actionAlignToCenter"/>
+    <addaction name="actionAlignToMiddle"/>
+   </widget>
+   <widget class="QMenu" name="menuSlide">
+    <property name="title">
+     <string>Diapo&amp;sitive</string>
+    </property>
+    <addaction name="actionRepaint"/>
+    <addaction name="actionRenameSlide"/>
+    <addaction name="actionDuplicateSlide"/>
+    <addaction name="actionMoveSlideLeft"/>
+    <addaction name="actionMoveSlideRight"/>
+    <addaction name="actionDeleteSlide"/>
+   </widget>
+   <widget class="QMenu" name="menuInsert">
+    <property name="title">
+     <string>&amp;Insérer</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuInsert"/>
+   <addaction name="menuSlide"/>
    <addaction name="menuSlideshow"/>
-   <addaction name="menuConfiguration"/>
+   <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
@@ -138,7 +142,7 @@
    <addaction name="actionSave"/>
    <addaction name="separator"/>
    <addaction name="actionAddSlide"/>
-   <addaction name="actionStart"/>
+   <addaction name="menuLaunch"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="propertiesDock">
@@ -572,7 +576,7 @@
     <iconset theme="document-properties"/>
    </property>
    <property name="text">
-    <string>Renommer la diapositive</string>
+    <string>Renommer</string>
    </property>
    <property name="shortcut">
     <string>Shift+R</string>
@@ -583,7 +587,7 @@
     <iconset theme="edit-delete"/>
    </property>
    <property name="text">
-    <string>Supprimer la diapositive</string>
+    <string>Supprimer</string>
    </property>
    <property name="shortcut">
     <string>Shift+Del</string>
@@ -603,7 +607,7 @@
     <string>Shift+F5</string>
    </property>
   </action>
-  <action name="actionStart">
+  <action name="menuLaunch">
    <property name="icon">
     <iconset theme="view-fullscreen"/>
    </property>
@@ -616,7 +620,7 @@
     <iconset theme="edit-copy"/>
    </property>
    <property name="text">
-    <string>Dupliquer la diapositive</string>
+    <string>Dupliquer</string>
    </property>
    <property name="shortcut">
     <string>Shift+C, Shift+V</string>
@@ -683,11 +687,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
-   </property>
-  </action>
-  <action name="actionCurrentSlide">
-   <property name="text">
-    <string>Diapositive actuelle</string>
    </property>
   </action>
   <action name="actionDeleteElements">
@@ -1116,7 +1115,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionStart</sender>
+   <sender>menuLaunch</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>launchViewerFromCurrentSlide()</slot>

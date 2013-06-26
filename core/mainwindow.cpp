@@ -66,29 +66,27 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	ui->mediaDock->setWindowTitle(ui->actionMediaDock->text());
 
 	// this doesn't work when using the designer
-	connect(ui->menuRecentFiles, &QMenu::aboutToShow, this, &MainWindow::displayRecentFiles);
+	connect(ui->menuRecentFiles, &QMenu::aboutToShow, this, &MainWindow::populateRecentFilesMenu);
 	connect(ui->menuRecentFiles, &QMenu::triggered, this, &MainWindow::openRecentFile);
 
-	QMenu *startMenu = new QMenu(this);
-	startMenu->addAction(tr("De la diapositive courante"), this, SLOT(launchViewerFromCurrentSlide()), QKeySequence(Qt::Key_F11));
-	startMenu->addAction(tr("Du début du diaporama"), this, SLOT(launchViewerFromStart()), QKeySequence(QStringLiteral("Shift+F11")));
-	ui->actionStart->setMenu(startMenu);
+	QMenu *launchMenu = new QMenu(this);
+	launchMenu->addAction(tr("De la diapositive courante"), this, SLOT(launchViewerFromCurrentSlide()), QKeySequence(Qt::Key_F11));
+	launchMenu->addAction(tr("Du début du diaporama"), this, SLOT(launchViewerFromStart()), QKeySequence(QStringLiteral("Shift+F11")));
+	ui->menuLaunch->setMenu(launchMenu);
 
-	ui->actionCurrentSlide->setSeparator(true);
+	connect(ui->menuInsert, &QMenu::aboutToShow, this, &MainWindow::populateInsertMenu);
 
-	connect(ui->menuInsertElement, &QMenu::aboutToShow, this, &MainWindow::displayInsertElemMenu);
-
-	currentSlideActions = new QActionGroup(this);
-	currentSlideActions->addAction(ui->menuInsertElement->menuAction());
-	currentSlideActions->addAction(ui->menuSelectedElements->menuAction());
-	currentSlideActions->addAction(ui->actionCurrentSlide);
-	currentSlideActions->addAction(ui->actionSelectAll);
-	currentSlideActions->addAction(ui->actionRenameSlide);
-	currentSlideActions->addAction(ui->actionDuplicateSlide);
-	currentSlideActions->addAction(ui->actionRepaint);
-	currentSlideActions->addAction(ui->actionMoveSlideLeft);
-	currentSlideActions->addAction(ui->actionMoveSlideRight);
-	currentSlideActions->addAction(ui->actionDeleteSlide);
+	slideActions = new QActionGroup(this);
+	slideActions->addAction(ui->menuLaunch);
+	slideActions->addAction(ui->menuInsert->menuAction());
+	slideActions->addAction(ui->menuSlide->menuAction());
+	slideActions->addAction(ui->actionSelectAll);
+	slideActions->addAction(ui->actionRenameSlide);
+	slideActions->addAction(ui->actionDuplicateSlide);
+	slideActions->addAction(ui->actionRepaint);
+	slideActions->addAction(ui->actionMoveSlideLeft);
+	slideActions->addAction(ui->actionMoveSlideRight);
+	slideActions->addAction(ui->actionDeleteSlide);
 
 	selectionActions = new QActionGroup(this);
 	selectionActions->addAction(ui->actionDeleteElements);
@@ -220,7 +218,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 
 	this->slideshow = new Slideshow;
 	this->slideshow->setValues(metadata);
-	this->currentSlideActions->setEnabled(false);
+	this->slideActions->setEnabled(false);
 
 	int slidesCount = 0;
 	in >> slidesCount;
@@ -457,7 +455,7 @@ void MainWindow::displaySlide(Slide *slide)
 	if(currentRow == -1)
 		ui->slideList->setCurrentRow(0);
 
-	this->currentSlideActions->setEnabled(true);
+	this->slideActions->setEnabled(true);
 
 	connect(slide, &SlideshowElement::modified, this, &MainWindow::slideModified);
 	connect(slide, &Slide::moved, this, &MainWindow::slideElementMoved);
@@ -716,7 +714,7 @@ void MainWindow::deleteSlide()
 		currentSlideChanged(ui->slideList->currentRow());
 	else
 	{
-		this->currentSlideActions->setEnabled(false);
+		this->slideActions->setEnabled(false);
 		updateSelectionActions();
 	}
 
@@ -1114,7 +1112,7 @@ QMenu *MainWindow::createSlideContextMenu()
 	menu->addAction(ui->actionRepaint);
 
 	QAction *separator = menu->addSeparator();
-	separator->setText(ui->menuInsertElement->menuAction()->text());
+	separator->setText(tr("Insérer un élément"));
 	separator->setVisible(true);
 
 	menu->addActions(insertActions);
@@ -1237,7 +1235,7 @@ void MainWindow::aboutQt()
 	qApp->aboutQt();
 }
 
-void MainWindow::displayRecentFiles()
+void MainWindow::populateRecentFilesMenu()
 {
 	ui->menuRecentFiles->clear();
 	const QStringList recentFiles = QSettings().value(QStringLiteral("recentFiles")).toStringList();
@@ -1253,10 +1251,10 @@ void MainWindow::openRecentFile(QAction *action)
 	openSlideshow(action->text());
 }
 
-void MainWindow::displayInsertElemMenu()
+void MainWindow::populateInsertMenu()
 {
-	ui->menuInsertElement->clear();
-	ui->menuInsertElement->addActions(insertActions);
+	ui->menuInsert->clear();
+	ui->menuInsert->addActions(insertActions);
 }
 
 void MainWindow::resizeSlideshow()

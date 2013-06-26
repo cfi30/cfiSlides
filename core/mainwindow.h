@@ -121,9 +121,9 @@ public slots:
 	void unloadPlugins();
 	void aboutPlugins();
 	void aboutQt();
-	void displayRecentFiles();
+	void populateRecentFilesMenu();
 	void openRecentFile(QAction *);
-	void displayInsertElemMenu();
+	void populateInsertMenu();
 	void resizeSlideshow();
 	void currentSlideChanged(int currentRow);
 	void slideItemChanged(QListWidgetItem *item);
@@ -167,7 +167,7 @@ private:
 	QList<QAction *> insertActions;
 	QList<QPluginLoader *> plugins;
 	QString commandLineHelp;
-	QActionGroup *currentSlideActions;
+	QActionGroup *slideActions;
 	QActionGroup *selectionActions;
 	SlideElementTypeList pluginTypes;
 	QMediaPlayer *previewPlayer;
