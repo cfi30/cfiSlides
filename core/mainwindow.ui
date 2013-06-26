@@ -94,7 +94,9 @@
     </property>
     <addaction name="actionDuplicateElements"/>
     <addaction name="actionDeleteElements"/>
+    <addaction name="separator"/>
     <addaction name="actionSelectAll"/>
+    <addaction name="actionClearSelection"/>
     <addaction name="separator"/>
     <addaction name="actionRaiseElement"/>
     <addaction name="actionLowerElement"/>
@@ -774,6 +776,14 @@
    </property>
    <property name="text">
     <string>Centrer horizontalement</string>
+   </property>
+  </action>
+  <action name="actionClearSelection">
+   <property name="text">
+    <string>Effacer la sélection</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+A</string>
    </property>
   </action>
  </widget>
@@ -1575,6 +1585,22 @@
     <hint type="destinationlabel">
      <x>199</x>
      <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionClearSelection</sender>
+   <signal>triggered()</signal>
+   <receiver>slideTree</receiver>
+   <slot>clearSelection()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>127</x>
+     <y>170</y>
     </hint>
    </hints>
   </connection>

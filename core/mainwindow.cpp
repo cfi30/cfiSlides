@@ -81,6 +81,7 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	slideActions->addAction(ui->menuInsert->menuAction());
 	slideActions->addAction(ui->menuSlide->menuAction());
 	slideActions->addAction(ui->actionSelectAll);
+	slideActions->addAction(ui->actionClearSelection);
 	slideActions->addAction(ui->actionRenameSlide);
 	slideActions->addAction(ui->actionDuplicateSlide);
 	slideActions->addAction(ui->actionRepaint);
