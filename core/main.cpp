@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 	bool disablePlugins = arguments.contains("--noplugins");
 	arguments.removeAll("--noplugins");
 
-	const QString commandLineHelp = QObject::tr("%3 [--noplugins] [FICHIER]").arg(app.applicationFilePath());
+	const QString commandLineHelp = QObject::tr("%1 [--noplugins] [FICHIER]").arg(app.applicationFilePath());
 	MainWindow window(commandLineHelp, arguments.size() > 1 ? arguments[1] : QString(), disablePlugins);
 	window.show();
 

@@ -1356,8 +1356,7 @@ void MainWindow::insertElementFromAction()
 	const Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
 
 	SlideElement *element = (SlideElement *)QMetaType::create(action->data().toInt());
-	element->setValue(QStringLiteral("name"), tr("%1 %2").arg(action->text()));
-	element->setValue(QStringLiteral("name"), element->getValue(QStringLiteral("name")).toString().arg(slide->getElements().size() + 1));
+	element->setValue(QStringLiteral("name"), tr("%1 %2").arg(action->text()).arg(slide->getElements().size() + 1));
 	insertElement(element);
 }
 
@@ -1553,10 +1552,13 @@ void MainWindow::copyElements()
 
 void MainWindow::pasteElements()
 {
+	const Slide *slide = slideshow->getSlide(ui->slideList->currentRow());
+
 	foreach(const SlideElement *source, clipboard)
 	{
 		SlideElement *copy = source->clone();
-		copy->setValue(QStringLiteral("name"), tr("Copie de %1").arg(source->getValue(QStringLiteral("name")).toString()));
+		const QString newName = slide == source->slide() ? tr("Copie de %1") : "%1";
+		copy->setValue(QStringLiteral("name"), newName.arg(source->getValue(QStringLiteral("name")).toString()));
 
 		insertElement(copy);
 	}
