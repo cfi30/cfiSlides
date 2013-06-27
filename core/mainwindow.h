@@ -89,7 +89,7 @@ public slots:
 	void slideElementMoved();
 	void launchViewerFromCurrentSlide();
 	void launchViewerFromStart();
-	void copySlide();
+	void duplicateSlide();
 	void selectPrevSlide();
 	void selectNextSlide();
 	void about();
@@ -115,7 +115,6 @@ public slots:
 	void bringElementToBack();
 	void moveSlideLeft();
 	void moveSlideRight();
-	void duplicateElements();
 	void playPreview();
 	void pausePreview();
 	void setPreviewVolume(int);
@@ -126,6 +125,9 @@ public slots:
 	void previewStateChanged(QMediaPlayer::State);
 	void alignElementsToCenter();
 	void alignElementsToMiddle();
+	void cutElements();
+	void copyElements();
+	void pasteElements();
 
 private:
 	void updatePropertiesEditor(const SlideshowElement *element);
@@ -138,6 +140,7 @@ private:
 	QString msToString(const int ms) const;
 	void launchViewer(const int from);
 	void appendToRecentFiles(const QString openedFile);
+	void clearClipboard();
 
 	Ui::MainWindow *ui;
 	Slideshow *slideshow;
@@ -151,6 +154,7 @@ private:
 	SlideElementTypeList pluginTypes;
 	QMediaPlayer *previewPlayer;
 	QElapsedTimer viewerTimer;
+	QList<SlideElement *> clipboard;
 
 private slots:
 	void displayViewContextMenu(const QPoint &);

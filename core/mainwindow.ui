@@ -92,7 +92,9 @@
     <property name="title">
      <string>&amp;Édition</string>
     </property>
-    <addaction name="actionDuplicateElements"/>
+    <addaction name="actionCutElements"/>
+    <addaction name="actionCopyElements"/>
+    <addaction name="actionPasteElements"/>
     <addaction name="actionDeleteElements"/>
     <addaction name="separator"/>
     <addaction name="actionSelectAll"/>
@@ -702,17 +704,6 @@
     <string>Del</string>
    </property>
   </action>
-  <action name="actionDuplicateElements">
-   <property name="icon">
-    <iconset theme="edit-copy"/>
-   </property>
-   <property name="text">
-    <string>Dupliquer</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+C, Ctrl+V</string>
-   </property>
-  </action>
   <action name="actionRaiseElement">
    <property name="icon">
     <iconset theme="object-order-raise"/>
@@ -784,6 +775,42 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+A</string>
+   </property>
+  </action>
+  <action name="actionCutElements">
+   <property name="icon">
+    <iconset theme="edit-cut"/>
+   </property>
+   <property name="text">
+    <string>Couper</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionCopyElements">
+   <property name="icon">
+    <iconset theme="edit-copy"/>
+   </property>
+   <property name="text">
+    <string>Copier</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionPasteElements">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="edit-paste"/>
+   </property>
+   <property name="text">
+    <string>Coller</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
    </property>
   </action>
  </widget>
@@ -1144,7 +1171,7 @@
    <sender>actionDuplicateSlide</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>copySlide()</slot>
+   <slot>duplicateSlide()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -1321,22 +1348,6 @@
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>moveSlideRight()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>154</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionDuplicateElements</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>duplicateElements()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -1604,6 +1615,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionCopyElements</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>copyElements()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCutElements</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>cutElements()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionPasteElements</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pasteElements()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>createEmptySlide()</slot>
@@ -1615,7 +1674,7 @@
   <slot>renameSlide()</slot>
   <slot>refreshSlide()</slot>
   <slot>deleteSlide()</slot>
-  <slot>copySlide()</slot>
+  <slot>duplicateSlide()</slot>
   <slot>managePlugins()</slot>
   <slot>print()</slot>
   <slot>updateMediaPreview()</slot>
@@ -1624,7 +1683,6 @@
   <slot>deleteElements()</slot>
   <slot>moveSlideLeft()</slot>
   <slot>moveSlideRight()</slot>
-  <slot>duplicateElements()</slot>
   <slot>raiseElement()</slot>
   <slot>lowerElement()</slot>
   <slot>currentSlideChanged(int)</slot>
@@ -1644,5 +1702,8 @@
   <slot>launchViewerFromStart()</slot>
   <slot>alignElementsToCenter()</slot>
   <slot>alignElementsToMiddle()</slot>
+  <slot>copyElements()</slot>
+  <slot>pasteElements()</slot>
+  <slot>cutElements()</slot>
  </slots>
 </ui>

@@ -9,7 +9,9 @@
 <file>./icons/oxygen/16x16/document-save-as.png</file>
 <file>./icons/oxygen/16x16/document-save.png</file>
 <file>./icons/oxygen/16x16/edit-copy.png</file>
+<file>./icons/oxygen/16x16/edit-cut.png</file>
 <file>./icons/oxygen/16x16/edit-delete.png</file>
+<file>./icons/oxygen/16x16/edit-paste.png</file>
 <file>./icons/oxygen/16x16/emblem-locked.png</file>
 <file>./icons/oxygen/16x16/help-about.png</file>
 <file>./icons/oxygen/16x16/insert-horizontal-rule.png</file>

@@ -102,15 +102,20 @@ Slide *SlideElement::slide() const
 	return parentSlide;
 }
 
-void SlideElement::setSlide(Slide *slide)
+void SlideElement::setSlide(const Slide *slide)
 {
 	if(parentSlide)
 		qFatal("this element is already attached to a slide");
 
-	parentSlide = slide;
+	parentSlide = const_cast<Slide *>(slide);
 }
 
 Slideshow *SlideElement::slideshow() const
 {
 	return parentSlide->slideshow();
+}
+
+SlideElement *SlideElement::clone() const
+{
+	return (SlideElement *)QMetaType::create(QMetaType::type(type()), this);
 }

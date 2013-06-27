@@ -43,8 +43,9 @@ public:
 	int getIndex() const;
 	void setIndex(const int newIndex);
 	Slide *slide() const;
-	void setSlide(Slide *slide);
+	void setSlide(const Slide *slide);
 	Slideshow *slideshow() const;
+	SlideElement *clone() const;
 	
 signals:
 	void moved();

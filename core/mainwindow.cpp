@@ -126,8 +126,9 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	slideActions->addAction(ui->actionDeleteSlide);
 
 	selectionActions = new QActionGroup(this);
+	selectionActions->addAction(ui->actionCutElements);
+	selectionActions->addAction(ui->actionCopyElements);
 	selectionActions->addAction(ui->actionDeleteElements);
-	selectionActions->addAction(ui->actionDuplicateElements);
 	selectionActions->addAction(ui->actionRaiseElement);
 	selectionActions->addAction(ui->actionLowerElement);
 	selectionActions->addAction(ui->actionBringElementToFront);
@@ -173,6 +174,7 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 
 MainWindow::~MainWindow()
 {
+	clearClipboard();
 	unloadPlugins();
 	delete ui;
 }
@@ -894,7 +896,7 @@ void MainWindow::deleteElements()
 
 	QList<int> indexesToRemove;
 	foreach(const QTreeWidgetItem *item, ui->slideTree->selectedItems())
-		indexesToRemove.append(item->data(0, Qt::UserRole).toInt());
+		indexesToRemove << item->data(0, Qt::UserRole).toInt();
 
 	qSort(indexesToRemove.begin(), indexesToRemove.end());
 	QListIterator<int> iterator(indexesToRemove);
@@ -906,32 +908,6 @@ void MainWindow::deleteElements()
 	updatePropertiesEditor(slide);
 	updateMediaPreview();
 	updateSelectionActions();
-
-	setWindowModified(true);
-}
-
-void MainWindow::duplicateElements()
-{
-	const int index = ui->slideList->currentRow();
-	Slide *slide = this->slideshow->getSlide(index);
-
-	const int duplicatedCount = ui->slideTree->selectedItems().size();
-	foreach(const QTreeWidgetItem *item, ui->slideTree->selectedItems())
-	{
-		const int elementIndex = item->data(0, Qt::UserRole).toInt();
-		const SlideElement *sourceElement = slide->getElement(elementIndex);
-		SlideElement *newElement = (SlideElement *)QMetaType::create(QMetaType::type(sourceElement->type()), sourceElement);
-		newElement->setValue(QStringLiteral("name"), tr("Copie de %1").arg(sourceElement->getValue(QStringLiteral("name")).toString()));
-		if(sceneItemFromIndex(elementIndex))
-			newElement->setValue(QStringLiteral("position"), sourceElement->getValue(QStringLiteral("position")).toPoint() + QPoint(COPY_SHIFT, COPY_SHIFT));
-		slide->addElement(newElement);
-	}
-
-	renderSlide(index);
-
-	ui->slideTree->clearSelection();
-	for(int i = 0; i < duplicatedCount; i++)
-		ui->slideTree->topLevelItem(0)->child(i)->setSelected(true);
 
 	setWindowModified(true);
 }
@@ -1042,14 +1018,14 @@ void MainWindow::viewerClosed()
 	statusBar()->showMessage(tr("Temps de lecture : %1").arg(msToString(viewerTimer.elapsed())));
 }
 
-void MainWindow::copySlide()
+void MainWindow::duplicateSlide()
 {
 	const Slide *sourceSlide = this->slideshow->getSlide(ui->slideList->currentRow());
 	Slide *newSlide = this->slideshow->createSlide();
 	newSlide->setValues(sourceSlide->getValues());
 	newSlide->setValue(QStringLiteral("name"), tr("Copie de %1").arg(sourceSlide->getValue(QStringLiteral("name")).toString()));
 	foreach(SlideElement *sourceElement, sourceSlide->getElements())
-		newSlide->addElement((SlideElement *)QMetaType::create(QMetaType::type(sourceElement->type()), sourceElement));
+		newSlide->addElement(sourceElement->clone());
 
 	displaySlide(newSlide);
 
@@ -1145,6 +1121,8 @@ QMenu *MainWindow::createSlideContextMenu()
 		menu->addActions(selectionActions->actions());
 		menu->addSeparator();
 	}
+
+	menu->addAction(ui->actionPasteElements);
 	menu->addAction(ui->actionSelectAll);
 	menu->addAction(ui->actionRepaint);
 
@@ -1337,19 +1315,19 @@ void MainWindow::registerElementType(const SlideElementType &type)
 	action->setData(type.getTypeId());
 	connect(action, &QAction::triggered, this, &MainWindow::insertElementFromAction);
 
-	insertActions.append(action);
+	insertActions << action;
 }
 
 void MainWindow::unregisterElementType(const SlideElementType &type)
 {
 	const int actionCount = insertActions.size();
-	for(int i = 0; i < actionCount; i++)
+	for(int index = 0; index < actionCount; index++)
 	{
-		const QAction *action = insertActions[i];
+		const QAction *action = insertActions[index];
 		if(action->data().toInt() != type.getTypeId())
 			continue;
 
-		insertActions.takeAt(i)->deleteLater();
+		insertActions.takeAt(index)->deleteLater();
 		break;
 	}
 }
@@ -1358,7 +1336,6 @@ void MainWindow::insertElement(SlideElement *element)
 {
 	const int index = ui->slideList->currentRow();
 	Slide *slide = this->slideshow->getSlide(index);
-	element->setValue(QStringLiteral("name"), element->getValue(QStringLiteral("name")).toString().arg(slide->getElements().size() + 1));
 	slide->addElement(element);
 
 	renderSlide(index);
@@ -1376,10 +1353,11 @@ void MainWindow::insertElement(SlideElement *element)
 void MainWindow::insertElementFromAction()
 {
 	const QAction *action = qobject_cast<QAction *>(sender());
+	const Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
 
 	SlideElement *element = (SlideElement *)QMetaType::create(action->data().toInt());
 	element->setValue(QStringLiteral("name"), tr("%1 %2").arg(action->text()));
-
+	element->setValue(QStringLiteral("name"), element->getValue(QStringLiteral("name")).toString().arg(slide->getElements().size() + 1));
 	insertElement(element);
 }
 
@@ -1539,4 +1517,51 @@ void MainWindow::alignElementsToCenter()
 void MainWindow::alignElementsToMiddle()
 {
 	alignElementsTo(ALIGN_MIDDLE);
+}
+
+void MainWindow::clearClipboard()
+{
+	ui->actionPasteElements->setDisabled(true);
+	while(!clipboard.isEmpty())
+		delete clipboard.takeFirst();
+}
+
+void MainWindow::cutElements()
+{
+	copyElements();
+	deleteElements();
+}
+
+void MainWindow::copyElements()
+{
+	clearClipboard();
+
+	const Slide *slide = slideshow->getSlide(ui->slideList->currentRow());
+	QListIterator<QTreeWidgetItem *> iterator(ui->slideTree->selectedItems());
+	iterator.toBack();
+	while(iterator.hasPrevious())
+	{
+		const QTreeWidgetItem *item = iterator.previous();
+		SlideElement *element = slide->getElement(item->data(0, Qt::UserRole).toInt())->clone();
+		element->setSlide(slide);
+
+		clipboard << element;
+	}
+
+	ui->actionPasteElements->setEnabled(true);
+}
+
+void MainWindow::pasteElements()
+{
+	foreach(const SlideElement *source, clipboard)
+	{
+		SlideElement *copy = source->clone();
+		copy->setValue(QStringLiteral("name"), tr("Copie de %1").arg(source->getValue(QStringLiteral("name")).toString()));
+
+		insertElement(copy);
+	}
+
+	const int clipboardSize = clipboard.size();
+	for(int index = 1; index < clipboardSize; index++)
+		ui->slideTree->topLevelItem(0)->child(index)->setSelected(true);
 }
