@@ -64,7 +64,7 @@ void Slide::render(QGraphicsScene *scene, const bool interactive) const
 
 	scene->addRect(scene->sceneRect(), QPen(Qt::NoPen), background);
 
-	foreach(SlideElement *element, this->elements)
+	foreach(SlideElement *element, elements)
 	{
 		QGraphicsItem *item = element->render(interactive);
 		if(!item) continue;
@@ -75,17 +75,17 @@ void Slide::render(QGraphicsScene *scene, const bool interactive) const
 
 QList<SlideElement *> Slide::getElements() const
 {
-	return this->elements;
+	return elements;
 }
 
 SlideElement *Slide::getElement(const int index) const
 {
-	return this->elements[index];
+	return elements[index];
 }
 
 void Slide::addElement(SlideElement *element)
 {
-	element->setIndex(this->elements.count());
+	element->setIndex(elements.size());
 	element->setSlide(this);
 
 	connect(element, &SlideshowElement::modified, this, &Slide::elementChanged);
@@ -93,26 +93,25 @@ void Slide::addElement(SlideElement *element)
 	connect(element, &SlideElement::refresh, this, &Slide::refreshRequested);
 	connect(element, &SlideElement::updateProperties, this, &Slide::updatePropertiesRequested);
 
-	this->elements.append(element);
+	elements << element;
 }
 
 void Slide::removeElement(const int index)
 {
-	delete getElement(index);
-	this->elements.removeAt(index);
+	delete elements.takeAt(index);
 
-	int elementsCount = this->elements.count();
-	for(int i = 0; i < elementsCount; i++)
-		this->elements[i]->setIndex(i);
+	const int elementsCount = elements.size();
+	for(int index = 0; index < elementsCount; index++)
+		elements[index]->setIndex(index);
 }
 
 void Slide::moveElement(const int from, const int to)
 {
-	this->elements.move(from, to);
+	elements.move(from, to);
 
-	int elementsCount = this->elements.count();
-	for(int i = 0; i < elementsCount; i++)
-		this->elements[i]->setIndex(i);
+	const int elementsCount = elements.size();
+	for(int index = 0; index < elementsCount; index++)
+		elements[index]->setIndex(index);
 }
 
 PropertyList Slide::getProperties() const

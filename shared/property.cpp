@@ -84,6 +84,6 @@ PropertyList Property::getProperties() const
 
 void Property::addProperty(Property *prop)
 {
-	subprops.append(prop);
+	subprops << prop;
 }
 

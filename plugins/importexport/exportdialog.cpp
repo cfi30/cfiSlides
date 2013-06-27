@@ -113,7 +113,7 @@ int ExportDialog::to() const
 
 void ExportDialog::validate()
 {
-	if(QDir(directory()).entryList(QDir::Files).count() > 0)
+	if(QDir(directory()).entryList(QDir::Files).size() > 0)
 	{
 		const int result = QMessageBox::question(this, this->windowTitle(), tr("Le dossier sélectionné n'est pas vide. Désirez-vous poursuivre l'exportation dans ce dossier ?<br />Les fichiers existants seront écrasés."), QMessageBox::Yes | QMessageBox::Cancel);
 		if(result == QMessageBox::Cancel)

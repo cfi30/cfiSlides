@@ -67,7 +67,7 @@ void ImportExport::launchImport()
 	Slideshow *slideshow;
 	QMetaObject::invokeMethod(window, "getSlideshow", Qt::DirectConnection, Q_RETURN_ARG(Slideshow *, slideshow));
 
-	ImportDialog *dialog = new ImportDialog(slideshow->getSlides().count(), slideshow, window);
+	ImportDialog *dialog = new ImportDialog(slideshow->getSlides().size(), slideshow, window);
 	connect(dialog, SIGNAL(finished(int)), dialog, SLOT(deleteLater()));
 
 	if(dialog->exec() == QDialog::Rejected)
@@ -93,7 +93,7 @@ void ImportExport::launchImport()
 		slide->setValues(tempSlide->getValues());
 
 		foreach(SlideElement *element, tempSlide->getElements())
-			slide->addElement((SlideElement *)QMetaType::create(QMetaType::type(element->type()), element));
+			slide->addElement(element->clone());
 
 		QMetaObject::invokeMethod(window, "displaySlide", Qt::DirectConnection, Q_ARG(Slide *, slide));
 		QMetaObject::invokeMethod(window, "setWindowModified", Qt::DirectConnection, Q_ARG(bool, true));

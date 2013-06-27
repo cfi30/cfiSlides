@@ -70,12 +70,12 @@ void PluginDialog::loadPlugins()
 
 		if(enabledOnes.contains(fileName))
 		{
-			enabledPlugins.append(fileName);
+			enabledPlugins << fileName;
 			ui->enabledPluginsList->addItem(item);
 		}
 		else
 		{
-			availablePlugins.append(fileName);
+			availablePlugins << fileName;
 			ui->availablePluginsList->addItem(item);
 		}
 	}
@@ -101,7 +101,7 @@ void PluginDialog::on_enableButton_clicked()
 	int currentRow = ui->availablePluginsList->currentRow();
 	QListWidgetItem *item = ui->availablePluginsList->item(currentRow);
 
-	enabledPlugins.append(availablePlugins[currentRow]);
+	enabledPlugins << availablePlugins[currentRow];
 	ui->enabledPluginsList->addItem(item->text());
 
 	availablePlugins.removeAt(currentRow);
@@ -117,7 +117,7 @@ void PluginDialog::on_disableButton_clicked()
 	int currentRow = ui->enabledPluginsList->currentRow();
 	QListWidgetItem *item = ui->enabledPluginsList->item(currentRow);
 
-	availablePlugins.append(enabledPlugins[currentRow]);
+	availablePlugins << enabledPlugins[currentRow];
 	ui->availablePluginsList->addItem(item->text());
 
 	enabledPlugins.removeAt(currentRow);

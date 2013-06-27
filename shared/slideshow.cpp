@@ -45,13 +45,13 @@ Slide *Slideshow::getSlide(const int index) const
 Slide *Slideshow::createSlide()
 {
 	Slide *slide = new Slide(this);
-	slides.append(slide);
+	slides << slide;
 	return slide;
 }
 
 void Slideshow::addSlide(Slide *slide)
 {
-	slides.append(slide);
+	slides << slide;
 }
 
 void Slideshow::moveSlide(const int from, const int to)

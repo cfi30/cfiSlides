@@ -1455,7 +1455,7 @@ void MainWindow::appendToRecentFiles(const QString openedFile)
 	QStringList recentFiles = QSettings().value(QStringLiteral("recentFiles")).toStringList();
 	recentFiles.insert(0, openedFile);
 	recentFiles.removeDuplicates();
-	if(recentFiles.count() > RECENT_FILES_MAX)
+	if(recentFiles.size() > RECENT_FILES_MAX)
 		recentFiles.removeLast();
 
 	QSettings().setValue(QStringLiteral("recentFiles"), recentFiles);

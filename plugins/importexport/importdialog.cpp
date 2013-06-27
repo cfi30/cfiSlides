@@ -87,7 +87,7 @@ QList<Slide *> ImportDialog::slides()
 		}
 
 		if(!slide->getElements().empty())
-			slides.append(slide);
+			slides << slide;
 	}
 
 	return slides;
