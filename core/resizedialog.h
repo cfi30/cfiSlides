@@ -16,32 +16,38 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GEOMETRYDIALOG_H
-#define GEOMETRYDIALOG_H
+#ifndef RESIZEDIALOG_H
+#define RESIZEDIALOG_H
 
 #include <QDialog>
 
+class QScreen;
+class Slideshow;
+
 namespace Ui {
-	class GeometryDialog;
+	class ResizeDialog;
 }
 
-class GeometryDialog : public QDialog
+class ResizeDialog : public QDialog
 {
 	Q_OBJECT
 	
 public:
-	explicit GeometryDialog(QRect rect, QWidget *parent = 0);
-	~GeometryDialog();
-	QRect getRect() const;
+	explicit ResizeDialog(const QSize &currentSize, QWidget *parent = 0);
+	~ResizeDialog();
+	QSize getSize() const;
 
 private slots:
+	void selectedScreenChanged(int);
 	void lockRatioToggled(bool);
 	void widthChanged(int);
 	void heightChanged(int);
 
 private:
-	Ui::GeometryDialog *ui;
+	void addScreen(const QScreen *);
+	Ui::ResizeDialog *ui;
+	QList<QSize> screenSizes;
 	double ratio;
 };
 
-#endif // GEOMETRYDIALOG_H
+#endif // RESIZEDIALOG_H

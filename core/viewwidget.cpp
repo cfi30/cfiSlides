@@ -86,6 +86,8 @@ ViewWidget::~ViewWidget()
 
 void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 {
+	this->slideshow = slideshow;
+
 	QProgressDialog *progress = new QProgressDialog(qobject_cast<QWidget *>(parent()));
 	progress->setWindowTitle(this->windowTitle());
 	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
@@ -96,14 +98,12 @@ void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 
 	const int renderStart = startIndex - (MAX_LOADED_SLIDES / 2);
 	const int renderEnd = startIndex + (MAX_LOADED_SLIDES / 2);
+	const QRect sceneRect = QRect(QPoint(), slideshow->getValue(QStringLiteral("size")).toSize());
 
-	this->slideshow = slideshow;
 	int index = 0;
 	foreach(Slide *slide, slideshow->getSlides())
 	{
 		progress->setValue(index + 1);
-
-		const QRect sceneRect = slideshow->getValue("geometry").toRect();
 
 		QGraphicsScene *scene = new QGraphicsScene(this);
 		scene->setSceneRect(sceneRect);

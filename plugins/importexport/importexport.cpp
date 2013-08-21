@@ -144,7 +144,7 @@ void ImportExport::launchExport()
 		progress->setValue(index + 1);
 
 		QGraphicsScene *scene = new QGraphicsScene;
-		scene->setSceneRect(slideshow->getValue(QStringLiteral("geometry")).toRect());
+		scene->setSceneRect(QRect(QPoint(), slideshow->getValue(QStringLiteral("size")).toSize()));
 		scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 
 		QPixmap pixmap(scene->sceneRect().size().toSize());

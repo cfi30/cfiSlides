@@ -22,8 +22,8 @@ HEADERS += \
 	audioelement.h \
 	lineelement.h \
 	plugindialog.h \
+	resizedialog.h \
 	../shared/plugin.h \
-	geometrydialog.h \
 
 SOURCES += \
 	main.cpp \
@@ -38,13 +38,13 @@ SOURCES += \
 	audioelement.cpp \
 	lineelement.cpp \
 	plugindialog.cpp \
-	geometrydialog.cpp \
+	resizedialog.cpp \
 
 FORMS += \
 	mainwindow.ui \
 	viewwidget.ui \
 	plugindialog.ui \
-	geometrydialog.ui \
+	resizedialog.ui \
 
 TRANSLATIONS = \
 	strings_fr.ts \

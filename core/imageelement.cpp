@@ -97,7 +97,7 @@ void ImageElement::propertyChanged(const QString &name, const QVariant &value)
 		QSize size = QPixmap(value.toString()).size();
 		if(!size.isNull())
 		{
-			const QSize sceneSize = slideshow()->getValue(QStringLiteral("geometry")).toRect().size();
+			const QSize sceneSize = slideshow()->getValue(QStringLiteral("size")).toSize();
 			if(size.width() > sceneSize.width() || size.height() > sceneSize.height())
 				size.scale(sceneSize, Qt::KeepAspectRatio);
 

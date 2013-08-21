@@ -52,7 +52,7 @@
 #include "viewwidget.h"
 #include "plugindialog.h"
 #include "plugin.h"
-#include "geometrydialog.h"
+#include "resizedialog.h"
 #include "configuration.h"
 
 MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePlugins, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -460,8 +460,9 @@ void MainWindow::displaySlide(Slide *slide)
 	statusBar()->showMessage(tr("Affichage de %1...").arg(slide->getValue(QStringLiteral("name")).toString()));
 
 	QGraphicsScene *scene = new QGraphicsScene;
-	scene->setSceneRect(slideshow->getValue(QStringLiteral("geometry")).toRect());
+	scene->setSceneRect(QRect(QPoint(), slideshow->getValue(QStringLiteral("size")).toSize()));
 	scene->setItemIndexMethod(QGraphicsScene::NoIndex);
+
 	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateCurrentSlideTree);
 	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateSelectionActions);
 	connect(scene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateCurrentPropertiesEditor);
@@ -1274,16 +1275,14 @@ void MainWindow::populateInsertMenu()
 
 void MainWindow::resizeSlideshow()
 {
-	GeometryDialog *dialog = new GeometryDialog(slideshow->getValue(QStringLiteral("geometry")).toRect(), this);
+	ResizeDialog *dialog = new ResizeDialog(slideshow->getValue(QStringLiteral("size")).toSize(), this);
 	if(dialog->exec() == QDialog::Rejected)
 		return;
 
-	QRect newRect = dialog->getRect();
-	if(newRect.isNull())
-		newRect = QDesktopWidget().screenGeometry();
-	slideshow->setValue(QStringLiteral("geometry"), newRect);
-
 	const int slideCount = ui->displayWidget->count();
+	const QSize newSize = dialog->getSize();
+	const QRect newRect = QRect(QPoint(), newSize);
+	slideshow->setValue(QStringLiteral("size"), newSize);
 
 	QProgressDialog *progress = new QProgressDialog(this);
 	progress->setWindowTitle(ui->actionResizeSlideshow->text());

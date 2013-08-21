@@ -255,7 +255,7 @@ QIcon ImportDialog::getIconFor(const QString &file) const
 QSize ImportDialog::getImageSizeFor(const QString &file) const
 {
 	QSize size = QPixmap(file).size();
-	const QSize sceneSize = slideshow->getValue(QStringLiteral("geometry")).toRect().size();
+	const QSize sceneSize = slideshow->getValue(QStringLiteral("size")).toSize();
 	if(size.width() > sceneSize.width() || size.height() > sceneSize.height())
 		size.scale(sceneSize, Qt::KeepAspectRatio);
 

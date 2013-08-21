@@ -81,7 +81,7 @@ PropertyList TextElement::getProperties() const
 	width->setToolTip(tr("Taille de l'élément"));
 	width->setValue(this->getValue(QStringLiteral("width")));
 	intManager->setMinimum(QStringLiteral("width"), 50);
-	intManager->setMaximum(QStringLiteral("width"), slideshow()->getValue(QStringLiteral("geometry")).toRect().width());
+	intManager->setMaximum(QStringLiteral("width"), slideshow()->getValue(QStringLiteral("size")).toSize().width());
 	intManager->setSuffix(QStringLiteral("width"), tr(" px"));
 	geometry->addProperty(width);
 

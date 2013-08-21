@@ -23,7 +23,7 @@
 
 Slideshow::Slideshow() : BaseElement()
 {
-	setValue(QStringLiteral("geometry"), QDesktopWidget().screenGeometry());
+	setValue(QStringLiteral("size"), QDesktopWidget().screenGeometry().size());
 }
 
 Slideshow::~Slideshow()

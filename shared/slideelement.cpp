@@ -72,7 +72,7 @@ PropertyList SlideElement::getProperties() const
 	size->setToolTip(tr("Taille de l'élément"));
 	size->setValue(getValue(QStringLiteral("size")));
 	sizeManager->setMinimum(QStringLiteral("size"), MINIMUM_SIZE);
-	sizeManager->setMaximum(QStringLiteral("size"), slideshow()->getValue(QStringLiteral("geometry")).toRect().size());
+	sizeManager->setMaximum(QStringLiteral("size"), slideshow()->getValue(QStringLiteral("size")).toSize());
 	geometry->addProperty(size);
 
 	return PropertyList()
