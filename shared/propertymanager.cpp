@@ -359,7 +359,7 @@ QWidget *SizePropertyManager::createEditor(const QString &propName, const QVaria
 
 	lockRatio = new QToolButton(widget);
 	lockRatio->setFixedWidth(20);
-	lockRatio->setIcon(QIcon::fromTheme(QStringLiteral("emblem-locked")));
+	lockRatio->setIcon(QIcon(QStringLiteral(":/icons/oxygen/16x16/emblem-locked")));
 	lockRatio->setCheckable(true);
 	layout->addWidget(lockRatio);
 
