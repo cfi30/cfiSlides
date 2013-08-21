@@ -17,7 +17,7 @@
    <string>Lecture du diaporama</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: black</string>
+   <string notr="true">#ViewWidget { background-color: black }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
