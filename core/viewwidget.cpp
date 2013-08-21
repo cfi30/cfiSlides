@@ -20,6 +20,7 @@
 #include <QProgressDialog>
 #include <QInputDialog>
 #include <QShortcut>
+#include <QTimer>
 
 #include "viewwidget.h"
 #include "ui_viewwidget.h"
@@ -87,28 +88,15 @@ ViewWidget::~ViewWidget()
 void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 {
 	this->slideshow = slideshow;
-
-	QProgressDialog *progress = new QProgressDialog(qobject_cast<QWidget *>(parent()));
-	progress->setWindowTitle(this->windowTitle());
-	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
-	progress->setCancelButtonText(QString());
-	progress->setLabelText(tr("Pré-affichage du diaporama en cours..."));
-	progress->setMaximum(slideshow->getSlides().size());
-	progress->open();
-
-	const int renderStart = startIndex - (MAX_LOADED_SLIDES / 2);
-	const int renderEnd = startIndex + (MAX_LOADED_SLIDES / 2);
 	const QRect sceneRect = QRect(QPoint(), slideshow->getValue(QStringLiteral("size")).toSize());
 
 	int index = 0;
 	foreach(Slide *slide, slideshow->getSlides())
 	{
-		progress->setValue(index + 1);
-
 		QGraphicsScene *scene = new QGraphicsScene(this);
 		scene->setSceneRect(sceneRect);
 
-		if(index >= renderStart && index <= renderEnd)
+		if(startIndex == index)
 			slide->render(scene, false);
 
 		QGraphicsView *view = new QGraphicsView(scene, this);
@@ -128,9 +116,6 @@ void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 	}
 
 	ui->stackedWidget->setCurrentIndex(startIndex);
-	progress->close();
-	progress->deleteLater();
-
 	play();
 }
 
@@ -141,7 +126,6 @@ void ViewWidget::prev()
 
 	stop();
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex() - 1);
-	lazyLoad();
 	play();
 }
 
@@ -152,7 +136,6 @@ void ViewWidget::next()
 
 	stop();
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->currentIndex() + 1);
-	lazyLoad();
 	play();
 }
 
@@ -163,7 +146,6 @@ void ViewWidget::first()
 
 	stop();
 	ui->stackedWidget->setCurrentIndex(0);
-	lazyLoad();
 	play();
 }
 
@@ -174,14 +156,20 @@ void ViewWidget::last()
 
 	stop();
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->count() - 1);
-	lazyLoad();
 	play();
 }
 
 void ViewWidget::play()
 {
+	const int index = ui->stackedWidget->currentIndex();
+	const QGraphicsView *view = ui->stackedWidget->widget(index)->findChild<QGraphicsView *>();
+	if(view->scene()->items().size() == 0)
+		lazyLoad();
+	else
+		QTimer::singleShot(REFRESH_INTERVAL, this, SLOT(lazyLoad()));
+
 	paused = false;
-	slideshow->getSlide(ui->stackedWidget->currentIndex())->play();
+	slideshow->getSlide(index)->play();
 }
 
 void ViewWidget::pause()
@@ -225,7 +213,6 @@ void ViewWidget::goTo()
 
 	stop();
 	ui->stackedWidget->setCurrentIndex(slideNames.indexOf(name));
-	lazyLoad();
 	play();
 }
 
