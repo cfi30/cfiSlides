@@ -84,14 +84,9 @@ QGraphicsItem *VideoElement::render(const bool interactive)
 	}
 	else
 	{
-		QGraphicsRectItem *container = new QGraphicsRectItem;
-		container->setBrush(Qt::black);
-		container->setPen(Qt::NoPen);
-		container->setRect(QRect(QPoint(), size));
-		container->setPos(pos);
-
-		QGraphicsVideoItem *item = new QGraphicsVideoItem(container);
+		QGraphicsVideoItem *item = new QGraphicsVideoItem;
 		item->setSize(size);
+		item->setPos(pos);
 		item->setAspectRatioMode(scaleMode);
 
 		player = new QMediaPlayer;
@@ -105,7 +100,7 @@ QGraphicsItem *VideoElement::render(const bool interactive)
 			playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
 		player->setPlaylist(playlist);
 
-		return container;
+		return item;
 	}
 }
 
