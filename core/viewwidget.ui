@@ -16,6 +16,9 @@
   <property name="windowTitle">
    <string>Lecture du diaporama</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: black</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
     <number>0</number>

@@ -117,7 +117,13 @@ void ViewWidget::setSlideshow(Slideshow *slideshow, const int startIndex)
 		view->setFocusPolicy(Qt::NoFocus);
 		view->setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
 		view->setFixedSize(sceneRect.size());
-		ui->stackedWidget->addWidget(view);
+
+		QWidget *container = new QWidget(this);
+		QHBoxLayout *layout = new QHBoxLayout(container);
+		layout->setMargin(0);
+		layout->addWidget(view);
+
+		ui->stackedWidget->addWidget(container);
 		index++;
 	}
 
@@ -234,7 +240,7 @@ void ViewWidget::closeEvent(QCloseEvent *)
 	const int slideCount = slideshow->getSlides().size();
 	for(int index = 0; index < slideCount; index++)
 	{
-		const QGraphicsView *view = qobject_cast<QGraphicsView *>(ui->stackedWidget->widget(index));
+		const QGraphicsView *view = ui->stackedWidget->widget(index)->findChild<QGraphicsView *>();
 		if(view->scene()->items().size() == 0)
 			continue;
 
@@ -254,7 +260,7 @@ void ViewWidget::lazyLoad()
 	const int keepEnd = currentIndex + (MAX_LOADED_SLIDES / 2);
 	for(int index = 0; index < slideCount; index++)
 	{
-		const QGraphicsView *view = qobject_cast<QGraphicsView *>(ui->stackedWidget->widget(index));
+		const QGraphicsView *view = ui->stackedWidget->widget(index)->findChild<QGraphicsView *>();
 		Slide *slide = this->slideshow->getSlide(index);
 
 		if(index < keepStart || index > keepEnd)
