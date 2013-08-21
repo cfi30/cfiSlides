@@ -133,8 +133,8 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	selectionActions->addAction(ui->actionLowerElement);
 	selectionActions->addAction(ui->actionBringElementToFront);
 	selectionActions->addAction(ui->actionBringElementToBack);
-	selectionActions->addAction(ui->actionAlignToCenter);
-	selectionActions->addAction(ui->actionAlignToMiddle);
+	selectionActions->addAction(ui->actionAlignToHCenter);
+	selectionActions->addAction(ui->actionAlignToVCenter);
 
 	previewPlayer = new QMediaPlayer(this);
 	previewPlayer->setNotifyInterval(REFRESH_INTERVAL);
@@ -638,14 +638,14 @@ void MainWindow::updateSelectionActions()
 	ui->actionBringElementToFront->setEnabled(ui->actionRaiseElement->isEnabled());
 	ui->actionBringElementToBack->setEnabled(ui->actionLowerElement->isEnabled());
 
-	ui->actionAlignToCenter->setDisabled(true);
-	ui->actionAlignToMiddle->setDisabled(true);
+	ui->actionAlignToHCenter->setDisabled(true);
+	ui->actionAlignToVCenter->setDisabled(true);
 	foreach(const QTreeWidgetItem *item, ui->slideTree->selectedItems())
 	{
 		if(sceneItemFromIndex(item->data(0, Qt::UserRole).toInt()) != 0)
 		{
-			ui->actionAlignToCenter->setEnabled(true);
-			ui->actionAlignToMiddle->setEnabled(true);
+			ui->actionAlignToHCenter->setEnabled(true);
+			ui->actionAlignToVCenter->setEnabled(true);
 			break;
 		}
 	}
@@ -1482,7 +1482,7 @@ void MainWindow::alignElementsTo(const AlignDirection direction)
 			case ALIGN_LEFT:
 				pos.setX(0);
 				break;
-			case ALIGN_CENTER:
+			case ALIGN_HCENTER:
 				pos.setX((view->scene()->sceneRect().width() / 2) - (graphicsItem->boundingRect().width() / 2));
 				break;
 			case ALIGN_RIGHT:
@@ -1491,7 +1491,7 @@ void MainWindow::alignElementsTo(const AlignDirection direction)
 			case ALIGN_TOP:
 				pos.setY(0);
 				break;
-			case ALIGN_MIDDLE:
+			case ALIGN_VCENTER:
 				pos.setY((view->scene()->sceneRect().height() / 2) - (graphicsItem->boundingRect().height() / 2));
 				break;
 			case ALIGN_BOTTOM:
@@ -1507,14 +1507,14 @@ void MainWindow::alignElementsTo(const AlignDirection direction)
 	setWindowModified(true);
 }
 
-void MainWindow::alignElementsToCenter()
+void MainWindow::alignElementsToHCenter()
 {
-	alignElementsTo(ALIGN_CENTER);
+	alignElementsTo(ALIGN_HCENTER);
 }
 
-void MainWindow::alignElementsToMiddle()
+void MainWindow::alignElementsToVCenter()
 {
-	alignElementsTo(ALIGN_MIDDLE);
+	alignElementsTo(ALIGN_VCENTER);
 }
 
 void MainWindow::clearClipboard()

@@ -50,10 +50,10 @@ public:
 	enum AlignDirection
 	{
 		ALIGN_LEFT,
-		ALIGN_CENTER,
+		ALIGN_VCENTER,
 		ALIGN_RIGHT,
 		ALIGN_TOP,
-		ALIGN_MIDDLE,
+		ALIGN_HCENTER,
 		ALIGN_BOTTOM
 	};
 
@@ -123,8 +123,8 @@ public slots:
 	void previewDurationChanged(qint64);
 	void previewPositionChanged(qint64);
 	void previewStateChanged(QMediaPlayer::State);
-	void alignElementsToCenter();
-	void alignElementsToMiddle();
+	void alignElementsToHCenter();
+	void alignElementsToVCenter();
 	void cutElements();
 	void copyElements();
 	void pasteElements();

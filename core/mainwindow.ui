@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>702</width>
-     <height>19</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -104,8 +104,8 @@
     <addaction name="actionLowerElement"/>
     <addaction name="actionBringElementToFront"/>
     <addaction name="actionBringElementToBack"/>
-    <addaction name="actionAlignToCenter"/>
-    <addaction name="actionAlignToMiddle"/>
+    <addaction name="actionAlignToHCenter"/>
+    <addaction name="actionAlignToVCenter"/>
    </widget>
    <widget class="QMenu" name="menuSlide">
     <property name="title">
@@ -315,7 +315,9 @@
           <string>Lire</string>
          </property>
          <property name="icon">
-          <iconset theme="media-playback-start"/>
+          <iconset theme="media-playback-start">
+           <normaloff/>
+          </iconset>
          </property>
          <property name="shortcut">
           <string>Ctrl+Space</string>
@@ -328,7 +330,9 @@
           <string>Pause</string>
          </property>
          <property name="icon">
-          <iconset theme="media-playback-pause"/>
+          <iconset theme="media-playback-pause">
+           <normaloff/>
+          </iconset>
          </property>
          <property name="shortcut">
           <string>Ctrl+Space</string>
@@ -416,7 +420,9 @@
   </widget>
   <action name="actionOpen">
    <property name="icon">
-    <iconset theme="document-open"/>
+    <iconset theme="document-open">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Ouvrir</string>
@@ -427,7 +433,9 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset theme="document-new"/>
+    <iconset theme="document-new">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Nouveau</string>
@@ -438,7 +446,9 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset theme="document-save"/>
+    <iconset theme="document-save">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Enregistrer</string>
@@ -449,7 +459,9 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset theme="window-close"/>
+    <iconset theme="window-close">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Quitter</string>
@@ -480,7 +492,9 @@
   </action>
   <action name="actionAddSlide">
    <property name="icon">
-    <iconset theme="window-new"/>
+    <iconset theme="window-new">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Ajouter une diapositive</string>
@@ -505,7 +519,9 @@
   </action>
   <action name="actionSaveAs">
    <property name="icon">
-    <iconset theme="document-save-as"/>
+    <iconset theme="document-save-as">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Enregistrer sous...</string>
@@ -549,7 +565,9 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset theme="help-about"/>
+    <iconset theme="help-about">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>À &amp;propos</string>
@@ -577,7 +595,9 @@
   </action>
   <action name="actionRenameSlide">
    <property name="icon">
-    <iconset theme="document-properties"/>
+    <iconset theme="document-properties">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Renommer</string>
@@ -588,7 +608,9 @@
   </action>
   <action name="actionDeleteSlide">
    <property name="icon">
-    <iconset theme="edit-delete"/>
+    <iconset theme="edit-delete">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Supprimer</string>
@@ -599,7 +621,9 @@
   </action>
   <action name="actionRepaint">
    <property name="icon">
-    <iconset theme="view-refresh"/>
+    <iconset theme="view-refresh">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Refaire le rendu</string>
@@ -613,7 +637,9 @@
   </action>
   <action name="menuLaunch">
    <property name="icon">
-    <iconset theme="view-fullscreen"/>
+    <iconset theme="view-fullscreen">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Démarrer la présentation</string>
@@ -621,7 +647,9 @@
   </action>
   <action name="actionDuplicateSlide">
    <property name="icon">
-    <iconset theme="edit-copy"/>
+    <iconset theme="edit-copy">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Dupliquer</string>
@@ -632,7 +660,9 @@
   </action>
   <action name="actionMoveSlideLeft">
    <property name="icon">
-    <iconset theme="arrow-left"/>
+    <iconset theme="arrow-left">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Déplacer vers la gauche</string>
@@ -646,7 +676,9 @@
   </action>
   <action name="actionMoveSlideRight">
    <property name="icon">
-    <iconset theme="arrow-right"/>
+    <iconset theme="arrow-right">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Déplacer vers la droite</string>
@@ -660,7 +692,9 @@
   </action>
   <action name="actionPrint">
    <property name="icon">
-    <iconset theme="document-print"/>
+    <iconset theme="document-print">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Imprimer</string>
@@ -695,7 +729,9 @@
   </action>
   <action name="actionDeleteElements">
    <property name="icon">
-    <iconset theme="edit-delete"/>
+    <iconset theme="edit-delete">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Supprimer</string>
@@ -706,7 +742,9 @@
   </action>
   <action name="actionRaiseElement">
    <property name="icon">
-    <iconset theme="object-order-raise"/>
+    <iconset theme="object-order-raise">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Avancer vers l'avant-plan</string>
@@ -717,7 +755,9 @@
   </action>
   <action name="actionLowerElement">
    <property name="icon">
-    <iconset theme="object-order-lower"/>
+    <iconset theme="object-order-lower">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Reculer vers l'arrière-plan</string>
@@ -728,7 +768,9 @@
   </action>
   <action name="actionBringElementToFront">
    <property name="icon">
-    <iconset theme="object-order-front"/>
+    <iconset theme="object-order-front">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Envoyer au premier plan</string>
@@ -739,7 +781,9 @@
   </action>
   <action name="actionBringElementToBack">
    <property name="icon">
-    <iconset theme="object-order-back"/>
+    <iconset theme="object-order-back">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Envoyer à l'arrière plan</string>
@@ -753,17 +797,21 @@
     <string>Modifier les dimensions</string>
    </property>
   </action>
-  <action name="actionAlignToCenter">
+  <action name="actionAlignToVCenter">
    <property name="icon">
-    <iconset theme="object-align-horizontal-center"/>
+    <iconset theme="object-align-horizontal-center">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Centrer verticalement</string>
    </property>
   </action>
-  <action name="actionAlignToMiddle">
+  <action name="actionAlignToHCenter">
    <property name="icon">
-    <iconset theme="object-align-horizontal-center"/>
+    <iconset theme="object-align-horizontal-center">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Centrer horizontalement</string>
@@ -779,7 +827,9 @@
   </action>
   <action name="actionCutElements">
    <property name="icon">
-    <iconset theme="edit-cut"/>
+    <iconset theme="edit-cut">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Couper</string>
@@ -790,7 +840,9 @@
   </action>
   <action name="actionCopyElements">
    <property name="icon">
-    <iconset theme="edit-copy"/>
+    <iconset theme="edit-copy">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Copier</string>
@@ -804,7 +856,9 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="edit-paste"/>
+    <iconset theme="edit-paste">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Coller</string>
@@ -1568,10 +1622,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionAlignToCenter</sender>
+   <sender>actionAlignToVCenter</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>alignElementsToCenter()</slot>
+   <slot>alignElementsToVCenter()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -1584,10 +1638,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionAlignToMiddle</sender>
+   <sender>actionAlignToHCenter</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>alignElementsToMiddle()</slot>
+   <slot>alignElementsToHCenter()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -1700,8 +1754,8 @@
   <slot>setPreviewPosition(int)</slot>
   <slot>launchViewerFromCurrentSlide()</slot>
   <slot>launchViewerFromStart()</slot>
-  <slot>alignElementsToCenter()</slot>
-  <slot>alignElementsToMiddle()</slot>
+  <slot>alignElementsToHCenter()</slot>
+  <slot>alignElementsToVCenter()</slot>
   <slot>copyElements()</slot>
   <slot>pasteElements()</slot>
   <slot>cutElements()</slot>
