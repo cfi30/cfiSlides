@@ -83,7 +83,7 @@ QList<Slide *> ImportDialog::slides()
 				continue;
 
 			SlideElement *element = (SlideElement *)elementItem->data(1, Qt::UserRole).value<void *>();
-			slide->addElement(element);
+			slide->addElement(element->clone());
 		}
 
 		if(!slide->getElements().empty())
@@ -151,13 +151,14 @@ bool ImportDialog::updateList(const QString directory)
 		QString file = files[index];
 		progress->setValue(index + 1);
 
-		Slide *slide = new Slide(0);
+		Slide *slide = new Slide(slideshow);
 		slide->setValue(QStringLiteral("name"), tr("Diapositive %1").arg(++slideCount));
 		connect(slide, &Slide::modified, this, &ImportDialog::elementModified);
 
 		SlideElement *element = createElementFor(dir.absoluteFilePath(file));
 		connect(element, &Slide::modified, this, &ImportDialog::elementModified);
 		element->setValue(QStringLiteral("name"), file);
+		element->setSlide(slide);
 
 		QTreeWidgetItem *slideItem = new QTreeWidgetItem(ui->treeWidget);
 		slideItem->setText(0, slide->getValue(QStringLiteral("name")).toString());
@@ -267,15 +268,27 @@ void ImportDialog::garbageCollector() const
 	const int slidesCount = ui->treeWidget->topLevelItemCount();
 	for(int index = 0; index < slidesCount; index++)
 	{
+		bool deleteSlide = true;
+
 		QTreeWidgetItem *slideItem = ui->treeWidget->topLevelItem(index);
-		delete (Slide *)slideItem->data(1, Qt::UserRole).value<void *>();
+		const int elementCount = slideItem->childCount();
+		for(int elementIndex = 0; elementIndex < elementCount; elementIndex++)
+		{
+			const QTreeWidgetItem *elementItem = slideItem->child(elementIndex);
+			if(elementItem->checkState(0) == Qt::Checked)
+				deleteSlide = false;
+
+			delete (SlideElement *)elementItem->data(1, Qt::UserRole).value<void *>();
+		}
+
+		if(deleteSlide) delete (Slide *)slideItem->data(1, Qt::UserRole).value<void *>();
 	}
 }
 
 void ImportDialog::enableOkButton()
 {
-	ui->buttonBox->button(QDialogButtonBox::Ok)->setDisabled(
-		ui->treeWidget->topLevelItemCount() < 1
+	ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(
+		ui->treeWidget->topLevelItemCount() > 0 && !ui->treeWidget->topLevelItem(0)->flags().testFlag(Qt::NoItemFlags)
 	);
 }
 

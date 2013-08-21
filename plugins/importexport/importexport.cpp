@@ -74,26 +74,20 @@ void ImportExport::launchImport()
 		return;
 
 	QList<Slide *> slides = dialog->slides();
-	const int slideCount = slides.size();
 
 	QProgressDialog *progress = new QProgressDialog(window);
 	progress->setWindowTitle(dialog->windowTitle());
 	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 	progress->setCancelButtonText(QString());
 	progress->setLabelText(tr("Importation et affichage des éléments en cours..."));
-	progress->setMaximum(slideCount);
+	progress->setMaximum(slides.size());
 	progress->open();
 
-	for(int index = 0; index < slideCount; index++)
+	int index = 0;
+	foreach(Slide *slide, slides)
 	{
-		progress->setValue(index);
-
-		Slide *tempSlide = slides[index];
-		Slide *slide = slideshow->createSlide();
-		slide->setValues(tempSlide->getValues());
-
-		foreach(SlideElement *element, tempSlide->getElements())
-			slide->addElement(element->clone());
+		progress->setValue(index++);
+		slideshow->addSlide(slide);
 
 		QMetaObject::invokeMethod(window, "displaySlide", Qt::DirectConnection, Q_ARG(Slide *, slide));
 		QMetaObject::invokeMethod(window, "setWindowModified", Qt::DirectConnection, Q_ARG(bool, true));
