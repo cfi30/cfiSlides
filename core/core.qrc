@@ -2,6 +2,7 @@
 <qresource>
 <file>./icons/oxygen/16x16/arrow-left.png</file>
 <file>./icons/oxygen/16x16/arrow-right.png</file>
+<file>./icons/oxygen/16x16/audio-volume-muted.png</file>
 <file>./icons/oxygen/16x16/document-new.png</file>
 <file>./icons/oxygen/16x16/document-open.png</file>
 <file>./icons/oxygen/16x16/document-print.png</file>
@@ -13,12 +14,16 @@
 <file>./icons/oxygen/16x16/edit-delete.png</file>
 <file>./icons/oxygen/16x16/edit-paste.png</file>
 <file>./icons/oxygen/16x16/emblem-locked.png</file>
+<file>./icons/oxygen/16x16/go-jump.png</file>
+<file>./icons/oxygen/16x16/go-next.png</file>
+<file>./icons/oxygen/16x16/go-previous.png</file>
 <file>./icons/oxygen/16x16/help-about.png</file>
 <file>./icons/oxygen/16x16/insert-horizontal-rule.png</file>
 <file>./icons/oxygen/16x16/insert-image.png</file>
 <file>./icons/oxygen/16x16/insert-text.png</file>
 <file>./icons/oxygen/16x16/media-playback-pause.png</file>
 <file>./icons/oxygen/16x16/media-playback-start.png</file>
+<file>./icons/oxygen/16x16/media-skip-backward.png</file>
 <file>./icons/oxygen/16x16/object-align-horizontal-center.png</file>
 <file>./icons/oxygen/16x16/object-align-vertical-center.png</file>
 <file>./icons/oxygen/16x16/object-order-back.png</file>
@@ -27,6 +32,7 @@
 <file>./icons/oxygen/16x16/object-order-raise.png</file>
 <file>./icons/oxygen/16x16/view-fullscreen.png</file>
 <file>./icons/oxygen/16x16/view-refresh.png</file>
+<file>./icons/oxygen/16x16/view-restore.png</file>
 <file>./icons/oxygen/16x16/window-close.png</file>
 <file>./icons/oxygen/16x16/window-new.png</file>
 

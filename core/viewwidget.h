@@ -21,6 +21,7 @@
 
 #include <QWidget>
 
+class QMenu;
 class Slideshow;
 
 namespace Ui
@@ -59,10 +60,12 @@ private:
 
 private slots:
 	void lazyLoad();
+	void displayContextMenu(const QPoint &pos);
 
 protected:
 	bool paused;
 	Slideshow *slideshow;
+	QMenu *contextMenu;
 	void closeEvent(QCloseEvent *);
 };
 

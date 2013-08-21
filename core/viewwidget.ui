@@ -13,6 +13,9 @@
   <property name="cursor">
    <cursorShape>BlankCursor</cursorShape>
   </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::CustomContextMenu</enum>
+  </property>
   <property name="windowTitle">
    <string>Lecture du diaporama</string>
   </property>
@@ -42,5 +45,25 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>ViewWidget</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>ViewWidget</receiver>
+   <slot>displayContextMenu(QPoint)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>displayContextMenu(QPoint)</slot>
+ </slots>
 </ui>
