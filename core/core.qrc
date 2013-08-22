@@ -3,24 +3,26 @@
 <file>./icons/oxygen/16x16/arrow-left.png</file>
 <file>./icons/oxygen/16x16/arrow-right.png</file>
 <file>./icons/oxygen/16x16/audio-volume-muted.png</file>
+<file alias="audio-x-generic">./icons/oxygen/16x16/audio-x-generic.png</file>
 <file>./icons/oxygen/16x16/document-new.png</file>
 <file>./icons/oxygen/16x16/document-open.png</file>
 <file>./icons/oxygen/16x16/document-print.png</file>
 <file>./icons/oxygen/16x16/document-properties.png</file>
 <file>./icons/oxygen/16x16/document-save-as.png</file>
 <file>./icons/oxygen/16x16/document-save.png</file>
+<file alias="draw-ellipse">./icons/oxygen/16x16/draw-ellipse.png</file>
+<file alias="draw-line">./icons/oxygen/16x16/draw-line.png</file>
+<file alias="draw-rectangle">./icons/oxygen/16x16/draw-rectangle.png</file>
 <file>./icons/oxygen/16x16/edit-copy.png</file>
 <file>./icons/oxygen/16x16/edit-cut.png</file>
 <file>./icons/oxygen/16x16/edit-delete.png</file>
 <file>./icons/oxygen/16x16/edit-paste.png</file>
-<file>./icons/oxygen/16x16/emblem-locked.png</file>
+<file alias="emblem-locked">./icons/oxygen/16x16/emblem-locked.png</file>
 <file>./icons/oxygen/16x16/go-jump.png</file>
 <file>./icons/oxygen/16x16/go-next.png</file>
 <file>./icons/oxygen/16x16/go-previous.png</file>
 <file>./icons/oxygen/16x16/help-about.png</file>
-<file>./icons/oxygen/16x16/insert-horizontal-rule.png</file>
-<file>./icons/oxygen/16x16/insert-image.png</file>
-<file>./icons/oxygen/16x16/insert-text.png</file>
+<file alias="image-x-generic">./icons/oxygen/16x16/image-x-generic.png</file>
 <file>./icons/oxygen/16x16/media-playback-pause.png</file>
 <file>./icons/oxygen/16x16/media-playback-start.png</file>
 <file>./icons/oxygen/16x16/media-skip-backward.png</file>
@@ -30,6 +32,8 @@
 <file>./icons/oxygen/16x16/object-order-front.png</file>
 <file>./icons/oxygen/16x16/object-order-lower.png</file>
 <file>./icons/oxygen/16x16/object-order-raise.png</file>
+<file alias="text-x-generic">./icons/oxygen/16x16/text-x-generic.png</file>
+<file alias="video-x-generic">./icons/oxygen/16x16/video-x-generic.png</file>
 <file>./icons/oxygen/16x16/view-fullscreen.png</file>
 <file>./icons/oxygen/16x16/view-refresh.png</file>
 <file>./icons/oxygen/16x16/view-restore.png</file>
@@ -42,8 +46,8 @@
 <file>./icons/oxygen/22x22/view-fullscreen.png</file>
 <file>./icons/oxygen/22x22/window-new.png</file>
 
-<file>./icons/oxygen/128x128/applications-multimedia.png</file>
-<file>./icons/oxygen/128x128/image-missing.png</file>
+<file alias="applications-multimedia">./icons/oxygen/128x128/applications-multimedia.png</file>
+<file alias="image-missing">./icons/oxygen/128x128/image-missing.png</file>
 <file>./icons/oxygen/index.theme</file>
 </qresource>
 </RCC>

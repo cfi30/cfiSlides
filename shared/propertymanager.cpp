@@ -31,10 +31,11 @@
 #include <QSpinBox>
 #include <QPainter>
 #include <QFontDialog>
+#include <limits.h>
 
 #include "propertymanager.h"
 #include "textinputdialog.h"
-#include "limits.h"
+#include "icon_t.h"
 
 QString PropertyManager::valueToString(const QString &, const QVariant &value) const
 {
@@ -359,7 +360,7 @@ QWidget *SizePropertyManager::createEditor(const QString &propName, const QVaria
 
 	lockRatio = new QToolButton(widget);
 	lockRatio->setFixedWidth(20);
-	lockRatio->setIcon(QIcon(QStringLiteral(":/icons/oxygen/16x16/emblem-locked")));
+	lockRatio->setIcon(ICON_T("emblem-locked"));
 	lockRatio->setCheckable(true);
 	layout->addWidget(lockRatio);
 

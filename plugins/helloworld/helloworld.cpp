@@ -25,13 +25,14 @@
 #include <QUrl>
 
 #include "helloworld.h"
+#include "icon_t.h"
 
 HelloWorld::HelloWorld()
 {
 	helloMenu = new QMenu("Hello World");
-	helloAction = helloMenu->addAction(QIcon::fromTheme("call-start"), "Do something !", this, SLOT(doSomething()));
+	helloAction = helloMenu->addAction(ICON_T("call-start"), "Do something !", this, SLOT(doSomething()));
 	helloAction->setCheckable(true);
-	hiAction = helloMenu->addAction(QIcon::fromTheme("call-stop"), "This one won't do a thing.", this, SLOT(doNothing()));
+	hiAction = helloMenu->addAction(ICON_T("call-stop"), "This one won't do a thing.", this, SLOT(doNothing()));
 
 	hiActionState = false;
 }
@@ -45,7 +46,7 @@ void HelloWorld::initialize()
 SlideElementTypeList HelloWorld::getElementTypes() const
 {
 	return SlideElementTypeList()
-		<< SlideElementType(qRegisterMetaType<HelloElement>(), "Hello World", QIcon::fromTheme("applications-internet"));
+		<< SlideElementType(qRegisterMetaType<HelloElement>(), "Hello World", ICON_T("applications-internet"));
 }
 
 HelloWorld::~HelloWorld()

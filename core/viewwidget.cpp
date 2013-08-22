@@ -27,6 +27,7 @@
 #include "ui_viewwidget.h"
 #include "slideshow.h"
 #include "slide.h"
+#include "icon_t.h"
 #include "configuration.h"
 
 ViewWidget::ViewWidget(QWidget *parent) : QWidget(parent), ui(new Ui::ViewWidget)
@@ -34,16 +35,16 @@ ViewWidget::ViewWidget(QWidget *parent) : QWidget(parent), ui(new Ui::ViewWidget
 	ui->setupUi(this);
 
 	contextMenu = new QMenu(this);
-	contextMenu->addAction(QIcon::fromTheme("go-next"), tr("Diapositive suivante"), this, SLOT(next()), QKeySequence(Qt::Key_Return));
-	contextMenu->addAction(QIcon::fromTheme("go-previous"), tr("Diapositive précédente"), this, SLOT(prev()), QKeySequence(Qt::Key_Left));
-	contextMenu->addAction(QIcon::fromTheme("go-jump"), tr("Atteindre..."), this, SLOT(goTo()), QKeySequence(Qt::Key_G));
+	contextMenu->addAction(ICON_T("go-next"), tr("Diapositive suivante"), this, SLOT(next()), QKeySequence(Qt::Key_Return));
+	contextMenu->addAction(ICON_T("go-previous"), tr("Diapositive précédente"), this, SLOT(prev()), QKeySequence(Qt::Key_Left));
+	contextMenu->addAction(ICON_T("go-jump"), tr("Atteindre..."), this, SLOT(goTo()), QKeySequence(Qt::Key_G));
 	contextMenu->addSeparator();
-	contextMenu->addAction(QIcon::fromTheme("media-playback-start"), tr("Lecture"), this, SLOT(play()), QKeySequence(Qt::Key_P));
-	contextMenu->addAction(QIcon::fromTheme("media-playback-pause"), tr("Pause"), this, SLOT(pause()), QKeySequence(Qt::Key_P));
-	contextMenu->addAction(QIcon::fromTheme("media-skip-backward"), tr("Redémarrer"), this, SLOT(restart()), QKeySequence(Qt::Key_R));
-	contextMenu->addAction(QIcon::fromTheme("audio-volume-muted"), tr("Muet"), this, SLOT(toggleMute()), QKeySequence(Qt::Key_M));
+	contextMenu->addAction(ICON_T("media-playback-start"), tr("Lecture"), this, SLOT(play()), QKeySequence(Qt::Key_P));
+	contextMenu->addAction(ICON_T("media-playback-pause"), tr("Pause"), this, SLOT(pause()), QKeySequence(Qt::Key_P));
+	contextMenu->addAction(ICON_T("media-skip-backward"), tr("Redémarrer"), this, SLOT(restart()), QKeySequence(Qt::Key_R));
+	contextMenu->addAction(ICON_T("audio-volume-muted"), tr("Muet"), this, SLOT(toggleMute()), QKeySequence(Qt::Key_M));
 	contextMenu->addSeparator();
-	contextMenu->addAction(QIcon::fromTheme("view-restore"), tr("Fermer"), this, SLOT(close()), QKeySequence(Qt::Key_Escape));
+	contextMenu->addAction(ICON_T("view-restore"), tr("Fermer"), this, SLOT(close()), QKeySequence(Qt::Key_Escape));
 
 	new QShortcut(QKeySequence(QStringLiteral("Ctrl+Q")), this, SLOT(close()));
 	new QShortcut(QKeySequence(Qt::Key_Q), this, SLOT(close()));

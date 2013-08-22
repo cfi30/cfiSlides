@@ -30,6 +30,7 @@
 #include "slideshow.h"
 #include "slide.h"
 #include "slideelement.h"
+#include "icon_t.h"
 #include "configuration.h"
 
 #include "importexport.h"
@@ -38,11 +39,11 @@
 
 ImportExport::ImportExport()
 {
-	importAction = new QAction(QIcon::fromTheme("document-import"), tr("Importer"), this);
+	importAction = new QAction(ICON_T("document-import"), tr("Importer"), this);
 	importAction->setShortcut(QKeySequence("Ctrl+I"));
 	connect(importAction, &QAction::triggered, this, &ImportExport::launchImport);
 
-	exportAction = new QAction(QIcon::fromTheme("document-export"), tr("Exporter"), this);
+	exportAction = new QAction(ICON_T("document-export"), tr("Exporter"), this);
 	exportAction->setShortcut(QKeySequence("Ctrl+E"));
 	connect(exportAction, &QAction::triggered, this, &ImportExport::launchExport);
 }

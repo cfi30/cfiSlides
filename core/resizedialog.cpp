@@ -20,11 +20,13 @@
 
 #include "resizedialog.h"
 #include "ui_resizedialog.h"
+#include "icon_t.h"
 #include "slideshow.h"
 
 ResizeDialog::ResizeDialog(const QSize &currentSize, QWidget *parent) : QDialog(parent), ui(new Ui::ResizeDialog)
 {
 	ui->setupUi(this);
+	ui->lockRatio->setIcon(ICON_T("emblem-locked"));
 	connect(qApp, &QApplication::screenAdded, this, &ResizeDialog::addScreen);
 
 	foreach(const QScreen *screen, qApp->screens())

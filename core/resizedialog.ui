@@ -78,10 +78,6 @@
          <height>22</height>
         </size>
        </property>
-       <property name="icon">
-        <iconset resource="core.qrc">
-         <normaloff>:/icons/oxygen/16x16/emblem-locked.png</normaloff>:/icons/oxygen/16x16/emblem-locked.png</iconset>
-       </property>
        <property name="checkable">
         <bool>true</bool>
        </property>
@@ -101,9 +97,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="core.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>

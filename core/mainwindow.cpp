@@ -53,6 +53,7 @@
 #include "plugindialog.h"
 #include "plugin.h"
 #include "resizedialog.h"
+#include "icon_t.h"
 #include "configuration.h"
 
 MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePlugins, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -60,25 +61,25 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	ui->setupUi(this);
 
 	registerElementType(SlideElementType(
-		qRegisterMetaType<RectElement>(), tr("Rectangle"), QIcon::fromTheme("insert-rectangle")
+		qRegisterMetaType<RectElement>(), tr("Rectangle"), ICON_T("draw-rectangle")
 	));
 	registerElementType(SlideElementType(
-		qRegisterMetaType<EllipseElement>(), tr("Ellipse"), QIcon::fromTheme("insert-ellipse")
+		qRegisterMetaType<EllipseElement>(), tr("Ellipse"), ICON_T("draw-ellipse")
 	));
 	registerElementType(SlideElementType(
-		qRegisterMetaType<LineElement>(), tr("Ligne"), QIcon::fromTheme("insert-horizontal-rule")
+		qRegisterMetaType<LineElement>(), tr("Ligne"), ICON_T("draw-line")
 	));
 	registerElementType(SlideElementType(
-		qRegisterMetaType<TextElement>(), tr("Texte"), QIcon::fromTheme("insert-text")
+		qRegisterMetaType<TextElement>(), tr("Texte"), ICON_T("text-x-generic")
 	));
 	registerElementType(SlideElementType(
-		qRegisterMetaType<ImageElement>(), tr("Image"), QIcon::fromTheme("insert-image")
+		qRegisterMetaType<ImageElement>(), tr("Image"), ICON_T("image-x-generic")
 	));
 	registerElementType(SlideElementType(
-		qRegisterMetaType<VideoElement>(), tr("Vidéo"), QIcon::fromTheme("insert-video")
+		qRegisterMetaType<VideoElement>(), tr("Vidéo"), ICON_T("video-x-generic")
 	));
 	registerElementType(SlideElementType(
-		qRegisterMetaType<AudioElement>(), tr("Son"), QIcon::fromTheme("insert-audio")
+		qRegisterMetaType<AudioElement>(), tr("Son"), ICON_T("audio-x-generic")
 	));
 
 	new QShortcut(QKeySequence(QStringLiteral("Ctrl+Tab")), this, SLOT(selectNextSlide()));
@@ -581,6 +582,7 @@ void MainWindow::updateSlideTree(const int index)
 
 		const int elementIndex = elements.indexOf(element);
 		QTreeWidgetItem *treeItem = new QTreeWidgetItem(topLevel);
+		treeItem->setIcon(0, registeredTypes.value(QMetaType::type(element->type())).getIcon());
 		treeItem->setText(0, element->getValue(QStringLiteral("name")).toString());
 		treeItem->setData(0, Qt::UserRole, elementIndex);
 		treeItem->setFlags(treeItem->flags() | Qt::ItemIsEditable);
@@ -1311,9 +1313,10 @@ void MainWindow::resizeSlideshow()
 void MainWindow::registerElementType(const SlideElementType &type)
 {
 	QAction *action = new QAction(type.getIcon(), type.getLabel(), this);
-	action->setData(type.getTypeId());
+	action->setData(type.getId());
 	connect(action, &QAction::triggered, this, &MainWindow::insertElementFromAction);
 
+	registeredTypes[type.getId()] = type;
 	insertActions << action;
 }
 
@@ -1323,12 +1326,14 @@ void MainWindow::unregisterElementType(const SlideElementType &type)
 	for(int index = 0; index < actionCount; index++)
 	{
 		const QAction *action = insertActions[index];
-		if(action->data().toInt() != type.getTypeId())
+		if(action->data().toInt() != type.getId())
 			continue;
 
 		insertActions.takeAt(index)->deleteLater();
 		break;
 	}
+
+	registeredTypes.remove(type.getId());
 }
 
 void MainWindow::insertElement(SlideElement *element)
@@ -1354,8 +1359,10 @@ void MainWindow::insertElementFromAction()
 	const QAction *action = qobject_cast<QAction *>(sender());
 	const Slide *slide = this->slideshow->getSlide(ui->slideList->currentRow());
 
-	SlideElement *element = (SlideElement *)QMetaType::create(action->data().toInt());
-	element->setValue(QStringLiteral("name"), tr("%1 %2").arg(action->text()).arg(slide->getElements().size() + 1));
+	const SlideElementType &type = registeredTypes.value(action->data().toInt());
+
+	SlideElement *element = (SlideElement *)QMetaType::create(type.getId());
+	element->setValue(QStringLiteral("name"), QString("%1 %2").arg(type.getLabel()).arg(slide->getElements().size() + 1));
 	insertElement(element);
 }
 

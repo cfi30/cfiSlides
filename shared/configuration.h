@@ -31,8 +31,8 @@
 #define MOVIE_FILTER           tr("Vidéo (*.mpg *.mpeg *.mp4 *.m4v *.ogv *.mkv *.mks *.mov *.qt *.avi *.mng *.mp2 *.wmv *.flv *.m2ts *.mts *.webm)")
 #define AUDIO_FILTER           tr("Audio (*.wav *.mp2 *.mp3 *.wma *.ogg *.aif *.acc *.m4a *.mka)")
 #define STATUS_TIMEOUT         5000
-#define GENERIC_ICON           "document-new"
-#define FALLBACK_ICON_THEME    "oxygen"
+#define TEST_ICON              "document-new"
+#define FALLBACK_THEME         "oxygen"
 #define REFRESH_INTERVAL       100
 #define PLUGINS_PATH           QCoreApplication::applicationDirPath() + "/plugins/"
 #define RECENT_FILES_MAX       6

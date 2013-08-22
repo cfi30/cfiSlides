@@ -20,6 +20,7 @@
 
 #include "videoelement.h"
 #include "propertymanager.h"
+#include "icon_t.h"
 #include "configuration.h"
 
 VideoElement::VideoElement() : SlideElement()
@@ -62,7 +63,7 @@ QGraphicsItem *VideoElement::render(const bool interactive)
 		item->setPen(QPen(Qt::black));
 
 		QGraphicsPixmapItem *icon = new QGraphicsPixmapItem(item);
-		icon->setPixmap(QIcon::fromTheme("applications-multimedia").pixmap(QSize(128, 128)));
+		icon->setPixmap(ICON_T("applications-multimedia").pixmap(QSize(128, 128)));
 
 		QGraphicsTextItem *label = new QGraphicsTextItem(item);
 		label->setDefaultTextColor(Qt::black);

@@ -20,6 +20,7 @@ cfislides-uselib:!cfislides-buildlib {
 		propertymanager.h \
 		propertyeditor.h \
 		propertyeditordelegate.h \
+		icon_t.h \
 
 	SOURCES += \
 		slideshow.cpp \

@@ -21,6 +21,7 @@
 #include "imageelement.h"
 #include "slideshow.h"
 #include "propertymanager.h"
+#include "icon_t.h"
 #include "configuration.h"
 
 ImageElement::ImageElement() : SlideElement()
@@ -46,7 +47,7 @@ QGraphicsItem *ImageElement::render(const bool interactive)
 		item->setPen(QPen(Qt::black));
 
 		QGraphicsPixmapItem *icon = new QGraphicsPixmapItem(item);
-		icon->setPixmap(QIcon::fromTheme("image-missing").pixmap(QSize(128, 128)));
+		icon->setPixmap(ICON_T("image-missing").pixmap(QSize(128, 128)));
 
 		icon->setVisible(
 			size.width() > icon->pixmap().size().width() &&

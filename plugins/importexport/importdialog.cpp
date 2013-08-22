@@ -21,6 +21,7 @@
 #include "slide.h"
 #include "slideshow.h"
 #include "slideelement.h"
+#include "icon_t.h"
 #include "configuration.h"
 
 ImportDialog::ImportDialog(const int slideCount, const Slideshow *slideshow, QWidget *parent) : QDialog(parent), ui(new Ui::ImportDialog)
@@ -244,11 +245,11 @@ QIcon ImportDialog::getIconFor(const QString &file) const
 	switch(type)
 	{
 		case ImageType:
-			return QIcon::fromTheme("image-x-generic");
+			return ICON_T("image-x-generic");
 		case MovieType:
-			return QIcon::fromTheme("video-x-generic");
+			return ICON_T("video-x-generic");
 		case AudioType:
-			return QIcon::fromTheme("audio-x-generic");
+			return ICON_T("audio-x-generic");
 	}
 	return QIcon();
 }

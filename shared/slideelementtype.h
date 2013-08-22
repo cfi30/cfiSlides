@@ -28,8 +28,9 @@
 class CFISLIDES_DLLSPEC SlideElementType
 {
 public:
-	SlideElementType(const int typeId, const QString &label, const QIcon &icon = QIcon());
-	int getTypeId() const;
+	SlideElementType() {}
+	explicit SlideElementType(const int typeId, const QString &label, const QIcon &icon = QIcon());
+	int getId() const;
 	QString getLabel() const;
 	QIcon getIcon() const;
 

@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
 	qt_translator.load("lang_" + locale, "lang");
 	app.installTranslator(&app_translator);
 
-	if(!QIcon::hasThemeIcon(GENERIC_ICON))
-		QIcon::setThemeName(FALLBACK_ICON_THEME);
+	if(!QIcon::hasThemeIcon(TEST_ICON))
+		QIcon::setThemeName(FALLBACK_THEME);
 
 	QStringList arguments = app.arguments();
 

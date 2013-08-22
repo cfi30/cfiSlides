@@ -1,9 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-<file>./icons/oxygen/16x16/document-import.png</file>
-<file>./icons/oxygen/16x16/document-export.png</file>
-<file>./icons/oxygen/16x16/image-x-generic.png</file>
-<file>./icons/oxygen/16x16/video-x-generic.png</file>
-<file>./icons/oxygen/16x16/audio-x-generic.png</file>
+<file alias="document-import">./icons/oxygen/16x16/document-import.png</file>
+<file alias="document-export">./icons/oxygen/16x16/document-export.png</file>
 </qresource>
 </RCC>

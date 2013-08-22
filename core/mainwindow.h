@@ -151,6 +151,7 @@ private:
 	QString commandLineHelp;
 	QActionGroup *slideActions;
 	QActionGroup *selectionActions;
+	QHash<int, SlideElementType> registeredTypes;
 	SlideElementTypeList pluginTypes;
 	QMediaPlayer *previewPlayer;
 	QElapsedTimer viewerTimer;

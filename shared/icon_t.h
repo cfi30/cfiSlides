@@ -16,26 +16,8 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "slideelementtype.h"
+#ifndef ICON_T
 
-SlideElementType::SlideElementType(const int typeId, const QString &label, const QIcon &icon)
-{
-	this->typeId = typeId;
-	this->label = label;
-	this->icon = icon;
-}
-
-int SlideElementType::getId() const
-{
-	return typeId;
-}
-
-QString SlideElementType::getLabel() const
-{
-	return label;
-}
-
-QIcon SlideElementType::getIcon() const
-{
-	return icon;
-}
+// Don't forget to add an alias in the QRC file for the fallback icon to work.
+#define ICON_T(name) QIcon::fromTheme(QStringLiteral(name), QIcon(":/" + QStringLiteral(name)))
+#endif
