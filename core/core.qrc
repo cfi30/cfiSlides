@@ -1,7 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-<file>./icons/oxygen/16x16/arrow-left.png</file>
-<file>./icons/oxygen/16x16/arrow-right.png</file>
 <file>./icons/oxygen/16x16/audio-volume-muted.png</file>
 <file alias="audio-x-generic">./icons/oxygen/16x16/audio-x-generic.png</file>
 <file>./icons/oxygen/16x16/document-new.png</file>

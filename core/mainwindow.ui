@@ -660,9 +660,7 @@
   </action>
   <action name="actionMoveSlideLeft">
    <property name="icon">
-    <iconset theme="arrow-left">
-     <normaloff/>
-    </iconset>
+    <iconset theme="go-previous"/>
    </property>
    <property name="text">
     <string>Déplacer vers la gauche</string>
@@ -676,9 +674,7 @@
   </action>
   <action name="actionMoveSlideRight">
    <property name="icon">
-    <iconset theme="arrow-right">
-     <normaloff/>
-    </iconset>
+    <iconset theme="go-next"/>
    </property>
    <property name="text">
     <string>Déplacer vers la droite</string>
