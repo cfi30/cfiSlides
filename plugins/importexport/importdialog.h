@@ -20,15 +20,8 @@
 #define IMPORTDIALOG_H
 
 #include <QDialog>
-#include <QPushButton>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QTreeWidgetItem>
-#include <QSettings>
-#include <QFileInfo>
-#include <QInputDialog>
-#include <QProgressDialog>
-#include <QDesktopWidget>
+
+class QTreeWidgetItem;
 
 namespace Ui {
 	class ImportDialog;
@@ -82,6 +75,8 @@ private slots:
 	void on_treeWidget_itemChanged(QTreeWidgetItem *item, int);
 	void on_propertiesButton_toggled(bool checked);
 	void on_treeWidget_itemSelectionChanged();
+	void on_moveUpButton_clicked();
+	void on_moveDownButton_clicked();
 };
 
 #endif // IMPORTDIALOG_H

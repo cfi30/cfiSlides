@@ -16,6 +16,17 @@
  * along with cfiSlides.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QPushButton>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QTreeWidgetItem>
+#include <QSettings>
+#include <QFileInfo>
+#include <QInputDialog>
+#include <QProgressDialog>
+#include <QDesktopWidget>
+#include <QDropEvent>
+
 #include "importdialog.h"
 #include "ui_importdialog.h"
 #include "slide.h"
@@ -158,7 +169,7 @@ bool ImportDialog::updateList(const QString directory)
 
 		SlideElement *element = createElementFor(dir.absoluteFilePath(file));
 		connect(element, &Slide::modified, this, &ImportDialog::elementModified);
-		element->setValue(QStringLiteral("name"), file);
+		element->setValue(QStringLiteral("name"), QFileInfo(file).baseName());
 		element->setSlide(slide);
 
 		QTreeWidgetItem *slideItem = new QTreeWidgetItem(ui->treeWidget);
@@ -166,15 +177,13 @@ bool ImportDialog::updateList(const QString directory)
 		slideItem->setData(0, Qt::UserRole, slideItem->text(0));
 		slideItem->setData(1, Qt::UserRole, QVariant::fromValue<void *>((void *)slide));
 		slideItem->setFlags(slideItem->flags() | Qt::ItemIsEditable);
-		slideItem->setFlags(slideItem->flags() ^ Qt::ItemIsDragEnabled);
 		slideItem->setExpanded(true);
 
 		QTreeWidgetItem *fileItem = new QTreeWidgetItem(slideItem);
 		fileItem->setText(0, element->getValue(QStringLiteral("name")).toString());
 		fileItem->setIcon(0, getIconFor(file));
 		fileItem->setData(1, Qt::UserRole, QVariant::fromValue<void *>((void *)element));
-		fileItem->setFlags(fileItem->flags() | Qt::ItemIsUserCheckable);
-		fileItem->setFlags(fileItem->flags() ^ Qt::ItemIsDropEnabled);
+		fileItem->setFlags(fileItem->flags() | Qt::ItemIsEditable | Qt::ItemIsUserCheckable);
 		fileItem->setToolTip(0, dir.absoluteFilePath(file));
 		fileItem->setCheckState(0, Qt::Checked);
 	}
@@ -352,25 +361,19 @@ void ImportDialog::on_sortComboBox_currentIndexChanged(int index)
 void ImportDialog::on_treeWidget_itemChanged(QTreeWidgetItem *item, int)
 {
 	this->modified = true;
-	if(item->parent() == 0)
-	{
-		if(item->text(0).trimmed().isEmpty())
-		{
-			QMessageBox::critical(qApp->activeWindow(), tr("Renommer la diapositive"), tr("Le nom de la diapositive ne peut pas être vide."));
-			return item->setText(0, item->data(0, Qt::UserRole).toString());
-		}
+	if(item->text(0).trimmed().isEmpty())
+		return item->setText(0, item->data(0, Qt::UserRole).toString());
 
-		item->setData(0, Qt::UserRole, item->text(0));
-		SlideshowElement *element = (SlideshowElement *)item->data(1, Qt::UserRole).value<void *>();
-		element->setValue(QStringLiteral("name"), item->text(0));
-		on_treeWidget_itemSelectionChanged();
-	}
+	item->setData(0, Qt::UserRole, item->text(0));
+	SlideshowElement *element = (SlideshowElement *)item->data(1, Qt::UserRole).value<void *>();
+	element->setValue(QStringLiteral("name"), item->text(0));
+	on_treeWidget_itemSelectionChanged();
 }
 
 void ImportDialog::on_propertiesButton_toggled(bool checked)
 {
 	ui->propertiesButton->setText(tr("Propriétés %1").arg(checked ? "<<" : ">>"));
-	ui->propertiesEditor->setVisible(checked);
+	ui->sidePanel->setVisible(checked);
 
 	QSettings().setValue(QStringLiteral("importDialog/showProperties"), checked);
 }
@@ -379,9 +382,93 @@ void ImportDialog::on_treeWidget_itemSelectionChanged()
 {
 	ui->propertiesEditor->clear();
 
-	if(ui->treeWidget->selectedItems().empty())
-		return;
+	const bool selectionIsEmpty = ui->treeWidget->selectedItems().empty();
+	ui->sidePanel->setDisabled(selectionIsEmpty);
 
-	SlideshowElement *element = (SlideshowElement *)ui->treeWidget->currentItem()->data(1, Qt::UserRole).value<void *>();
-	ui->propertiesEditor->addTopLevelProperties(element->getProperties());
+	if(!selectionIsEmpty)
+	{
+		SlideshowElement *element = (SlideshowElement *)ui->treeWidget->currentItem()->data(1, Qt::UserRole).value<void *>();
+		ui->propertiesEditor->addTopLevelProperties(element->getProperties());
+	}
+}
+
+void ImportDialog::on_moveUpButton_clicked()
+{
+	QTreeWidgetItem *item = ui->treeWidget->currentItem();
+	QTreeWidgetItem *parent = item->parent();
+
+	if(!parent)
+	{
+		const int currentIndex = ui->treeWidget->indexOfTopLevelItem(item);
+		if(currentIndex == 0) return;
+
+		this->modified = true;
+
+		ui->treeWidget->takeTopLevelItem(currentIndex);
+		ui->treeWidget->insertTopLevelItem(currentIndex - 1, item);
+		item->setExpanded(true);
+	}
+	else
+	{
+		const int currentIndex = parent->indexOfChild(item);
+		const int parentIndex = ui->treeWidget->indexOfTopLevelItem(parent);
+
+		if(currentIndex + parentIndex > 0)
+		{
+			parent->takeChild(currentIndex);
+			this->modified = true;
+		}
+
+		if(currentIndex > 0)
+			parent->insertChild(currentIndex - 1, item);
+		else if(parentIndex > 0)
+		{
+			QTreeWidgetItem *parentNeighbour = ui->treeWidget->topLevelItem(parentIndex - 1);
+			parentNeighbour->addChild(item);
+		}
+	}
+
+	ui->treeWidget->setCurrentItem(item);
+}
+
+void ImportDialog::on_moveDownButton_clicked()
+{
+	QTreeWidgetItem *item = ui->treeWidget->currentItem();
+	QTreeWidgetItem *parent = item->parent();
+	const int lastParentIndex = ui->treeWidget->topLevelItemCount() - 1;
+
+	if(!parent)
+	{
+		const int currentIndex = ui->treeWidget->indexOfTopLevelItem(item);
+		if(currentIndex == lastParentIndex) return;
+
+		this->modified = true;
+
+		ui->treeWidget->takeTopLevelItem(currentIndex);
+		ui->treeWidget->insertTopLevelItem(currentIndex + 1, item);
+		item->setExpanded(true);
+	}
+	else
+	{
+		const int currentIndex = parent->indexOfChild(item);
+		const int lastBrotherIndex = parent->childCount() - 1;
+		const int parentIndex = ui->treeWidget->indexOfTopLevelItem(parent);
+
+		if(currentIndex < lastBrotherIndex)
+		{
+			parent->takeChild(currentIndex);
+			parent->insertChild(currentIndex + 1, item);
+		}
+		else if(parentIndex < lastParentIndex)
+		{
+			QTreeWidgetItem *parentNeighbour = ui->treeWidget->topLevelItem(parentIndex + 1);
+			parent->takeChild(currentIndex);
+			parentNeighbour->insertChild(0, item);
+		}
+		else { return; }
+
+		this->modified = true;
+	}
+
+	ui->treeWidget->setCurrentItem(item);
 }

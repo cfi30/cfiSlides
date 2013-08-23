@@ -2,5 +2,8 @@
 <qresource>
 <file alias="document-import">./icons/oxygen/16x16/document-import.png</file>
 <file alias="document-export">./icons/oxygen/16x16/document-export.png</file>
+
+<file>./icons/oxygen/22x22/go-down.png</file>
+<file>./icons/oxygen/22x22/go-up.png</file>
 </qresource>
 </RCC>

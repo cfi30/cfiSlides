@@ -74,11 +74,8 @@
        </item>
        <item>
         <widget class="QTreeWidget" name="treeWidget">
-         <property name="dragDropMode">
-          <enum>QAbstractItemView::InternalMove</enum>
-         </property>
-         <property name="defaultDropAction">
-          <enum>Qt::MoveAction</enum>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
          </property>
          <property name="rootIsDecorated">
           <bool>false</bool>
@@ -100,6 +97,9 @@
            <property name="checkable">
             <bool>true</bool>
            </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
           </widget>
          </item>
          <item>
@@ -116,7 +116,58 @@
        </item>
       </layout>
      </widget>
-     <widget class="PropertyEditor" name="propertiesEditor" native="true"/>
+     <widget class="QWidget" name="sidePanel" native="true">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="PropertyEditor" name="propertiesEditor" native="true"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QPushButton" name="moveUpButton">
+           <property name="text">
+            <string>Monter</string>
+           </property>
+           <property name="icon">
+            <iconset theme="go-up"/>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="moveDownButton">
+           <property name="text">
+            <string>Descendre</string>
+           </property>
+           <property name="icon">
+            <iconset theme="go-down"/>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>

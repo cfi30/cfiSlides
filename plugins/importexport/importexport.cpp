@@ -26,6 +26,8 @@
 #include <QProgressDialog>
 #include <QListWidget>
 #include <QGraphicsView>
+#include <QFileInfo>
+#include <QSettings>
 
 #include "slideshow.h"
 #include "slide.h"
