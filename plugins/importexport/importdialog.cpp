@@ -306,13 +306,11 @@ void ImportDialog::elementModified()
 	this->modified = true;
 
 	ui->treeWidget->blockSignals(true);
-	QTreeWidgetItem *item = ui->treeWidget->selectedItems()[0];
-	if(item->parent() == 0)
-	{
-		SlideshowElement *element = (SlideshowElement *)sender();
-		item->setText(0, element->getValue(QStringLiteral("name")).toString());
-		item->setData(0, Qt::UserRole, element->getValue(QStringLiteral("name")).toString());
-	}
+	QTreeWidgetItem *item = ui->treeWidget->currentItem();
+
+	const SlideshowElement *element = (SlideshowElement *)sender();
+	item->setText(0, element->getValue(QStringLiteral("name")).toString());
+	item->setData(0, Qt::UserRole, element->getValue(QStringLiteral("name")).toString());
 	ui->treeWidget->blockSignals(false);
 }
 
