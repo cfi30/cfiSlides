@@ -87,8 +87,7 @@ QList<Slide *> ImportDialog::slides()
 		QTreeWidgetItem *slideItem = ui->treeWidget->topLevelItem(index);
 		Slide *slide = (Slide *)slideItem->data(1, Qt::UserRole).value<void *>();
 
-		const int elementCount = slideItem->childCount();
-		for(int elementIndex = 0; elementIndex < elementCount; elementIndex++)
+		for(int elementIndex = slideItem->childCount() - 1; elementIndex >= 0; elementIndex--)
 		{
 			QTreeWidgetItem *elementItem = slideItem->child(elementIndex);
 			if(elementItem->checkState(0) != Qt::Checked)
