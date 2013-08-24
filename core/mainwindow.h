@@ -77,7 +77,7 @@ public slots:
 	void createEmptySlide();
 	bool saveSlideshow();
 	bool saveSlideshowAs();
-	bool openSlideshow(const QString knowPath = QString());
+	bool openSlideshow(const QString &knowPath = QString());
 	void updateCurrentSlideTree();
 	void updateCurrentPropertiesEditor();
 	void updateSelectionActions();
@@ -139,7 +139,7 @@ private:
 	QMenu *createSlideContextMenu();
 	QString msToString(const int ms) const;
 	void launchViewer(const int from);
-	void appendToRecentFiles(const QString openedFile);
+	void appendToRecentFiles(const QString &openedFile);
 	void clearClipboard();
 
 	Ui::MainWindow *ui;

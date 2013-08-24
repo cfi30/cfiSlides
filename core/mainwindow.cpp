@@ -212,7 +212,7 @@ void MainWindow::newSlideshow()
 	this->setWindowModified(false);
 }
 
-bool MainWindow::openSlideshow(const QString knowPath)
+bool MainWindow::openSlideshow(const QString &knowPath)
 {
 	QString newFile;
 	if(knowPath.isEmpty())
@@ -291,15 +291,16 @@ bool MainWindow::openSlideshow(const QString knowPath)
 			QVariantMap properties;
 			in >> properties;
 
-			SlideElement *element = (SlideElement *)QMetaType::create(QMetaType::type(type));
-			if(element == 0)
+			const int typeId = QMetaType::type(type);
+			if(!registeredTypes.contains(typeId))
 			{
 				if(errorsCount == 0)
 				{
 					QMessageBox::warning(this, ui->actionOpen->text(),
-						tr("Une erreur s'est produite lors du chargement des éléments graphiques de la diapositive n° %1 (index %2, élément %3, %4). L'élément en question a été supprimé du diaporama. Les erreurs suivantes seront ignorées.")
-							.arg(si+1).arg(si).arg(ei)
-							.arg(QString(type)=="" ? tr("Type inconnu") : type)
+						tr("La diapositive %1 contient un élément graphique inconnu (%2@%3). L'élément a été ignoré et sera supprimé au prochain enregistrement.\n\nLes erreurs suivantes ne seront pas rapportés.")
+							.arg(slide->getValue(QStringLiteral("name")).toString())
+							.arg(QString(type).isEmpty() ? tr("Inconnu") : type)
+							.arg(ei)
 					);
 					this->setWindowModified(true);
 				}
@@ -308,6 +309,7 @@ bool MainWindow::openSlideshow(const QString knowPath)
 				continue;
 			}
 
+			SlideElement *element = (SlideElement *)QMetaType::create(typeId);
 			element->setValues(properties);
 			slide->addElement(element);
 		}
@@ -1455,7 +1457,7 @@ QString MainWindow::msToString(const int ms) const
 		);
 }
 
-void MainWindow::appendToRecentFiles(const QString openedFile)
+void MainWindow::appendToRecentFiles(const QString &openedFile)
 {
 	QStringList recentFiles = QSettings().value(QStringLiteral("recentFiles")).toStringList();
 	recentFiles.insert(0, openedFile);
