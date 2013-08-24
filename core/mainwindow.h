@@ -57,7 +57,7 @@ public:
 		ALIGN_BOTTOM
 	};
 
-	explicit MainWindow(QString commandLineHelp = QString(), QString openFile = QString(), bool disablePlugins = true, QWidget *parent = 0);
+	explicit MainWindow(const QString openFile, const bool disablePlugins, QWidget *parent = 0);
 	~MainWindow();
 
 	Q_INVOKABLE void setWindowModified(const bool);
@@ -132,6 +132,7 @@ public slots:
 	void cutElements();
 	void copyElements();
 	void pasteElements();
+	void restart();
 
 private:
 	void updatePropertiesEditor(const SlideshowElement *element);

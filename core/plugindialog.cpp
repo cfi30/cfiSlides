@@ -51,8 +51,8 @@ QStringList PluginDialog::getEnabledPlugins()
 void PluginDialog::loadPlugins()
 {
 	QDir dir(PLUGINS_PATH);
-	QStringList allPlugins = dir.entryList(QDir::Files, QDir::Time | QDir::Reversed);
-	QStringList enabledOnes = QSettings().value(QStringLiteral("plugins")).toStringList();
+	const QStringList allPlugins = dir.entryList(QDir::Files, QDir::Time | QDir::Reversed);
+	const QStringList enabledOnes = QSettings().value(QStringLiteral("plugins")).toStringList();
 
 	foreach(QString fileName, allPlugins)
 	{

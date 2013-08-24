@@ -34,7 +34,7 @@
 #include <QMediaPlayer>
 #include <QJsonObject>
 #include <QProgressDialog>
-#include <QDesktopWidget>
+#include <QProcess>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -56,7 +56,7 @@
 #include "icon_t.h"
 #include "configuration.h"
 
-MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePlugins, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
+MainWindow::MainWindow(const QString openFile, const bool disablePlugins, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
 
@@ -155,7 +155,9 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 
 	this->slideshow = 0;
 	this->newSlideshowCount = 0;
-	this->commandLineHelp = commandLineHelp;
+
+	if(!disablePlugins)
+		loadPlugins();
 
 	if(openFile.isEmpty() || !openSlideshow(openFile))
 	{
@@ -173,8 +175,6 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 		ui->actionAboutPlugins->setEnabled(false);
 		statusBar()->showMessage(tr("Extensions désactivés par la ligne de commandes."));
 	}
-	else
-		QTimer::singleShot(REFRESH_INTERVAL, this, SLOT(loadPlugins()));
 }
 
 MainWindow::~MainWindow()
@@ -785,7 +785,7 @@ void MainWindow::slideElementMoved()
 void MainWindow::about()
 {
 	QMessageBox::about(this, tr("À propos de %1 - %2").arg(qApp->applicationName()).arg(qApp->applicationPid()), QString(
-		QString("<p><strong>%1 %2</strong><br /><kbd>%3</kbd></p>") +
+		QString("<p><strong>%1 %2</strong><br /><kbd>%3 [--noplugins] [FICHIER]</kbd></p>") +
 
 		"<p>Copyright (C) 2013  Christian Fillion</p>" +
 
@@ -801,7 +801,7 @@ void MainWindow::about()
 
 		"<p>You should have received a copy of the GNU General Public License along with %1." +
 		"   If not, see <a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>.</p>"
-	).arg(qApp->applicationName(), qApp->applicationVersion(), commandLineHelp));
+	).arg(qApp->applicationName(), qApp->applicationVersion(), qApp->applicationFilePath()));
 }
 
 void MainWindow::currentSlideChanged(int currentRow)
@@ -1187,13 +1187,15 @@ void MainWindow::displaySlideTreeContextMenu(const QPoint &pos)
 
 void MainWindow::managePlugins()
 {
-	unloadPlugins();
+	const QStringList currentPlugins = QSettings().value(QStringLiteral("plugins")).toStringList();
 
 	PluginDialog *dialog = new PluginDialog(this);
-	if(dialog->exec() == QDialog::Accepted)
-		QSettings().setValue(QStringLiteral("plugins"), dialog->getEnabledPlugins());
+	if(dialog->exec() != QDialog::Accepted || dialog->getEnabledPlugins() == currentPlugins)
+		return;
 
-	loadPlugins();
+	QSettings().setValue(QStringLiteral("plugins"), dialog->getEnabledPlugins());
+	QMessageBox::information(this, tr("Redémarrage requis"), tr("%1 doit être redémarré afin de recharger les extensions. Cliquez sur OK pour enregister les changements et redémarrer l'application.").arg(qApp->applicationName()));
+	restart();
 }
 
 void MainWindow::loadPlugins()
@@ -1598,4 +1600,16 @@ void MainWindow::pasteElements()
 	const int clipboardSize = clipboard.size();
 	for(int index = 1; index < clipboardSize; index++)
 		ui->slideTree->topLevelItem(0)->child(index)->setSelected(true);
+}
+
+void MainWindow::restart()
+{
+	statusBar()->showMessage(tr("Redémarrage de l'application..."));
+
+	const QString filePath = this->windowFilePath();
+	if(!closeSlideshow())
+		return statusBar()->clearMessage();
+
+	QProcess::startDetached(qApp->applicationFilePath(), QStringList() << filePath);
+	qApp->exit();
 }
