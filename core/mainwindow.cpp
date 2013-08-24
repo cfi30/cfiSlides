@@ -134,8 +134,12 @@ MainWindow::MainWindow(QString commandLineHelp, QString openFile, bool disablePl
 	selectionActions->addAction(ui->actionLowerElement);
 	selectionActions->addAction(ui->actionBringElementToFront);
 	selectionActions->addAction(ui->actionBringElementToBack);
+	selectionActions->addAction(ui->actionAlignToLeft);
 	selectionActions->addAction(ui->actionAlignToHCenter);
+	selectionActions->addAction(ui->actionAlignToRight);
+	selectionActions->addAction(ui->actionAlignToTop);
 	selectionActions->addAction(ui->actionAlignToVCenter);
+	selectionActions->addAction(ui->actionAlignToBottom);
 
 	previewPlayer = new QMediaPlayer(this);
 	previewPlayer->setNotifyInterval(REFRESH_INTERVAL);
@@ -1516,14 +1520,34 @@ void MainWindow::alignElementsTo(const AlignDirection direction)
 	setWindowModified(true);
 }
 
+void MainWindow::alignElementsToLeft()
+{
+	alignElementsTo(ALIGN_LEFT);
+}
+
 void MainWindow::alignElementsToHCenter()
 {
 	alignElementsTo(ALIGN_HCENTER);
 }
 
+void MainWindow::alignElementsToRight()
+{
+	alignElementsTo(ALIGN_RIGHT);
+}
+
+void MainWindow::alignElementsToTop()
+{
+	alignElementsTo(ALIGN_TOP);
+}
+
 void MainWindow::alignElementsToVCenter()
 {
 	alignElementsTo(ALIGN_VCENTER);
+}
+
+void MainWindow::alignElementsToBottom()
+{
+	alignElementsTo(ALIGN_BOTTOM);
 }
 
 void MainWindow::clearClipboard()

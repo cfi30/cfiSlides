@@ -1,5 +1,11 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+<file>./icons/oxygen/16x16/align-horizontal-center.png</file>
+<file>./icons/oxygen/16x16/align-horizontal-left.png</file>
+<file>./icons/oxygen/16x16/align-horizontal-right.png</file>
+<file>./icons/oxygen/16x16/align-vertical-bottom.png</file>
+<file>./icons/oxygen/16x16/align-vertical-center.png</file>
+<file>./icons/oxygen/16x16/align-vertical-top.png</file>
 <file>./icons/oxygen/16x16/audio-volume-muted.png</file>
 <file alias="audio-x-generic">./icons/oxygen/16x16/audio-x-generic.png</file>
 <file>./icons/oxygen/16x16/document-new.png</file>
@@ -24,8 +30,6 @@
 <file>./icons/oxygen/16x16/media-playback-pause.png</file>
 <file>./icons/oxygen/16x16/media-playback-start.png</file>
 <file>./icons/oxygen/16x16/media-skip-backward.png</file>
-<file>./icons/oxygen/16x16/object-align-horizontal-center.png</file>
-<file>./icons/oxygen/16x16/object-align-vertical-center.png</file>
 <file>./icons/oxygen/16x16/object-order-back.png</file>
 <file>./icons/oxygen/16x16/object-order-front.png</file>
 <file>./icons/oxygen/16x16/object-order-lower.png</file>

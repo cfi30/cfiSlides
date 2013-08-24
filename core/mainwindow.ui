@@ -105,8 +105,13 @@
      <property name="title">
       <string>&amp;Aligner</string>
      </property>
+     <addaction name="actionAlignToLeft"/>
      <addaction name="actionAlignToHCenter"/>
+     <addaction name="actionAlignToRight"/>
+     <addaction name="separator"/>
+     <addaction name="actionAlignToTop"/>
      <addaction name="actionAlignToVCenter"/>
+     <addaction name="actionAlignToBottom"/>
     </widget>
     <addaction name="actionCutElements"/>
     <addaction name="actionCopyElements"/>
@@ -810,9 +815,7 @@
   </action>
   <action name="actionAlignToVCenter">
    <property name="icon">
-    <iconset theme="object-align-horizontal-center">
-     <normaloff/>
-    </iconset>
+    <iconset theme="align-vertical-center"/>
    </property>
    <property name="text">
     <string>Centrer verticalement</string>
@@ -820,9 +823,7 @@
   </action>
   <action name="actionAlignToHCenter">
    <property name="icon">
-    <iconset theme="object-align-horizontal-center">
-     <normaloff/>
-    </iconset>
+    <iconset theme="align-horizontal-center"/>
    </property>
    <property name="text">
     <string>Centrer horizontalement</string>
@@ -876,6 +877,38 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionAlignToLeft">
+   <property name="icon">
+    <iconset theme="align-horizontal-left"/>
+   </property>
+   <property name="text">
+    <string>Aligner à gauche</string>
+   </property>
+  </action>
+  <action name="actionAlignToRight">
+   <property name="icon">
+    <iconset theme="align-horizontal-right"/>
+   </property>
+   <property name="text">
+    <string>Aligner à droite</string>
+   </property>
+  </action>
+  <action name="actionAlignToTop">
+   <property name="icon">
+    <iconset theme="align-vertical-top"/>
+   </property>
+   <property name="text">
+    <string>Aligner en haut</string>
+   </property>
+  </action>
+  <action name="actionAlignToBottom">
+   <property name="icon">
+    <iconset theme="align-vertical-bottom"/>
+   </property>
+   <property name="text">
+    <string>Aligner en bas</string>
    </property>
   </action>
  </widget>
@@ -1728,6 +1761,70 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionAlignToLeft</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>alignElementsToLeft()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAlignToRight</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>alignElementsToRight()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAlignToTop</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>alignElementsToTop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAlignToBottom</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>alignElementsToBottom()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>350</x>
+     <y>250</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>createEmptySlide()</slot>
@@ -1770,5 +1867,9 @@
   <slot>copyElements()</slot>
   <slot>pasteElements()</slot>
   <slot>cutElements()</slot>
+  <slot>alignElementsToLeft()</slot>
+  <slot>alignElementsToRight()</slot>
+  <slot>alignElementsToTop()</slot>
+  <slot>alignElementsToBottom()</slot>
  </slots>
 </ui>

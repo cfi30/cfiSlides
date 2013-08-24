@@ -123,8 +123,12 @@ public slots:
 	void previewDurationChanged(qint64);
 	void previewPositionChanged(qint64);
 	void previewStateChanged(QMediaPlayer::State);
+	void alignElementsToLeft();
 	void alignElementsToHCenter();
+	void alignElementsToRight();
+	void alignElementsToTop();
 	void alignElementsToVCenter();
+	void alignElementsToBottom();
 	void cutElements();
 	void copyElements();
 	void pasteElements();
