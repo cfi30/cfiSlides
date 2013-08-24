@@ -92,20 +92,31 @@
     <property name="title">
      <string>&amp;Édition</string>
     </property>
+    <widget class="QMenu" name="menuOrganizeElements">
+     <property name="title">
+      <string>&amp;Organiser</string>
+     </property>
+     <addaction name="actionRaiseElement"/>
+     <addaction name="actionLowerElement"/>
+     <addaction name="actionBringElementToFront"/>
+     <addaction name="actionBringElementToBack"/>
+    </widget>
+    <widget class="QMenu" name="menuAlignElements">
+     <property name="title">
+      <string>&amp;Aligner</string>
+     </property>
+     <addaction name="actionAlignToHCenter"/>
+     <addaction name="actionAlignToVCenter"/>
+    </widget>
     <addaction name="actionCutElements"/>
     <addaction name="actionCopyElements"/>
     <addaction name="actionPasteElements"/>
+    <addaction name="menuOrganizeElements"/>
+    <addaction name="menuAlignElements"/>
     <addaction name="actionDeleteElements"/>
     <addaction name="separator"/>
     <addaction name="actionSelectAll"/>
     <addaction name="actionClearSelection"/>
-    <addaction name="separator"/>
-    <addaction name="actionRaiseElement"/>
-    <addaction name="actionLowerElement"/>
-    <addaction name="actionBringElementToFront"/>
-    <addaction name="actionBringElementToBack"/>
-    <addaction name="actionAlignToHCenter"/>
-    <addaction name="actionAlignToVCenter"/>
    </widget>
    <widget class="QMenu" name="menuSlide">
     <property name="title">
@@ -660,7 +671,9 @@
   </action>
   <action name="actionMoveSlideLeft">
    <property name="icon">
-    <iconset theme="go-previous"/>
+    <iconset theme="go-previous">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Déplacer vers la gauche</string>
@@ -674,7 +687,9 @@
   </action>
   <action name="actionMoveSlideRight">
    <property name="icon">
-    <iconset theme="go-next"/>
+    <iconset theme="go-next">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Déplacer vers la droite</string>

@@ -1122,13 +1122,13 @@ QMenu *MainWindow::createSlideContextMenu()
 {
 	QMenu *menu = new QMenu(this);
 	if(!ui->slideTree->selectedItems().isEmpty())
+		menu->addActions(ui->menuEdit->actions());
+	else
 	{
-		menu->addActions(selectionActions->actions());
-		menu->addSeparator();
+		menu->addAction(ui->actionPasteElements);
+		menu->addAction(ui->actionSelectAll);
 	}
 
-	menu->addAction(ui->actionPasteElements);
-	menu->addAction(ui->actionSelectAll);
 	menu->addAction(ui->actionRepaint);
 
 	QAction *separator = menu->addSeparator();
