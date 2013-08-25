@@ -480,8 +480,6 @@ void MainWindow::displaySlide(Slide *slide)
 
 	QPixmap pixmap(scene->sceneRect().size().toSize());
 	QPainter painter(&pixmap);
-	painter.setRenderHint(QPainter::Antialiasing);
-
 	slide->render(scene, true);
 	scene->render(&painter, scene->sceneRect());
 
@@ -554,7 +552,6 @@ void MainWindow::updateSlideIcon(const int index)
 
 	QPixmap pixmap(view->scene()->sceneRect().size().toSize());
 	QPainter painter(&pixmap);
-	painter.setRenderHint(QPainter::Antialiasing);
 	view->scene()->render(&painter, view->scene()->sceneRect());
 
 	const QIcon icon(pixmap.scaledToWidth(ui->slideList->iconSize().width()));
