@@ -50,11 +50,11 @@ QStringList PluginDialog::getEnabledPlugins()
 
 void PluginDialog::loadPlugins()
 {
-	QDir dir(PLUGINS_PATH);
+	const QDir dir(PLUGINS_PATH);
 	const QStringList allPlugins = dir.entryList(QDir::Files, QDir::Time | QDir::Reversed);
 	const QStringList enabledOnes = QSettings().value(QStringLiteral("plugins")).toStringList();
 
-	foreach(QString fileName, allPlugins)
+	foreach(const QString fileName, allPlugins)
 	{
 		QPluginLoader loader(dir.absoluteFilePath(fileName));
 		const QJsonObject metaData = loader.metaData().value(QStringLiteral("MetaData")).toObject();
@@ -79,6 +79,8 @@ void PluginDialog::loadPlugins()
 			ui->availablePluginsList->addItem(item);
 		}
 	}
+
+	ui->buttonBox->setEnabled(true);
 }
 
 void PluginDialog::on_openDirectory_clicked()
@@ -98,7 +100,7 @@ void PluginDialog::on_enabledPluginsList_currentRowChanged(int currentRow)
 
 void PluginDialog::on_enableButton_clicked()
 {
-	int currentRow = ui->availablePluginsList->currentRow();
+	const int currentRow = ui->availablePluginsList->currentRow();
 	QListWidgetItem *item = ui->availablePluginsList->item(currentRow);
 
 	enabledPlugins << availablePlugins[currentRow];
@@ -114,7 +116,7 @@ void PluginDialog::on_enableButton_clicked()
 
 void PluginDialog::on_disableButton_clicked()
 {
-	int currentRow = ui->enabledPluginsList->currentRow();
+	const int currentRow = ui->enabledPluginsList->currentRow();
 	QListWidgetItem *item = ui->enabledPluginsList->item(currentRow);
 
 	availablePlugins << enabledPlugins[currentRow];

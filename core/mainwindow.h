@@ -132,7 +132,7 @@ public slots:
 	void cutElements();
 	void copyElements();
 	void pasteElements();
-	void restart();
+	void restart(QStringList arguments = QStringList());
 
 private:
 	void updatePropertiesEditor(const SlideshowElement *element);

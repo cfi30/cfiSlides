@@ -227,16 +227,19 @@ bool MainWindow::openSlideshow(const QString &knowPath)
 	}
 	else if(!QFile::exists(knowPath))
 	{
-		QMessageBox::critical(this, ui->actionOpen->text(), tr("Impossible d'ouvrir le diaporama : le fichier demandé n'existe pas."));
+		QMessageBox::critical(this, qApp->applicationName(), tr("Impossible d'ouvrir le fichier : le fichier demandé n'existe pas."));
 		return false;
 	}
 	else
 		newFile = knowPath;
 
+	if(this->slideshow != 0 && !closeSlideshow())
+		return false;
+
 	QFile file(newFile);
 	if(!file.open(QIODevice::ReadOnly))
 	{
-		QMessageBox::critical(this, ui->actionOpen->text(), tr("Impossible de lire le contenu du fichier."));
+		QMessageBox::critical(this, qApp->applicationName(), tr("Impossible de lire le contenu du fichier."));
 		return false;
 	}
 
@@ -247,14 +250,9 @@ bool MainWindow::openSlideshow(const QString &knowPath)
 	in >> fileAppName;
 	if(fileAppName != qApp->applicationName())
 	{
-		QMessageBox::critical(this, ui->actionOpen->text(), tr("Le fichier demandé ne peut pas être ouvert avec %1.").arg(qApp->applicationName()));
+		QMessageBox::critical(this, qApp->applicationName(), tr("Le fichier demandé ne peut pas être ouvert avec %1.").arg(qApp->applicationName()));
+		file.close();
 		return false;
-	}
-
-	if(this->slideshow != 0)
-	{
-		if(!closeSlideshow())
-			return false;
 	}
 
 	QVariantMap metadata;
@@ -268,7 +266,7 @@ bool MainWindow::openSlideshow(const QString &knowPath)
 	in >> slidesCount;
 
 	QProgressDialog *progress = new QProgressDialog(this);
-	progress->setWindowTitle(ui->actionOpen->text());
+	progress->setWindowTitle(qApp->applicationName());
 	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 	progress->setCancelButtonText(QString());
 	progress->setLabelText(tr("Chargement et affichage du diaporama en cours..."));
@@ -300,7 +298,7 @@ bool MainWindow::openSlideshow(const QString &knowPath)
 			{
 				if(errorsCount == 0)
 				{
-					QMessageBox::warning(this, ui->actionOpen->text(),
+					QMessageBox::warning(this, qApp->applicationName(),
 						tr("La diapositive %1 contient un élément graphique inconnu (%2@%3). L'élément a été ignoré et sera supprimé au prochain enregistrement.\n\nLes erreurs suivantes ne seront pas rapportés.")
 							.arg(slide->getValue(QStringLiteral("name")).toString())
 							.arg(QString(type).isEmpty() ? tr("Inconnu") : type)
@@ -332,12 +330,12 @@ bool MainWindow::openSlideshow(const QString &knowPath)
 	progress->deleteLater();
 
 	statusBar()->showMessage(tr("Fin du chargement de %1. Diapositives : %2 | Erreurs : %3").arg(fileName).arg(slidesCount).arg(errorsCount), STATUS_TIMEOUT);
-	if(slidesCount == 0)
-		return true;
-
-	QListWidgetItem *item = ui->slideList->item(0);
-	ui->slideList->scrollToItem(item);
-	ui->slideList->setCurrentItem(item);
+	if(slidesCount > 0)
+	{
+		QListWidgetItem *item = ui->slideList->item(0);
+		ui->slideList->scrollToItem(item);
+		ui->slideList->setCurrentItem(item);
+	}
 
 	return true;
 }
@@ -1187,14 +1185,12 @@ void MainWindow::displaySlideTreeContextMenu(const QPoint &pos)
 
 void MainWindow::managePlugins()
 {
-	const QStringList currentPlugins = QSettings().value(QStringLiteral("plugins")).toStringList();
-
 	PluginDialog *dialog = new PluginDialog(this);
-	if(dialog->exec() != QDialog::Accepted || dialog->getEnabledPlugins() == currentPlugins)
+	if(dialog->exec() != QDialog::Accepted)
 		return;
 
 	QSettings().setValue(QStringLiteral("plugins"), dialog->getEnabledPlugins());
-	QMessageBox::information(this, tr("Redémarrage requis"), tr("%1 doit être redémarré afin de recharger les extensions. Cliquez sur OK pour enregister les changements et redémarrer l'application.").arg(qApp->applicationName()));
+	QMessageBox::information(this, tr("Redémarrage requis"), tr("%1 doit être redémarré afin de recharger les extensions.\n\nVous serez invité à enregistrer toute modification non sauvegardée.\nCliquez sur OK pour continuer.").arg(qApp->applicationName()));
 	restart();
 }
 
@@ -1602,14 +1598,14 @@ void MainWindow::pasteElements()
 		ui->slideTree->topLevelItem(0)->child(index)->setSelected(true);
 }
 
-void MainWindow::restart()
+void MainWindow::restart(QStringList arguments)
 {
+	arguments.prepend(this->windowFilePath());
 	statusBar()->showMessage(tr("Redémarrage de l'application..."));
 
-	const QString filePath = this->windowFilePath();
 	if(!closeSlideshow())
 		return statusBar()->clearMessage();
 
-	QProcess::startDetached(qApp->applicationFilePath(), QStringList() << filePath);
+	QProcess::startDetached(qApp->applicationFilePath(), arguments);
 	qApp->exit();
 }
