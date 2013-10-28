@@ -58,12 +58,16 @@ ViewWidget::ViewWidget(QWidget *parent) : QWidget(parent), ui(new Ui::ViewWidget
 	new QShortcut(QKeySequence(Qt::Key_Tab), this, SLOT(next()));
 	new QShortcut(QKeySequence(Qt::Key_Forward), this, SLOT(next()));
 	new QShortcut(QKeySequence(Qt::Key_MediaNext), this, SLOT(next()));
+	new QShortcut(QKeySequence(Qt::Key_L), this, SLOT(next()));
+	new QShortcut(QKeySequence(Qt::Key_J), this, SLOT(next()));
 
 	new QShortcut(QKeySequence(Qt::Key_Backspace), this, SLOT(prev()));
 	new QShortcut(QKeySequence(Qt::Key_Left), this, SLOT(prev()));
 	new QShortcut(QKeySequence(Qt::Key_Up), this, SLOT(prev()));
 	new QShortcut(QKeySequence(Qt::Key_Back), this, SLOT(prev()));
 	new QShortcut(QKeySequence(Qt::Key_MediaPrevious), this, SLOT(prev()));
+	new QShortcut(QKeySequence(Qt::Key_H), this, SLOT(prev()));
+	new QShortcut(QKeySequence(Qt::Key_K), this, SLOT(prev()));
 
 	new QShortcut(QKeySequence(Qt::Key_Home), this, SLOT(first()));
 	new QShortcut(QKeySequence(Qt::Key_PageUp), this, SLOT(first()));
