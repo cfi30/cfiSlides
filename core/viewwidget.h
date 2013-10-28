@@ -54,6 +54,7 @@ public slots:
 	void destroy();
 	void restart();
 	void goTo();
+	void toggleBlack();
 
 private:
 	Ui::ViewWidget *ui;

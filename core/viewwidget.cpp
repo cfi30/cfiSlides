@@ -96,6 +96,8 @@ ViewWidget::ViewWidget(QWidget *parent) : QWidget(parent), ui(new Ui::ViewWidget
 
 	new QShortcut(QKeySequence(Qt::Key_G), this, SLOT(goTo()));
 	new QShortcut(QKeySequence(Qt::Key_Go), this, SLOT(goTo()));
+
+	new QShortcut(QKeySequence(Qt::Key_B), this, SLOT(toggleBlack()));
 }
 
 ViewWidget::~ViewWidget()
@@ -222,6 +224,12 @@ void ViewWidget::destroy()
 	slideshow->getSlide(ui->stackedWidget->currentIndex())->destroy();
 }
 
+void ViewWidget::restart()
+{
+	stop();
+	play();
+}
+
 void ViewWidget::goTo()
 {
 	pause();
@@ -239,10 +247,9 @@ void ViewWidget::goTo()
 	play();
 }
 
-void ViewWidget::restart()
+void ViewWidget::toggleBlack()
 {
-	stop();
-	play();
+	ui->stackedWidget->setVisible(!ui->stackedWidget->isVisible());
 }
 
 void ViewWidget::closeEvent(QCloseEvent *)
