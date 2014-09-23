@@ -1,4 +1,4 @@
-cfiSlides 0.4
+cfiSlides 0.5
 =========
 
 Build instructions for Linux:

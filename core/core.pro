@@ -7,7 +7,7 @@ TARGET = cfislides
 DESTDIR = ../build/
 LIBDIR = $$DESTDIR
 
-VERSION = 0.4
+VERSION = 0.5
 DEFINES += CFISLIDES_VERSION=\\\"$$VERSION\\\"
 
 HEADERS += \
