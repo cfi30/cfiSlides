@@ -2,8 +2,9 @@ cfiSlides 0.5
 =========
 
 Build instructions for Linux:
-```
-git clone https://bitbucket.org/cfi30/cfislides.git
+
+```sh
+git clone https://github.com/cfi30/cfiSlides.git
 cd cfislides
 qmake-qt5 CONFIG+=silent
 make && cd build/
@@ -12,6 +13,7 @@ chmod +x ./cfislides.sh
 # launch cfiSlides
 ./cfislides.sh
 ```
+
 cfiSlides is tested on both Linux and Windows (MinGW).
 
 Requirements
