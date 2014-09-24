@@ -4,7 +4,7 @@ cfiSlides 0.5
 Build instructions for Linux:
 
 ```sh
-git clone https://github.com/cfi30/cfiSlides.git
+git clone https://github.com/cfillion/cfiSlides.git
 cd cfislides
 qmake-qt5 CONFIG+=silent
 make && cd build/
